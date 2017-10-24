@@ -122,7 +122,7 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
-        public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount);
-        public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault();
+        public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount); // TODO: should be updated when a purchase is added
+        public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault(); // TODO: should be updated when a purchase is added
     }
 }

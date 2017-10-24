@@ -19,11 +19,11 @@ using Xceed.Wpf.Toolkit;
 namespace Loyalty.App.Views
 {
     /// <summary>
-    /// Interaction logic for ClientEncodingView.xaml
+    /// Interaction logic for DisplayClientView.xaml
     /// </summary>
-    public partial class ClientEncodingView : UserControl
+    public partial class DisplayClientView : UserControl
     {
-        public ClientEncodingView()
+        public DisplayClientView()
         {
             InitializeComponent();
         }

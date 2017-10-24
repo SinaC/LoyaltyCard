@@ -8,12 +8,12 @@ namespace Loyalty.App
     public enum Modes
     {
         Search,
-        Encoding
+        Display
     }
 
     public class MainViewModel : ObservableObject
     {
-        public ClientEncodingViewModel ClientEncodingViewModel { get; protected set; }
+        public DisplayClientViewModel DisplayClientViewModel { get; protected set; }
         public SearchClientViewModel SearchClientViewModel { get; protected set; }
 
         private Modes _mode;
@@ -25,7 +25,7 @@ namespace Loyalty.App
 
         public MainViewModel()
         {
-            ClientEncodingViewModel = new ClientEncodingViewModel();
+            DisplayClientViewModel = new DisplayClientViewModel();
             SearchClientViewModel = new SearchClientViewModel();
 
             Mode = Modes.Search;
@@ -42,8 +42,8 @@ namespace Loyalty.App
 
         private void HandleDisplayClientMessage(DisplayClientMessage displayClientMessage)
         {
-            ClientEncodingViewModel.Initialize(displayClientMessage.Client);
-            Mode = Modes.Encoding;
+            DisplayClientViewModel.Initialize(displayClientMessage.Client);
+            Mode = Modes.Display;
         }
 
         private void HandleCreateClientMessage(CreateClientMessage createClientMessage)
@@ -53,8 +53,8 @@ namespace Loyalty.App
                 LastName = createClientMessage.LastNameFilter,
                 FirstName = createClientMessage.FirstNameFilter
             };
-            ClientEncodingViewModel.Initialize(client);
-            Mode = Modes.Encoding;
+            DisplayClientViewModel.Initialize(client);
+            Mode = Modes.Display;
         }
     }
 
@@ -62,7 +62,7 @@ namespace Loyalty.App
     {
         public MainViewModelDesignData()
         {
-            ClientEncodingViewModel = new ClientEncodingViewModelDesignData();
+            DisplayClientViewModel = new DisplayDisplayClientViewModelDesignData();
             SearchClientViewModel = new SearchClientViewModelDesignData();
         }
     }

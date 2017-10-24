@@ -1,0 +1,4 @@
+DB instead of Xml
+
+known issues:
+	when a purchase is added on a client, its total is not refreshed

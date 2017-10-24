@@ -33,6 +33,9 @@ namespace LoyaltyCard.Business
             if (client.Id == Guid.Empty)
                 client.Id = Guid.NewGuid();
 
+            client.FirstName = client.FirstName.Trim();
+            client.LastName = client.LastName.Trim();
+
             ClientDL.SaveClient(client);
         }
 

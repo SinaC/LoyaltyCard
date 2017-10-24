@@ -8,15 +8,14 @@
         xmlns:viewModels="clr-namespace:Loyalty.App.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainViewModelDesignData, IsDesignTimeCreatable=True}"
-        SizeToContent="WidthAndHeight"
         MinHeight="350"
         MinWidth="525"
         MaxHeight="600"
         MaxWidth="800"
-        Title="MainWindow">
+        Title="Loyalty Card Manager">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="ClientEncodingTemplate">
-            <views:ClientEncodingView DataContext="{Binding ClientEncodingViewModel}"/>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayClientTemplate">
+            <views:DisplayClientView DataContext="{Binding DisplayClientViewModel}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="SearchClientTemplate">
             <views:SearchClientView DataContext="{Binding SearchClientViewModel}"/>
@@ -26,8 +25,8 @@
         <ContentControl.Style>
             <Style TargetType="{x:Type ContentControl}">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Encoding}">
-                        <Setter Property="ContentTemplate" Value="{StaticResource ClientEncodingTemplate}"/>
+                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Display}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayClientTemplate}"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Search}">
                         <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>

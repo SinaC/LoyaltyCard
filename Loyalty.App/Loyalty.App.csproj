@@ -84,11 +84,11 @@
     <Compile Include="Messages\CreateClientMessage.cs" />
     <Compile Include="Messages\DisplayClientMessage.cs" />
     <Compile Include="Messages\SearchClientMessage.cs" />
-    <Compile Include="ViewModels\ClientEncodingViewModel.cs" />
+    <Compile Include="ViewModels\DisplayClientViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ViewModels\SearchClientViewModel.cs" />
-    <Compile Include="Views\ClientEncodingView.xaml.cs">
-      <DependentUpon>ClientEncodingView.xaml</DependentUpon>
+    <Compile Include="Views\DisplayClientView.xaml.cs">
+      <DependentUpon>DisplayClientView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchClientView.xaml.cs">
       <DependentUpon>SearchClientView.xaml</DependentUpon>
@@ -105,7 +105,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ClientEncodingView.xaml">
+    <Page Include="Views\DisplayClientView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

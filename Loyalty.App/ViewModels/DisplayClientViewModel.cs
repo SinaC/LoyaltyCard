@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using EasyMVVM;
 using Loyalty.App.Messages;
@@ -7,7 +10,7 @@ using LoyaltyCard.Domain;
 
 namespace Loyalty.App.ViewModels
 {
-    public class ClientEncodingViewModel : ObservableObject
+    public class DisplayClientViewModel : ObservableObject
     {
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
 
@@ -32,6 +35,10 @@ namespace Loyalty.App.ViewModels
 
         private void Save()
         {
+            if (string.IsNullOrWhiteSpace(Client.FirstName)
+                || string.IsNullOrWhiteSpace(Client.LastName))
+                return; // TODO: inform user
+
             ClientBL.SaveClient(Client);
             if (PurchaseAmount.HasValue)
             {
@@ -68,12 +75,13 @@ namespace Loyalty.App.ViewModels
                 throw new ArgumentNullException(nameof(client));
 
             Client = client;
+            PurchaseAmount = null;
         }
     }
 
-    public class ClientEncodingViewModelDesignData : ClientEncodingViewModel
+    public class DisplayDisplayClientViewModelDesignData : DisplayClientViewModel
     {
-        public ClientEncodingViewModelDesignData()
+        public DisplayDisplayClientViewModelDesignData()
         {
             Client = new Client
             {
@@ -81,7 +89,12 @@ namespace Loyalty.App.ViewModels
                 LastName = "Brol",
                 BirthDate = new DateTime(1999, 12, 31),
                 Email = "pouet.brol@hotmail.com",
-                Mobile = null
+                Mobile = null,
+                Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1, 20).Select(y => new Purchase
+                {
+                    Amount = y * 10,
+                    Date = DateTime.Now.AddDays(-y * 2)
+                }))
             };
         }
     }
