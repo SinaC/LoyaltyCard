@@ -8,13 +8,15 @@ namespace Loyalty.App
     public enum Modes
     {
         Search,
-        Display
+        Display,
+        Stats
     }
 
     public class MainViewModel : ObservableObject
     {
         public DisplayClientViewModel DisplayClientViewModel { get; protected set; }
         public SearchClientViewModel SearchClientViewModel { get; protected set; }
+        public DisplayStatsViewModel DisplayStatsViewModel { get; protected set; }
 
         private Modes _mode;
         public Modes Mode
@@ -27,12 +29,19 @@ namespace Loyalty.App
         {
             DisplayClientViewModel = new DisplayClientViewModel();
             SearchClientViewModel = new SearchClientViewModel();
+            DisplayStatsViewModel = new DisplayStatsViewModel();
 
-            Mode = Modes.Search;
+             Mode = Modes.Search;
 
             Mediator.Default.Register<CreateClientMessage>(this, HandleCreateClientMessage);
             Mediator.Default.Register<DisplayClientMessage>(this, HandleDisplayClientMessage);
             Mediator.Default.Register<SearchClientMessage>(this, HandleSearchClientMessage);
+            Mediator.Default.Register< DisplayStatsMessage>(this, HandleDisplayStatsMessage);
+        }
+
+        private void HandleDisplayStatsMessage(DisplayStatsMessage displayStatsMessage)
+        {
+            Mode = Modes.Stats;
         }
 
         private void HandleSearchClientMessage(SearchClientMessage switchModeMessage)
@@ -64,6 +73,7 @@ namespace Loyalty.App
         {
             DisplayClientViewModel = new DisplayDisplayClientViewModelDesignData();
             SearchClientViewModel = new SearchClientViewModelDesignData();
+            DisplayStatsViewModel = new DisplayStatsViewModelDesignData();
         }
     }
 }

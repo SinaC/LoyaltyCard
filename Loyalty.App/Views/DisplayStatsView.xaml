@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Loyalty.App.Views.DisplayStatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:Loyalty.App.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:DisplayStatsViewModelDesignData, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <TextBlock FontSize="72" Foreground="Red"
+                       Text="NOT YET IMPLEMENTED"/>
+            <Button Command="{Binding CancelCommand}">
+                <TextBlock Text="Cancel"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

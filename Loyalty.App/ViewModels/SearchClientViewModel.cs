@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using EasyIoc;
 using EasyMVVM;
 using Loyalty.App.Messages;
 using Loyalty.IBusiness;
@@ -86,6 +85,18 @@ namespace Loyalty.App.ViewModels
                 FirstNameFilter = FirstNameFilter,
                 LastNameFilter = LastNameFilter
             });
+        }
+
+        #endregion
+
+        #region Stats
+
+        private ICommand _displayStatsCommand;
+        public ICommand DisplayStatsCommand => _displayStatsCommand = _displayStatsCommand ?? new RelayCommand(DisplayStats);
+
+        private void DisplayStats()
+        {
+            Mediator.Default.Send(new DisplayStatsMessage());
         }
 
         #endregion

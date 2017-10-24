@@ -20,111 +20,128 @@
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
     </UserControl.Resources>
+    <!-- Client informations -->
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!-- Client informations -->
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <!-- FirstName  LastName -->
+        <!-- BirthDate  Email -->
+        <!-- GSM-->
+        <!-- Amount     [Save] -->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="Nom:"/>
+            <TextBox MinWidth="200"
+                        behaviours:SelectTextOnFocus.Active="True"
+                        Text="{Binding Client.LastName}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="Prénom:"/>
+            <TextBox MinWidth="200"
+                        behaviours:SelectTextOnFocus.Active="True"
+                        Text="{Binding Client.FirstName}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="Date de naissance:"/>
+            <DatePicker SelectedDate="{Binding Client.BirthDate}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="Email:"/>
+            <TextBox MinWidth="200"
+                        behaviours:SelectTextOnFocus.Active="True"
+                        Text="{Binding Client.Email}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="GSM:"/>
+            <TextBox MinWidth="200"
+                        Text="{Binding Client.Mobile}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3"
+                    Grid.Column="0"
+                    Margin="5,2"
+                    Orientation="Vertical">
+            <TextBlock Text="Montant à ajouter:"/>
+            <xctk:DecimalUpDown Minimum="0"
+                                Increment="0.01"
+                                FormatString="C"
+                                Value="{Binding PurchaseAmount}"
+                                GotFocus="DecimalUpDown_OnGotFocus"
+                                ValueChanged="DecimalUpDown_OnValueChanged"/>
+        </StackPanel>
+        <Grid Grid.Row="2"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Margin="5,2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!-- FirstName  LastName -->
-            <!-- BirthDate  Email -->
-            <!-- GSM-->
-            <!-- Amount     [Save] -->
-            <StackPanel Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="Last name:"/>
-                <TextBox MinWidth="200"
-                         behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding Client.LastName}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="First name:"/>
-                <TextBox MinWidth="200"
-                         behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding Client.FirstName}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="Birth date:"/>
-                <DatePicker SelectedDate="{Binding Client.BirthDate}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="Email:"/>
-                <TextBox MinWidth="200"
-                         behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding Client.Email}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="2"
-                        Grid.Column="0"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="GSM:"/>
-                <TextBox MinWidth="200"
-                         Text="{Binding Client.Mobile}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="3"
-                        Grid.Column="0"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Text="Amount:"/>
-                <xctk:DecimalUpDown Minimum="0"
-                                    Increment="0.01"
-                                    FormatString="C"
-                                    Value="{Binding PurchaseAmount}"
-                                    GotFocus="DecimalUpDown_OnGotFocus"
-                                    ValueChanged="DecimalUpDown_OnValueChanged"/>
-            </StackPanel>
-
-            <StackPanel Grid.Row="2"
-                        Grid.RowSpan="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <Button Margin="5,2"
-                        MinWidth="100"
-                        Command="{Binding SaveCommand}">
-                    <TextBlock Text="Save"/>
-                </Button>
-                <Button Margin="5,2"
-                        MinWidth="100"
-                        Command="{Binding CancelCommand}">
-                    <TextBlock Text="Cancel"/>
-                </Button>
-            </StackPanel>
+            <TextBlock Grid.Row="0"
+                       Text="Commentaire:"/>
+            <TextBox Grid.Row="1"
+                     MinWidth="200"
+                     MaxHeight="60"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" 
+                     AcceptsReturn="True"
+                     Text="{Binding Client.Comment}"/>
         </Grid>
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+            <Button Margin="5,2"
+                    MinWidth="100"
+                    MaxHeight="100"
+                    Command="{Binding SaveCommand}">
+                <TextBlock Text="Sauver"/>
+            </Button>
+            <Button Margin="5,2"
+                    MinWidth="100"
+                    MaxHeight="100"
+                    Command="{Binding CancelCommand}">
+                <TextBlock Text="Annuler"/>
+            </Button>
+        </StackPanel>
+
         <!-- Client purchases -->
-        <DataGrid Grid.Row="1"
-                  Margin="5,2"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  AutoGenerateColumns="False"
-                  ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
+        <DataGrid Grid.Row="4"
+                  Grid.Column="0"
+                Margin="5,2"
+                IsReadOnly="True"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}"/>
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                <DataGridTextColumn Header="Date d'achat" Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                <DataGridTextColumn Header="Montant de l'achat" Binding="{Binding Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
+
     </Grid>
 </UserControl>

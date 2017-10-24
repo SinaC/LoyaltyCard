@@ -108,6 +108,25 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
+        #region Comment
+
+        private string _comment;
+        [DataMember]
+        public string Comment
+        {
+            get { return _comment; }
+            set
+            {
+                if (_comment != value)
+                {
+                    _comment = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         [DataMember]
         public virtual ObservableCollection<Purchase> Purchases { get; set; }
 

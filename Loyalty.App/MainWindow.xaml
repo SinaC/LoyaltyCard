@@ -20,6 +20,9 @@
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="SearchClientTemplate">
             <views:SearchClientView DataContext="{Binding SearchClientViewModel}"/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayStatsTemplate">
+            <views:DisplayStatsView DataContext="{Binding DisplayStatsViewModel}"/>
+        </DataTemplate>
     </Window.Resources>
     <ContentControl Content="{Binding}">
         <ContentControl.Style>
@@ -30,6 +33,9 @@
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Search}">
                         <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Stats}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayStatsTemplate}"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
