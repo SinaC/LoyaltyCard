@@ -2,6 +2,7 @@
 using Loyalty.IBusiness;
 using Loyalty.IDataAccess;
 using LoyaltyCard.Business;
+using LoyaltyCard.Services.Popup;
 
 namespace Loyalty.App
 {
@@ -16,6 +17,7 @@ namespace Loyalty.App
 
             EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(new DataAccess.FileBased.ClientDL());
             EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IPopupService>(new PopupService(this));
 
             MainViewModel vm = new MainViewModel();
             DataContext = vm;

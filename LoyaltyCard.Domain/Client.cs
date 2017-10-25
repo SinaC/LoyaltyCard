@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -53,9 +54,9 @@ namespace LoyaltyCard.Domain
 
         #region BirthDate
 
-        private DateTime _birthDate;
+        private DateTime? _birthDate;
         [DataMember]
-        public DateTime BirthDate
+        public DateTime? BirthDate
         {
             get { return _birthDate; }
             set
@@ -64,6 +65,7 @@ namespace LoyaltyCard.Domain
                 {
                     _birthDate = value;
                     OnPropertyChanged();
+                    OnPropertyChanged("IsBirthDay");
                 }
             }
         }
@@ -108,6 +110,82 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
+        #region Street name
+
+        private string _streetName;
+        [DataMember]
+        public string StreetName
+        {
+            get { return _streetName; }
+            set
+            {
+                if (_streetName != value)
+                {
+                    _streetName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Street number
+
+        private string _streetNumber;
+        [DataMember]
+        public string StreetNumber
+        {
+            get { return _streetNumber; }
+            set
+            {
+                if (_streetNumber != value)
+                {
+                    _streetNumber = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Zip
+
+        private string _zipCode;
+        [DataMember]
+        public string ZipCode
+        {
+            get { return _zipCode; }
+            set
+            {
+                if (_zipCode != value)
+                {
+                    _zipCode = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Zip
+
+        private string _city;
+        [DataMember]
+        public string City
+        {
+            get { return _city; }
+            set
+            {
+                if (_city != value)
+                {
+                    _city = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         #region Comment
 
         private string _comment;
@@ -120,6 +198,44 @@ namespace LoyaltyCard.Domain
                 if (_comment != value)
                 {
                     _comment = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Last voucher date
+
+        private DateTime? _lastVoucherDate;
+        [DataMember]
+        public DateTime? LastVoucherDate
+        {
+            get { return _lastVoucherDate; }
+            set
+            {
+                if (_lastVoucherDate != value)
+                {
+                    _lastVoucherDate = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Categories
+
+        private List<ClientCategories> _categories;
+        [DataMember]
+        public List<ClientCategories> Categories
+        {
+            get { return _categories; }
+            set
+            {
+                if (_categories != value)
+                {
+                    _categories = value;
                     OnPropertyChanged();
                 }
             }
@@ -143,5 +259,6 @@ namespace LoyaltyCard.Domain
 
         public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount); // TODO: should be updated when a purchase is added
         public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault(); // TODO: should be updated when a purchase is added
+        public bool IsBirthDay => BirthDate.HasValue && DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day; // TODO: 29th february =D
     }
 }

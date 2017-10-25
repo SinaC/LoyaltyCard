@@ -110,7 +110,7 @@ namespace Loyalty.App.ViewModels
             {
                 FirstName = $"Pouet{x}",
                 LastName = "Brol",
-                BirthDate = new DateTime(1999, 12, 31),
+                BirthDate = x == 5 ? new DateTime(1976, DateTime.Today.Month, DateTime.Today.Day) : new DateTime(1999, 12, 31),
                 Email = "pouet.brol@hotmail.com",
                 Mobile = null,
                 Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1,1+x/2).Select(y => new Purchase

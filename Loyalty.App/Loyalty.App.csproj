@@ -81,19 +81,25 @@
     </ApplicationDefinition>
     <Compile Include="Behaviours\DataGridBehaviours.cs" />
     <Compile Include="Behaviours\SelectTextOnFocus.cs" />
+    <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Messages\CreateClientMessage.cs" />
     <Compile Include="Messages\DisplayClientMessage.cs" />
     <Compile Include="Messages\DisplayStatsMessage.cs" />
     <Compile Include="Messages\SearchClientMessage.cs" />
+    <Compile Include="Models\ClientCategoryModel.cs" />
     <Compile Include="ViewModels\DisplayClientViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ViewModels\DisplayStatsViewModel.cs" />
+    <Compile Include="ViewModels\Popups\AddPurchaseViewModel.cs" />
     <Compile Include="ViewModels\SearchClientViewModel.cs" />
     <Compile Include="Views\DisplayClientView.xaml.cs">
       <DependentUpon>DisplayClientView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DisplayStatsView.xaml.cs">
       <DependentUpon>DisplayStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popups\AddPurchaseView.xaml.cs">
+      <DependentUpon>AddPurchaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SearchClientView.xaml.cs">
       <DependentUpon>SearchClientView.xaml</DependentUpon>
@@ -115,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DisplayStatsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Popups\AddPurchaseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,6 +189,10 @@
     <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
       <Project>{682c685c-6375-4cea-b6a3-61f2f0c5a008}</Project>
       <Name>LoyaltyCard.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Services\LoyaltyCard.Services.csproj">
+      <Project>{daab6105-1a4d-4af9-9cae-b76204b411d0}</Project>
+      <Name>LoyaltyCard.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

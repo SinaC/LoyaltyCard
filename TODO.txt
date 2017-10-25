@@ -10,6 +10,11 @@ DisplayClient:
 	when editing an existing client, set focus on PurchaseAmount
 	add purchase in the past (2 new fields + 1 new button)
 	select text on Birth date selection (mouse)
+	Esc: Cancel
+
+AddPurchase:
+	Enter: Ok
+	Esc: Cancel
 
 SearchClient
 	LastName, FirstName max width -> TextTrimming if too long + complete value in tooltîp
@@ -19,7 +24,5 @@ Footer with #Client, total EUR from beginning, total EUR for day
 Client merge
 
 known issues:
-	libellé en francais
-	!!!!!! don't use directly Client from DB in form ... add specific fields and fill client when saving
 	birth date starting value 1st jan 1990
 	when a purchase is added on a client, its total is not refreshed

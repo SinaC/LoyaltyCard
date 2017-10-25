@@ -12,7 +12,7 @@
         MinWidth="525"
         MaxHeight="600"
         MaxWidth="800"
-        Title="Loyalty Card Manager">
+        Title="Fidelis PPC">
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayClientTemplate">
             <views:DisplayClientView DataContext="{Binding DisplayClientViewModel}"/>

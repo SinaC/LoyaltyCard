@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Loyalty.App.Views.Popups.AddPurchaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Loyalty.App.Views.Popups"
+             xmlns:popups="clr-namespace:Loyalty.App.ViewModels.Popups"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance popups:AddPurchaseViewModelDesignData, IsDesignTimeCreatable=True}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical">
+            <TextBlock Margin="5,2"
+                       Text="Montant:"/>
+            <xctk:DecimalUpDown x:Name="AmountDecimalUpDown"
+                                Margin="5,2"
+                                Minimum="0"
+                                Increment="0.01"
+                                FormatString="C"
+                                ValueChanged="DecimalUpDown_OnValueChanged"
+                                GotFocus="DecimalUpDown_OnGotFocus"
+                                Value="{Binding Amount}"/>
+        </StackPanel>
+        <!-- Ok/Cancel -->
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+            <Button Margin="5,2"
+                    Command="{Binding OkCommand}">
+                <TextBlock Text="Ajouter"/>
+            </Button>
+            <Button Margin="5,2"
+                    Command="{Binding CancelCommand}">
+                <TextBlock Text="Annuler"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

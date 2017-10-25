@@ -13,6 +13,13 @@
         <Style TargetType="{x:Type TextBlock}" x:Key="RightAlignedTextBlockStyle">
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
+        <Style TargetType="{x:Type DataGridRow}" x:Key="ClientDataGridRowStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsBirthDay}" Value="True">
+                    <Setter Property="Background" Value="Pink" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}">
         <Grid.RowDefinitions>
@@ -83,6 +90,7 @@
                   AutoGenerateColumns="False"
                   SelectedItem="{Binding SelectedClient}"
                   behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditClientCommand}"
+                  RowStyle="{StaticResource ClientDataGridRowStyle}"
                   ItemsSource="{Binding Clients}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
