@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientBL.cs" />
+    <Compile Include="GeoBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -48,13 +49,13 @@
       <Project>{38d20e7f-9510-4b80-8755-1def2ef07bcf}</Project>
       <Name>EasyIoc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Loyalty.IBusiness\Loyalty.IBusiness.csproj">
+    <ProjectReference Include="..\LoyaltyCard.IBusiness\LoyaltyCard.IBusiness.csproj">
       <Project>{15919C85-1781-4608-8333-AE6DEBFCF7AE}</Project>
-      <Name>Loyalty.IBusiness</Name>
+      <Name>LoyaltyCard.IBusiness</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Loyalty.IDataAccess\Loyalty.IDataAccess.csproj">
+    <ProjectReference Include="..\LoyaltyCard.IDataAccess\LoyaltyCard.IDataAccess.csproj">
       <Project>{65C7761D-9EAC-4B48-B81C-BCD402F38597}</Project>
-      <Name>Loyalty.IDataAccess</Name>
+      <Name>LoyaltyCard.IDataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
       <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>

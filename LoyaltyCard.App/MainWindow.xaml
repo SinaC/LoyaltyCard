@@ -1,0 +1,44 @@
+﻿<Window x:Class="LoyaltyCard.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LoyaltyCard.App"
+        xmlns:views="clr-namespace:LoyaltyCard.App.Views"
+        xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:MainViewModelDesignData, IsDesignTimeCreatable=True}"
+        MinHeight="350"
+        MinWidth="525"
+        MaxHeight="600"
+        MaxWidth="800"
+        Title="Fidelis PPC">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayClientTemplate">
+            <views:DisplayClientView DataContext="{Binding DisplayClientViewModel}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="SearchClientTemplate">
+            <views:SearchClientView DataContext="{Binding SearchClientViewModel}"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayStatsTemplate">
+            <views:DisplayStatsView DataContext="{Binding DisplayStatsViewModel}"/>
+        </DataTemplate>
+    </Window.Resources>
+    <ContentControl Content="{Binding}">
+        <ContentControl.Style>
+            <Style TargetType="{x:Type ContentControl}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Display}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayClientTemplate}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Search}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Stats}">
+                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayStatsTemplate}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ContentControl.Style>
+    </ContentControl>
+</Window>

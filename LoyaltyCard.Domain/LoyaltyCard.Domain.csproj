@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CityByZip.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientCategories.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

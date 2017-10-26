@@ -1,6 +1,7 @@
 DB instead of Xml
 
 birth day automatic mail
+get GPS coordinates from client address -> will be used to do a chart with distance from client to shop
 
 Statistics:
 	to be defined by end-user

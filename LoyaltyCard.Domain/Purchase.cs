@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace LoyaltyCard.Domain
 {
-    [DataContract]
+    [DataContract(Namespace = "")]
     public class Purchase
     {
         [DataMember]

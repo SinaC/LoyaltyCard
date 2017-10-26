@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Loyalty.DataAccess.FileBased;
-using Loyalty.IBusiness;
-using Loyalty.IDataAccess;
+using LoyaltyCard.DataAccess.FileBased;
+using LoyaltyCard.IBusiness;
+using LoyaltyCard.IDataAccess;
 using LoyaltyCard.Business;
 using LoyaltyCard.Domain;
 

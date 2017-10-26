@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Loyalty.IBusiness;
+using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
-using Loyalty.IDataAccess;
+using LoyaltyCard.IDataAccess;
 
 namespace LoyaltyCard.Business
 {

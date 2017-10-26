@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 
 namespace LoyaltyCard.Domain
 {
-    [DataContract]
+    [DataContract(Namespace = "")]
     public class Client : INotifyPropertyChanged
     {
         [DataMember]
@@ -167,7 +167,7 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
-        #region Zip
+        #region City
 
         private string _city;
         [DataMember]
@@ -260,5 +260,6 @@ namespace LoyaltyCard.Domain
         public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount); // TODO: should be updated when a purchase is added
         public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault(); // TODO: should be updated when a purchase is added
         public bool IsBirthDay => BirthDate.HasValue && DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day; // TODO: 29th february =D
+        public int? Age => BirthDate.HasValue ? DateTime.Today.Year - BirthDate.Value.Date.Year : (int?)null;
     }
 }

@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6ECA25F-AA36-4495-AFA8-5069E0B0AFA6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{15919C85-1781-4608-8333-AE6DEBFCF7AE}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LoyaltyCard.ConsoleApp</RootNamespace>
-    <AssemblyName>LoyaltyCard.ConsoleApp</AssemblyName>
+    <RootNamespace>LoyaltyCard.IBusiness</RootNamespace>
+    <AssemblyName>LoyaltyCard.IBusiness</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,35 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="IClientBL.cs" />
+    <Compile Include="IGeoBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Libraries\EasyIoc\EasyIoc.csproj">
-      <Project>{38d20e7f-9510-4b80-8755-1def2ef07bcf}</Project>
-      <Name>EasyIoc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.DataAccess.FileBased\LoyaltyCard.DataAccess.FileBased.csproj">
-      <Project>{14ef3fdd-92fd-495a-94ed-59ff467f2b3a}</Project>
-      <Name>LoyaltyCard.DataAccess.FileBased</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.IBusiness\LoyaltyCard.IBusiness.csproj">
-      <Project>{15919c85-1781-4608-8333-ae6debfcf7ae}</Project>
-      <Name>LoyaltyCard.IBusiness</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.IDataAccess\LoyaltyCard.IDataAccess.csproj">
-      <Project>{65c7761d-9eac-4b48-b81c-bcd402f38597}</Project>
-      <Name>LoyaltyCard.IDataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.Business\LoyaltyCard.Business.csproj">
-      <Project>{cf0c4a8a-92c4-4fd4-ae22-3cbcc104d2a9}</Project>
-      <Name>LoyaltyCard.Business</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
       <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>
       <Name>LoyaltyCard.Domain</Name>
