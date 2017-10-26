@@ -4,7 +4,8 @@ birth day automatic mail
 get GPS coordinates from client address -> will be used to do a chart with distance from client to shop
 
 Statistics:
-	to be defined by end-user
+	Bar Graph avec montant moyen/tranche d'âge
+	Graphique? de regroupement/ commune. Créer des communes et regrouper nbre de personne suivant le code postal. Créer 3 zones Bruxelles, BW, Wallonie avec un % de client.
 
 DisplayClient:
 	when creating a new client, set focus on LastName
@@ -23,7 +24,3 @@ SearchClient
 Footer with #Client, total EUR from beginning, total EUR for day
 
 Client merge
-
-known issues:
-	birth date starting value 1st jan 1990
-	when a purchase is added on a client, its total is not refreshed

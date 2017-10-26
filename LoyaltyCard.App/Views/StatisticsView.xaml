@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:StatisticsViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="600">
@@ -19,8 +20,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Week best client -->
         <StackPanel Grid.Row="0"
                     Orientation="Vertical">
             <TextBlock Margin="5,2"
@@ -38,7 +41,15 @@
             </TextBlock>
         </StackPanel>
 
-        <Button Grid.Row="1" 
+        <!-- Age pie chart -->
+        <lvc:PieChart Grid.Row="1"
+                      Series="{Binding ClientByAgeRangeSeries}"
+                      LegendLocation="Bottom"
+                      Hoverable="False"
+                      DataTooltip="{x:Null}"/>
+
+        <!-- Ok -->
+        <Button Grid.Row="2" 
                 Margin="5,2"
                 Width="32"
                 VerticalAlignment="Bottom"
