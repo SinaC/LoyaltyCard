@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:LoyaltyCard.App">
+    <BitmapImage UriSource="Images/euro.png" x:Key="VoucherImage"/>
+    <BitmapImage UriSource="Images/greentick.png" x:Key="OkImage"/>
+    <BitmapImage UriSource="Images/x.png" x:Key="CancelImage"/>
+    <BitmapImage UriSource="Images/plus.png" x:Key="AddPuchaseImage"/>
+</ResourceDictionary>

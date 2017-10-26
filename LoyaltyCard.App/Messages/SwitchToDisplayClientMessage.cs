@@ -2,7 +2,7 @@
 
 namespace LoyaltyCard.App.Messages
 {
-    public class DisplayClientMessage
+    public class SwitchToDisplayClientMessage
     {
         public Client Client { get; set; }
     }

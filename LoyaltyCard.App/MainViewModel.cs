@@ -16,7 +16,7 @@ namespace LoyaltyCard.App
     {
         public DisplayClientViewModel DisplayClientViewModel { get; protected set; }
         public SearchClientViewModel SearchClientViewModel { get; protected set; }
-        public DisplayStatsViewModel DisplayStatsViewModel { get; protected set; }
+        public StatisticsViewModel StatisticsViewModel { get; protected set; }
 
         private Modes _mode;
         public Modes Mode
@@ -29,29 +29,30 @@ namespace LoyaltyCard.App
         {
             DisplayClientViewModel = new DisplayClientViewModel();
             SearchClientViewModel = new SearchClientViewModel();
-            DisplayStatsViewModel = new DisplayStatsViewModel();
+            StatisticsViewModel = new StatisticsViewModel();
 
              Mode = Modes.Search;
 
             Mediator.Default.Register<CreateClientMessage>(this, HandleCreateClientMessage);
-            Mediator.Default.Register<DisplayClientMessage>(this, HandleDisplayClientMessage);
-            Mediator.Default.Register<SearchClientMessage>(this, HandleSearchClientMessage);
-            Mediator.Default.Register< DisplayStatsMessage>(this, HandleDisplayStatsMessage);
+            Mediator.Default.Register<SwitchToDisplayClientMessage>(this, HandleSwitchToDisplayClientMessage);
+            Mediator.Default.Register<SwitchToSearchClientMessage>(this, HandleSwitchToSearchClientMessage);
+            Mediator.Default.Register< SwitchToStatisticsMessage>(this, HandleSwitchToStatisticsMessage);
         }
 
-        private void HandleDisplayStatsMessage(DisplayStatsMessage displayStatsMessage)
+        private void HandleSwitchToStatisticsMessage(SwitchToStatisticsMessage switchToStatisticsMessage)
         {
+            StatisticsViewModel.Initialize();
             Mode = Modes.Stats;
         }
 
-        private void HandleSearchClientMessage(SearchClientMessage switchModeMessage)
+        private void HandleSwitchToSearchClientMessage(SwitchToSearchClientMessage switchToSearchClientMessage)
         {
             Mode = Modes.Search;
         }
 
-        private void HandleDisplayClientMessage(DisplayClientMessage displayClientMessage)
+        private void HandleSwitchToDisplayClientMessage(SwitchToDisplayClientMessage switchToDisplayClientMessage)
         {
-            DisplayClientViewModel.Initialize(displayClientMessage.Client);
+            DisplayClientViewModel.Initialize(switchToDisplayClientMessage.Client);
             Mode = Modes.Display;
         }
 
@@ -71,9 +72,9 @@ namespace LoyaltyCard.App
     {
         public MainViewModelDesignData()
         {
-            DisplayClientViewModel = new DisplayDisplayClientViewModelDesignData();
+            DisplayClientViewModel = new DisplayClientViewModelDesignData();
             SearchClientViewModel = new SearchClientViewModelDesignData();
-            DisplayStatsViewModel = new DisplayStatsViewModelDesignData();
+            StatisticsViewModel = new StatisticsViewModelDesignData();
         }
     }
 }

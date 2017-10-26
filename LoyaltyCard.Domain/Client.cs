@@ -17,6 +17,7 @@ namespace LoyaltyCard.Domain
         #region LastName
 
         private string _lastName;
+
         [DataMember]
         public string LastName
         {
@@ -36,6 +37,7 @@ namespace LoyaltyCard.Domain
         #region FirstName
 
         private string _firstName;
+
         [DataMember]
         public string FirstName
         {
@@ -55,6 +57,7 @@ namespace LoyaltyCard.Domain
         #region BirthDate
 
         private DateTime? _birthDate;
+
         [DataMember]
         public DateTime? BirthDate
         {
@@ -66,6 +69,7 @@ namespace LoyaltyCard.Domain
                     _birthDate = value;
                     OnPropertyChanged();
                     OnPropertyChanged("IsBirthDay");
+                    OnPropertyChanged("Age");
                 }
             }
         }
@@ -75,6 +79,7 @@ namespace LoyaltyCard.Domain
         #region Email
 
         private string _email;
+
         [DataMember]
         public string Email
         {
@@ -94,6 +99,7 @@ namespace LoyaltyCard.Domain
         #region Mobile
 
         private string _mobile;
+
         [DataMember]
         public string Mobile
         {
@@ -113,6 +119,7 @@ namespace LoyaltyCard.Domain
         #region Street name
 
         private string _streetName;
+
         [DataMember]
         public string StreetName
         {
@@ -132,6 +139,7 @@ namespace LoyaltyCard.Domain
         #region Street number
 
         private string _streetNumber;
+
         [DataMember]
         public string StreetNumber
         {
@@ -151,6 +159,7 @@ namespace LoyaltyCard.Domain
         #region Zip
 
         private string _zipCode;
+
         [DataMember]
         public string ZipCode
         {
@@ -170,6 +179,7 @@ namespace LoyaltyCard.Domain
         #region City
 
         private string _city;
+
         [DataMember]
         public string City
         {
@@ -189,6 +199,7 @@ namespace LoyaltyCard.Domain
         #region Comment
 
         private string _comment;
+
         [DataMember]
         public string Comment
         {
@@ -208,6 +219,7 @@ namespace LoyaltyCard.Domain
         #region Last voucher date
 
         private DateTime? _lastVoucherDate;
+
         [DataMember]
         public DateTime? LastVoucherDate
         {
@@ -218,6 +230,7 @@ namespace LoyaltyCard.Domain
                 {
                     _lastVoucherDate = value;
                     OnPropertyChanged();
+                    OnPropertyChanged("TotalSinceLastVoucher");
                 }
             }
         }
@@ -227,6 +240,7 @@ namespace LoyaltyCard.Domain
         #region Categories
 
         private List<ClientCategories> _categories;
+
         [DataMember]
         public List<ClientCategories> Categories
         {
@@ -257,9 +271,25 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
-        public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount); // TODO: should be updated when a purchase is added
-        public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault(); // TODO: should be updated when a purchase is added
+        public void PurchaseAdded() // TODO: should be called automatically when Purchases collection is modified
+        {
+            OnPropertyChanged("TotalPurchases");
+            OnPropertyChanged("LastPurchase");
+            OnPropertyChanged("TotalSinceLastVoucher");
+        }
+
+        public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount);
+
+        public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault();
+
+        public decimal? TotalSinceLastVoucher => LastVoucherDate.HasValue
+            ? Purchases?.Where(x => x.Date > LastVoucherDate.Value).Sum(x => x.Amount)
+            : TotalPurchases;
+
         public bool IsBirthDay => BirthDate.HasValue && DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day; // TODO: 29th february =D
-        public int? Age => BirthDate.HasValue ? DateTime.Today.Year - BirthDate.Value.Date.Year : (int?)null;
+
+        public int? Age => BirthDate.HasValue
+            ? DateTime.Today.Year - BirthDate.Value.Date.Year
+            : (int?) null;
     }
 }

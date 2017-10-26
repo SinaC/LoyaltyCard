@@ -8,6 +8,14 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance popups:AddPurchaseViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Images.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,27 +24,34 @@
         <StackPanel Grid.Row="0"
                     Orientation="Vertical">
             <TextBlock Margin="5,2"
+                       Style="{StaticResource LabelTextBlockStyle}"
                        Text="Montant:"/>
             <xctk:DecimalUpDown x:Name="AmountDecimalUpDown"
                                 Margin="5,2"
-                                Minimum="0"
-                                Increment="0.01"
-                                FormatString="C"
+                                Style="{StaticResource DecimalUpDownStyle}"
                                 ValueChanged="DecimalUpDown_OnValueChanged"
                                 GotFocus="DecimalUpDown_OnGotFocus"
-                                Value="{Binding Amount}"/>
+                                Value="{Binding Amount}">
+                <xctk:DecimalUpDown.InputBindings>
+                    <KeyBinding Command="{Binding OkCommand}" Key="Enter"/>
+                    <KeyBinding Command="{Binding OkCommand}" Key="Return"/>
+                    <KeyBinding Command="{Binding CancelCommand}" Key="Escape"/>
+                </xctk:DecimalUpDown.InputBindings>
+            </xctk:DecimalUpDown>
         </StackPanel>
         <!-- Ok/Cancel -->
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
             <Button Margin="5,2"
+                    Width="24"
                     Command="{Binding OkCommand}">
-                <TextBlock Text="Ajouter"/>
+               <Image Source="{StaticResource OkImage}"/>
             </Button>
             <Button Margin="5,2"
+                    Width="24"
                     Command="{Binding CancelCommand}">
-                <TextBlock Text="Annuler"/>
+                <Image Source="{StaticResource CancelImage}"/>
             </Button>
         </StackPanel>
     </Grid>

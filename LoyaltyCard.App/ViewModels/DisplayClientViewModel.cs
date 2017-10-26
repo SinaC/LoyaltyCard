@@ -153,7 +153,7 @@ namespace LoyaltyCard.App.ViewModels
         private void Cancel()
         {
             // Switch to search mode
-            Mediator.Default.Send(new SearchClientMessage());
+            Mediator.Default.Send(new SwitchToSearchClientMessage());
         }
 
         #endregion
@@ -176,6 +176,14 @@ namespace LoyaltyCard.App.ViewModels
                 Amount = amount,
                 Date = DateTime.Now
             };
+            // Add purchase
+            Client.Purchases = Client.Purchases ?? new ObservableCollection<Purchase>();
+            if (Client.Purchases.All(p => p.Id != purchase.Id))
+            {
+                Client.Purchases.Add(purchase);
+                Client.PurchaseAdded();
+            }
+            // Save client and purchase
             ClientBL.SavePurchase(Client, purchase);
         }
 
@@ -184,7 +192,22 @@ namespace LoyaltyCard.App.ViewModels
         #region Voucher
 
         private ICommand _createVoucherCommand;
-        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(CreateVoucher);
+        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(AskVoucherCreationConfirmation);
+
+        private void AskVoucherCreationConfirmation()
+        {
+            PopupService.DisplayQuestion("Emission d'un bon d'achat", 
+                "Etes-vous certain(e) de vouloir émettre un bon d'achat ?", 
+                new QuestionActionButton
+                {
+                    Caption = "Oui",
+                    ClickCallback = CreateVoucher
+                },
+                new QuestionActionButton
+                {
+                    Caption = "Non"
+                });
+        }
 
         private void CreateVoucher()
         {
@@ -229,9 +252,9 @@ namespace LoyaltyCard.App.ViewModels
         }
     }
 
-    public class DisplayDisplayClientViewModelDesignData : DisplayClientViewModel
+    public class DisplayClientViewModelDesignData : DisplayClientViewModel
     {
-        public DisplayDisplayClientViewModelDesignData()
+        public DisplayClientViewModelDesignData()
         {
             Client client = new Client
             {

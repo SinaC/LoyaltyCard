@@ -52,7 +52,7 @@ namespace LoyaltyCard.App.ViewModels
             if (SelectedClient == null)
                 return;
             // Display client
-            Mediator.Default.Send(new DisplayClientMessage
+            Mediator.Default.Send(new SwitchToDisplayClientMessage
             {
                 Client = SelectedClient
             });
@@ -96,10 +96,14 @@ namespace LoyaltyCard.App.ViewModels
 
         private void DisplayStats()
         {
-            Mediator.Default.Send(new DisplayStatsMessage());
+            Mediator.Default.Send(new SwitchToStatisticsMessage());
         }
 
         #endregion
+
+        public void Initialize()
+        {
+        }
     }
 
     public class SearchClientViewModelDesignData : SearchClientViewModel

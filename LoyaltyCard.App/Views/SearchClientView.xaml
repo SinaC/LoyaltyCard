@@ -10,16 +10,19 @@
              d:DataContext="{d:DesignInstance viewModels:SearchClientViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" x:Key="RightAlignedTextBlockStyle">
-            <Setter Property="HorizontalAlignment" Value="Right" />
-        </Style>
-        <Style TargetType="{x:Type DataGridRow}" x:Key="ClientDataGridRowStyle">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding IsBirthDay}" Value="True">
-                    <Setter Property="Background" Value="Pink" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Images.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type DataGridRow}" x:Key="ClientDataGridRowStyle">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsBirthDay}" Value="True">
+                        <Setter Property="Background" Value="Pink" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}">
         <Grid.RowDefinitions>
@@ -95,9 +98,10 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
                 <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
+                <DataGridTextColumn Header="Total depuis dernier bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 <DataGridTextColumn Header="Total des achats" Binding="{Binding TotalPurchases, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                <DataGridTextColumn Header="Total dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                <DataGridTextColumn Header="Montant dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

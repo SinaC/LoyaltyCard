@@ -9,23 +9,20 @@
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:models="clr-namespace:LoyaltyCard.App.Models"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModels:DisplayDisplayClientViewModelDesignData, IsDesignTimeCreatable=True}"
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DataContext="{d:DesignInstance viewModels:DisplayClientViewModelDesignData, IsDesignTimeCreatable=True}"
+             d:DesignHeight="480" d:DesignWidth="600">
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding Client.Purchases}" x:Key="PurchaseItems">
-            <CollectionViewSource.SortDescriptions>
-                <componentModel:SortDescription PropertyName="Date" Direction="Descending"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <Style TargetType="{x:Type TextBlock}" x:Key="RightAlignedTextBlockStyle">
-            <Setter Property="HorizontalAlignment" Value="Right" />
-        </Style>
-        <Style TargetType="{x:Type TextBlock}" x:Key="LabelTextBlockStyle">
-            <Setter Property="FontSize" Value="15"/>
-        </Style>
-        <Style TargetType="{x:Type TextBox}" x:Key="InputTextBoxStyle">
-            <Setter Property="FontSize" Value="15"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Images.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource Source="{Binding Client.Purchases}" x:Key="PurchaseItems">
+                <CollectionViewSource.SortDescriptions>
+                    <componentModel:SortDescription PropertyName="Date" Direction="Descending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <!-- Client info + status + Ok/Cancel | History + Add/Voucher -->
@@ -147,7 +144,8 @@
                             Orientation="Vertical">
                     <TextBlock Style="{StaticResource LabelTextBlockStyle}"
                                Text="Date de naissance:"/>
-                    <DatePicker SelectedDate="{Binding BirthDate}"/>
+                    <DatePicker Style="{StaticResource DatePickerStyle}"
+                                SelectedDate="{Binding BirthDate}"/>
                 </StackPanel>
                 <!-- Mobile -->
                 <StackPanel Grid.Row="4"
@@ -209,19 +207,22 @@
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
                 <Button Margin="5,2"
+                        Width="32"
                         Command="{Binding SaveCommand}">
-                    <TextBlock Text="Sauver"/>
+                    <Image Source="{StaticResource OkImage}"/>
                 </Button>
                 <Button Margin="5,2"
+                        Width="32"
                         Command="{Binding CancelCommand}">
-                    <TextBlock Text="Annuler"/>
+                    <Image Source="{StaticResource CancelImage}"/>
                 </Button>
             </StackPanel>
         </Grid>
-        <!-- Purchase history + new purchase + voucher -->
+        <!-- Purchase history + total since last voucher + new purchase/voucher -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!-- Purchase history -->
@@ -237,17 +238,34 @@
                     <DataGridTextColumn Header="Montant de l'achat" Binding="{Binding Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <!-- New purchase + voucher -->
             <StackPanel Grid.Row="1"
+                        Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,2"
+                               Text="Total depuis dernier bon:"/>
+                    <TextBlock Margin="5,2"
+                               Text="{Binding Client.TotalSinceLastVoucher, StringFormat=C, TargetNullValue=Néant}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,2"
+                               Text="Date du dernier bon:"/>
+                    <TextBlock Margin="5,2"
+                               Text="{Binding Client.LastVoucherDate, StringFormat=dd/MM/yyyy, TargetNullValue=Néant}"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- New purchase/voucher -->
+            <StackPanel Grid.Row="2"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
                 <Button Margin="5,2"
+                        Width="32"
                         Command="{Binding AddPurchaseCommand}">
-                    <TextBlock Text="Ajouter vente"/>
+                    <Image Source="{StaticResource AddPuchaseImage}"/>
                 </Button>
                 <Button Margin="5,2"
+                        Width="32"
                         Command="{Binding CreateVoucherCommand}">
-                    <TextBlock Text="Emettre bon d'achat"/>
+                    <Image Source="{StaticResource VoucherImage}"/>
                 </Button>
             </StackPanel>
         </Grid>

@@ -82,21 +82,22 @@
     <Compile Include="Behaviours\DataGridBehaviours.cs" />
     <Compile Include="Behaviours\SelectTextOnFocus.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />
+    <Compile Include="Helpers\IEnumerableExtensions.cs" />
     <Compile Include="Messages\CreateClientMessage.cs" />
-    <Compile Include="Messages\DisplayClientMessage.cs" />
-    <Compile Include="Messages\DisplayStatsMessage.cs" />
-    <Compile Include="Messages\SearchClientMessage.cs" />
+    <Compile Include="Messages\SwitchToDisplayClientMessage.cs" />
+    <Compile Include="Messages\SwitchToStatisticsMessage.cs" />
+    <Compile Include="Messages\SwitchToSearchClientMessage.cs" />
     <Compile Include="Models\ClientCategoryModel.cs" />
     <Compile Include="ViewModels\DisplayClientViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="ViewModels\DisplayStatsViewModel.cs" />
+    <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\Popups\AddPurchaseViewModel.cs" />
     <Compile Include="ViewModels\SearchClientViewModel.cs" />
     <Compile Include="Views\DisplayClientView.xaml.cs">
       <DependentUpon>DisplayClientView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DisplayStatsView.xaml.cs">
-      <DependentUpon>DisplayStatsView.xaml</DependentUpon>
+    <Compile Include="Views\StatisticsView.xaml.cs">
+      <DependentUpon>StatisticsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Popups\AddPurchaseView.xaml.cs">
       <DependentUpon>AddPurchaseView.xaml</DependentUpon>
@@ -104,6 +105,10 @@
     <Compile Include="Views\SearchClientView.xaml.cs">
       <DependentUpon>SearchClientView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Images.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -116,11 +121,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DisplayClientView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DisplayStatsView.xaml">
+    <Page Include="Views\StatisticsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,7 +204,14 @@
       <Name>LoyaltyCard.Services</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\euro.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\greentick.png" />
+    <Resource Include="Images\plus.png" />
+    <Resource Include="Images\x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

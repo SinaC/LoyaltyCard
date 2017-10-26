@@ -26,7 +26,8 @@ namespace LoyaltyCard.App.ViewModels.Popups
         {
             PopupService?.Close(this);
 
-            _okAction?.Invoke(Amount);
+            if (Amount > 0)
+                _okAction?.Invoke(Amount);
         }
 
         private ICommand _cancelCommand;

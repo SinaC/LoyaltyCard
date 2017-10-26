@@ -79,8 +79,6 @@ namespace LoyaltyCard.DataAccess.FileBased
 
         public void SavePurchase(Client client, Purchase purchase)
         {
-            client.Purchases = client.Purchases ?? new ObservableCollection<Purchase>();
-            client.Purchases.Add(purchase);
             SaveClient(client);
         }
 

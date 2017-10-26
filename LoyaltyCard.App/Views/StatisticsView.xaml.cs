@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace LoyaltyCard.App.Views
 {
     /// <summary>
-    /// Interaction logic for DisplayStatsView.xaml
+    /// Interaction logic for StatisticsView.xaml
     /// </summary>
-    public partial class DisplayStatsView : UserControl
+    public partial class StatisticsView : UserControl
     {
-        public DisplayStatsView()
+        public StatisticsView()
         {
             InitializeComponent();
         }

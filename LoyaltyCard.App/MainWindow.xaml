@@ -8,10 +8,8 @@
         xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainViewModelDesignData, IsDesignTimeCreatable=True}"
-        MinHeight="350"
-        MinWidth="525"
-        MaxHeight="600"
-        MaxWidth="800"
+        Height="600"
+        Width="800"
         Title="Fidelis PPC">
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayClientTemplate">
@@ -20,8 +18,8 @@
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="SearchClientTemplate">
             <views:SearchClientView DataContext="{Binding SearchClientViewModel}"/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayStatsTemplate">
-            <views:DisplayStatsView DataContext="{Binding DisplayStatsViewModel}"/>
+        <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="StatisticsTemplate">
+            <views:StatisticsView DataContext="{Binding StatisticsViewModel}"/>
         </DataTemplate>
     </Window.Resources>
     <ContentControl Content="{Binding}">
@@ -35,7 +33,7 @@
                         <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Stats}">
-                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayStatsTemplate}"/>
+                        <Setter Property="ContentTemplate" Value="{StaticResource StatisticsTemplate}"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

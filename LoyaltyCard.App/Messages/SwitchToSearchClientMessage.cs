@@ -1,6 +1,6 @@
 ﻿namespace LoyaltyCard.App.Messages
 {
-    public class DisplayStatsMessage
+    public class SwitchToSearchClientMessage
     {
     }
 }
