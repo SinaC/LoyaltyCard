@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:behaviours="clr-namespace:LoyaltyCard.App.Behaviours"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:models="clr-namespace:LoyaltyCard.App.Models"
@@ -28,7 +27,7 @@
             <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}">
+    <Grid behaviours:EnterKeyTraversal.IsEnabled="True">
         <Grid.InputBindings>
             <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
             <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddPurchaseCommand}"/>
@@ -39,7 +38,6 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-
         <!-- Client info + status + Ok/Cancel -->
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
@@ -155,7 +153,8 @@
                             Orientation="Vertical">
                     <TextBlock Style="{StaticResource LabelTextBlockStyle}"
                                Text="Date de naissance:"/>
-                    <DatePicker x:Name="BirthDatePicker"  Style="{StaticResource DatePickerStyle}"
+                    <DatePicker x:Name="BirthDatePicker"
+                                Style="{StaticResource DatePickerStyle}"
                                 GotFocus="DatePicker_OnGotFocus"
                                 SelectedDate="{Binding BirthDate}"/>
                 </StackPanel>
@@ -175,6 +174,7 @@
                               Grid.Column="0"
                               Grid.ColumnSpan="4"
                               Margin="5,2"
+                              Focusable="False"
                               ItemsSource="{Binding Categories}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -233,21 +233,22 @@
             </Grid>
 
             <!-- Ok/Cancel -->
-            <UniformGrid Grid.Row="1"
-                         Margin="5,2"
-                         HorizontalAlignment="Stretch"
-                         Rows="1">
+            <StackPanel Grid.Row="1"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
                 <Button Width="32"
+                        Margin="35,2"
                         Command="{Binding SaveCommand}">
                     <Image Style="{StaticResource AliasedImageStyle}"
                            Source="{StaticResource OkImage}"/>
                 </Button>
                 <Button Width="32"
+                        Margin="35,2"
                         Command="{Binding CancelCommand}">
                     <Image Style="{StaticResource AliasedImageStyle}"
                            Source="{StaticResource CancelImage}"/>
                 </Button>
-            </UniformGrid>
+            </StackPanel>
         </Grid>
         <!-- Purchase history + total since last voucher + new purchase/voucher -->
         <Grid Grid.Column="1">
@@ -265,8 +266,12 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date d'achat" Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                    <DataGridTextColumn Header="Montant de l'achat" Binding="{Binding Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="Date d'achat" 
+                                        Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" 
+                                        ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="Montant de l'achat" 
+                                        Binding="{Binding Amount, StringFormat=C}" 
+                                        ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Grid.Row="1"
@@ -285,21 +290,23 @@
                 </StackPanel>
             </StackPanel>
             <!-- New purchase/voucher -->
-            <UniformGrid Grid.Row="2"
-                         Margin="5,2"
-                         HorizontalAlignment="Stretch"
-                         Rows="1">
+            <StackPanel Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
                 <Button Width="32"
+                        Margin="35,2"
                         Command="{Binding AddPurchaseCommand}">
                     <Image Style="{StaticResource AliasedImageStyle}"
                            Source="{StaticResource AddPuchaseImage}"/>
                 </Button>
                 <Button Width="32"
+                        Margin="35,2"
                         Command="{Binding CreateVoucherCommand}">
                     <Image Style="{StaticResource AliasedImageStyle}"
                            Source="{StaticResource VoucherImage}"/>
                 </Button>
-            </UniformGrid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>
+

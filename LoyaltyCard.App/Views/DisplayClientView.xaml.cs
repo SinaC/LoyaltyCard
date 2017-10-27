@@ -30,18 +30,7 @@ namespace LoyaltyCard.App.Views
 
             //https://social.msdn.microsoft.com/Forums/vstudio/en-US/855d5127-e66c-47b6-ae0a-744a203c9096/no-gotfocus-event-for-wpf-datepickertextbox?forum=wpf
             // GotFocus event is handled internally by DatePicker
-            BirthDatePicker.AddHandler(DatePicker.GotFocusEvent, new RoutedEventHandler(DatePicker_OnGotFocus), true);
-
-            //Loaded += OnLoaded;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
-        {
-            LastNameTextBox.Dispatcher.BeginInvoke((Action)delegate
-            {
-                LastNameTextBox.Focus();
-                Keyboard.Focus(LastNameTextBox);
-            }, DispatcherPriority.Input);
+            BirthDatePicker.AddHandler(GotFocusEvent, new RoutedEventHandler(DatePicker_OnGotFocus), true);
         }
 
         private void DatePicker_OnGotFocus(object sender, RoutedEventArgs e)
@@ -57,6 +46,6 @@ namespace LoyaltyCard.App.Views
             }, DispatcherPriority.Render);
         }
 
-        public IInputElement ElementToFocus => LastNameTextBox;
+        public IInputElement ElementToFocusOnActivation => LastNameTextBox;
     }
 }

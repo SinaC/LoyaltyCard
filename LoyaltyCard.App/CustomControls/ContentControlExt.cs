@@ -20,7 +20,7 @@ namespace LoyaltyCard.App.CustomControls
             Dispatcher.BeginInvoke((Action)(() => {
                 UserControl uc = FindVisualChild<UserControl>(this);
                 IFocusInputElementOnActivation elementToFocus = uc as IFocusInputElementOnActivation;
-                elementToFocus?.ElementToFocus?.Focus();
+                elementToFocus?.ElementToFocusOnActivation?.Focus();
             }), DispatcherPriority.Render);
         }
 

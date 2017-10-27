@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:popups="clr-namespace:LoyaltyCard.App.ViewModels.Popups"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:behaviours="clr-namespace:LoyaltyCard.App.Behaviours"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance popups:AddPurchaseViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -16,7 +17,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}"
+          behaviours:EnterKeyTraversal.IsEnabled="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -57,20 +59,21 @@
             </xctk:DecimalUpDown>
         </StackPanel>
         <!-- Ok/Cancel -->
-        <UniformGrid Grid.Row="2"
-                     Margin="5,2"
-                     HorizontalAlignment="Stretch"
-                     Rows="1">
+        <StackPanel Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
             <Button Width="24"
+                    Margin="25,2"
                     Command="{Binding OkCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource OkImage}"/>
             </Button>
             <Button Width="24"
+                    Margin="25,2"
                     Command="{Binding CancelCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource CancelImage}"/>
             </Button>
-        </UniformGrid>
+        </StackPanel>
     </Grid>
 </UserControl>

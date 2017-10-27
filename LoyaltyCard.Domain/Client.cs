@@ -14,6 +14,9 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public Guid Id { get; set; }
 
+        [DataMember]
+        public DateTime? CreationDate { get; set; }
+
         #region LastName
 
         private string _lastName;

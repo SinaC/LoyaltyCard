@@ -11,5 +11,7 @@ SearchClient
 	LastName, FirstName max width -> TextTrimming if too long + complete value in tooltîp
 
 Footer with #Client, total EUR from beginning, total EUR for day
+ -> use creation date
+ continue FooterData, add DL/BL to fill FooterData, use FooterData in FooterVM init
 
 Client merge

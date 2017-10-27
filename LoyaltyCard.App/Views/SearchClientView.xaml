@@ -25,7 +25,9 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <!--  FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}" -->
+    <!--<UserControl.CommandBindings>
+        <CommandBinding Command="ComponentCommands.MoveFocusDown" Executed="CommandBinding_Executed" />
+    </UserControl.CommandBindings>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -53,6 +55,7 @@
                     <TextBox.InputBindings>
                         <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
                         <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                        <!--<KeyBinding Command="ComponentCommands.MoveFocusDown" Gesture="DOWN"/>-->
                     </TextBox.InputBindings>
                 </TextBox>
             </StackPanel>
@@ -94,8 +97,9 @@
             </Button>
         </Grid>
         <!-- List -->
-        <DataGrid Margin="5,2"
+        <DataGrid x:Name="ClientsDataGrid"
                   Grid.Row="1"
+                  Margin="5,2"
                   IsReadOnly="True"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
@@ -104,6 +108,10 @@
                   behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditClientCommand}"
                   RowStyle="{StaticResource ClientDataGridRowStyle}"
                   ItemsSource="{Binding Clients}">
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding EditClientCommand}"/>
+                <KeyBinding Key="Return" Command="{Binding EditClientCommand}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
                 <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
