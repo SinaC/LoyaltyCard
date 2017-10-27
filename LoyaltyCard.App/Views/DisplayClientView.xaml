@@ -8,7 +8,10 @@
              xmlns:behaviours="clr-namespace:LoyaltyCard.App.Behaviours"
              xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:models="clr-namespace:LoyaltyCard.App.Models"
+             xmlns:converters="clr-namespace:LoyaltyCard.App.Converters"
+             xmlns:domain="clr-namespace:LoyaltyCard.Domain;assembly=LoyaltyCard.Domain"
              mc:Ignorable="d" 
+             Focusable="False"
              d:DataContext="{d:DesignInstance viewModels:DisplayClientViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="480" d:DesignWidth="600">
     <UserControl.Resources>
@@ -22,9 +25,15 @@
                     <componentModel:SortDescription PropertyName="Date" Direction="Descending"/>
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
+            <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}">
+        <Grid.InputBindings>
+            <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
+            <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddPurchaseCommand}"/>
+            <KeyBinding Key="B" Modifiers="Alt" Command="{Binding CreateVoucherCommand}"/>
+        </Grid.InputBindings>
         <!-- Client info + status + Ok/Cancel | History + Add/Voucher -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -45,8 +54,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -62,7 +72,8 @@
                             Orientation="Vertical">
                     <TextBlock Style="{StaticResource LabelTextBlockStyle}"
                                Text="Nom:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
+                    <TextBox x:Name="LastNameTextBox"
+                             Style="{StaticResource InputTextBoxStyle}"
                              behaviours:SelectTextOnFocus.Active="True"
                              Text="{Binding LastName}"/>
                 </StackPanel>
@@ -78,20 +89,9 @@
                              behaviours:SelectTextOnFocus.Active="True"
                              Text="{Binding FirstName}"/>
                 </StackPanel>
-                <!-- Street number -->
-                <StackPanel Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="N° rue:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding StreetNumber}"/>
-                </StackPanel>
                 <!-- Street -->
                 <StackPanel Grid.Row="1"
-                            Grid.Column="1"
+                            Grid.Column="0"
                             Grid.ColumnSpan="3"
                             Margin="5,2"
                             Orientation="Vertical">
@@ -100,6 +100,17 @@
                     <TextBox Style="{StaticResource InputTextBoxStyle}"
                              behaviours:SelectTextOnFocus.Active="True"
                              Text="{Binding StreetName}"/>
+                </StackPanel>
+                <!-- Street number -->
+                <StackPanel Grid.Row="1"
+                            Grid.Column="3"
+                            Margin="5,2"
+                            Orientation="Vertical">
+                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                               Text="N° rue:"/>
+                    <TextBox Style="{StaticResource InputTextBoxStyle}"
+                             behaviours:SelectTextOnFocus.Active="True"
+                             Text="{Binding StreetNumber}"/>
                 </StackPanel>
                 <!-- Zip -->
                 <StackPanel Grid.Row="2"
@@ -144,7 +155,8 @@
                             Orientation="Vertical">
                     <TextBlock Style="{StaticResource LabelTextBlockStyle}"
                                Text="Date de naissance:"/>
-                    <DatePicker Style="{StaticResource DatePickerStyle}"
+                    <DatePicker x:Name="BirthDatePicker"  Style="{StaticResource DatePickerStyle}"
+                                GotFocus="DatePicker_OnGotFocus"
                                 SelectedDate="{Binding BirthDate}"/>
                 </StackPanel>
                 <!-- Mobile -->
@@ -158,27 +170,8 @@
                     <TextBox Style="{StaticResource InputTextBoxStyle}"
                              Text="{Binding Mobile}"/>
                 </StackPanel>
-                <!-- Comment -->
-                <Grid Grid.Row="5"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="4"
-                      Margin="5,2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Commentaire:"/>
-                    <TextBox Grid.Row="1"
-                             TextWrapping="Wrap"
-                             VerticalScrollBarVisibility="Auto" 
-                             AcceptsReturn="True"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Text="{Binding Comment}"/>
-                </Grid>
                 <!-- Status -->
-                <ItemsControl Grid.Row="6"
+                <ItemsControl Grid.Row="5"
                               Grid.Column="0"
                               Grid.ColumnSpan="4"
                               Margin="5,2"
@@ -200,23 +193,61 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <!-- Sex -->
+                <StackPanel Grid.Row="6"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="4"
+                            Orientation="Horizontal">
+                    <RadioButton Margin="5,2"
+                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Male}}">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Homme"/>
+                    </RadioButton>
+                    <RadioButton Margin="5,2"
+                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Female}}">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Femme"/>
+                    </RadioButton>
+                    <RadioButton Margin="5,2"
+                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Unspecified}}">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Non-spécifié"/>
+                    </RadioButton>
+                </StackPanel>
+                <!-- Comment -->
+                <Grid Grid.Row="7"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="4"
+                      Margin="5,2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Style="{StaticResource LabelTextBlockStyle}"
+                               Text="Commentaire:"/>
+                    <TextBox Grid.Row="1"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto" 
+                             AcceptsReturn="True"
+                             Style="{StaticResource InputTextBoxStyle}"
+                             Text="{Binding Comment}"/>
+                </Grid>
             </Grid>
 
             <!-- Ok/Cancel -->
-            <StackPanel Grid.Row="1"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <Button Margin="5,2"
-                        Width="32"
+            <UniformGrid Grid.Row="1"
+                         Margin="5,2"
+                         HorizontalAlignment="Stretch"
+                         Rows="1">
+                <Button Width="32"
                         Command="{Binding SaveCommand}">
-                    <Image Source="{StaticResource OkImage}"/>
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource OkImage}"/>
                 </Button>
-                <Button Margin="5,2"
-                        Width="32"
+                <Button Width="32"
                         Command="{Binding CancelCommand}">
-                    <Image Source="{StaticResource CancelImage}"/>
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource CancelImage}"/>
                 </Button>
-            </StackPanel>
+            </UniformGrid>
         </Grid>
         <!-- Purchase history + total since last voucher + new purchase/voucher -->
         <Grid Grid.Column="1">
@@ -254,20 +285,21 @@
                 </StackPanel>
             </StackPanel>
             <!-- New purchase/voucher -->
-            <StackPanel Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <Button Margin="5,2"
-                        Width="32"
+            <UniformGrid Grid.Row="2"
+                         Margin="5,2"
+                         HorizontalAlignment="Stretch"
+                         Rows="1">
+                <Button Width="32"
                         Command="{Binding AddPurchaseCommand}">
-                    <Image Source="{StaticResource AddPuchaseImage}"/>
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource AddPuchaseImage}"/>
                 </Button>
-                <Button Margin="5,2"
-                        Width="32"
+                <Button Width="32"
                         Command="{Binding CreateVoucherCommand}">
-                    <Image Source="{StaticResource VoucherImage}"/>
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource VoucherImage}"/>
                 </Button>
-            </StackPanel>
+            </UniformGrid>
         </Grid>
     </Grid>
 </UserControl>

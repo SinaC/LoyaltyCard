@@ -257,6 +257,26 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
+        #region Sex
+
+        private Sex _sex;
+
+        [DataMember]
+        public Sex Sex
+        {
+            get { return _sex; }
+            set
+            {
+                if (_sex != value)
+                {
+                    _sex = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
         [DataMember]
         public virtual ObservableCollection<Purchase> Purchases { get; set; }
 

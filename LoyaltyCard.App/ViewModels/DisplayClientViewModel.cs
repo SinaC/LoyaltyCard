@@ -106,6 +106,17 @@ namespace LoyaltyCard.App.ViewModels
             set { Set(() => Comment, ref _comment, value); }
         }
 
+        #region Sex
+
+        private Sex _sex;
+        public Sex Sex
+        {
+            get { return _sex; }
+            set { Set(() => Sex, ref _sex, value); }
+        }
+
+        #endregion
+
         // Create once then each item is selected/unselected in Initialize/UI
         private List<ClientCategoryModel> _categories;
         public List<ClientCategoryModel> Categories
@@ -135,12 +146,13 @@ namespace LoyaltyCard.App.ViewModels
             Client.ZipCode = ZipCode;
             Client.City = City;
             Client.Comment = Comment;
+            Client.Sex = Sex;
             Client.Categories = Categories.Where(x => x.IsSelected).Select(x => x.Category).ToList();
 
             ClientBL.SaveClient(Client);
 
-            //// Switch to search mode
-            //Mediator.Default.Send(new SearchClientMessage());
+            // Switch to search mode
+            Mediator.Default.Send(new SwitchToSearchClientMessage());
         }
 
         #endregion
@@ -169,12 +181,12 @@ namespace LoyaltyCard.App.ViewModels
             PopupService.DisplayModal(vm, "Ajout achat");
         }
 
-        private void AddPurchase(decimal amount)
+        private void AddPurchase(decimal amount, DateTime when)
         {
             Purchase purchase = new Purchase
             {
                 Amount = amount,
-                Date = DateTime.Now
+                Date = when
             };
             // Add purchase
             Client.Purchases = Client.Purchases ?? new ObservableCollection<Purchase>();
@@ -246,6 +258,7 @@ namespace LoyaltyCard.App.ViewModels
             ZipCode = client.ZipCode;
             City = client.City;
             Comment = client.Comment;
+            Sex = client.Sex;
             foreach (ClientCategoryModel categoryModel in Categories)
                 categoryModel.IsSelected = client.Categories?.Contains(categoryModel.Category) == true;
             _automaticCitySearch = true;

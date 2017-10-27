@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:LoyaltyCard.App"
         xmlns:views="clr-namespace:LoyaltyCard.App.Views"
         xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
+        xmlns:customControls="clr-namespace:LoyaltyCard.App.CustomControls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainViewModelDesignData, IsDesignTimeCreatable=True}"
         Height="600"
@@ -22,21 +23,34 @@
             <views:StatisticsView DataContext="{Binding StatisticsViewModel}"/>
         </DataTemplate>
     </Window.Resources>
-    <ContentControl Content="{Binding}">
-        <ContentControl.Style>
-            <Style TargetType="{x:Type ContentControl}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Display}">
-                        <Setter Property="ContentTemplate" Value="{StaticResource DisplayClientTemplate}"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Search}">
-                        <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Stats}">
-                        <Setter Property="ContentTemplate" Value="{StaticResource StatisticsTemplate}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ContentControl.Style>
-    </ContentControl>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Mode view -->
+        <customControls:ContentControlExt Grid.Row="0"
+                                          Focusable="False"
+                                          Content="{Binding}">
+            <customControls:ContentControlExt.Style>
+                <Style TargetType="{x:Type ContentControl}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Display}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource DisplayClientTemplate}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Search}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource SearchClientTemplate}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:Modes.Stats}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource StatisticsTemplate}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </customControls:ContentControlExt.Style>
+        </customControls:ContentControlExt>
+        <!-- Footer -->
+       <views:FooterView Margin="5,2"
+                         Grid.Row="1"
+                         DataContext="{Binding FooterViewModel}"/>
+    </Grid>
 </Window>

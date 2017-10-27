@@ -38,12 +38,12 @@ namespace LoyaltyCard.DataAccess.FileBased
             if (!string.IsNullOrWhiteSpace(firstNameFilter))
             {
                 firstNameFilter = firstNameFilter.ToLowerInvariant();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && x.FirstName.ToLowerInvariant().Contains(firstNameFilter));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && x.FirstName.ToLowerInvariant().StartsWith(firstNameFilter));
             }
             if (!string.IsNullOrWhiteSpace(lastNameFilter))
             {
                 lastNameFilter = lastNameFilter.ToLowerInvariant();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.LastName) && x.LastName.ToLowerInvariant().Contains(lastNameFilter));
+                query = query.Where(x => !string.IsNullOrWhiteSpace(x.LastName) && x.LastName.ToLowerInvariant().StartsWith(lastNameFilter));
             }
 
             return query.ToList();

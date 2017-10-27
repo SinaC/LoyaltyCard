@@ -11,7 +11,14 @@ namespace LoyaltyCard.App.ViewModels.Popups
     {
         private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
 
-        private readonly Action<decimal> _okAction;
+        private readonly Action<decimal, DateTime> _okAction;
+
+        private DateTime? _selectedDate;
+        public DateTime? SelectedDate
+        {
+            get { return _selectedDate; }
+            set { Set(() => SelectedDate, ref _selectedDate, value); }
+        }
 
         private decimal _amount;
         public decimal Amount
@@ -27,7 +34,10 @@ namespace LoyaltyCard.App.ViewModels.Popups
             PopupService?.Close(this);
 
             if (Amount > 0)
-                _okAction?.Invoke(Amount);
+            {
+                DateTime date = SelectedDate ?? DateTime.Now;
+                _okAction?.Invoke(Amount, date);
+            }
         }
 
         private ICommand _cancelCommand;
@@ -37,7 +47,7 @@ namespace LoyaltyCard.App.ViewModels.Popups
             PopupService?.Close(this);
         }
 
-        public AddPurchaseViewModel(Action<decimal> okAction)
+        public AddPurchaseViewModel(Action<decimal, DateTime> okAction)
         {
             _okAction = okAction;
         }
@@ -45,7 +55,7 @@ namespace LoyaltyCard.App.ViewModels.Popups
 
     public class AddPurchaseViewModelDesignData : AddPurchaseViewModel
     {
-        public AddPurchaseViewModelDesignData() : base(d => { })
+        public AddPurchaseViewModelDesignData() : base((amount, when) => { })
         {
         }
     }

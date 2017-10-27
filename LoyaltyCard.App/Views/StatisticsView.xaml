@@ -25,31 +25,53 @@
 
         <!-- Week best client -->
         <StackPanel Grid.Row="0"
-                    Orientation="Vertical">
-            <TextBlock Margin="5,2"
-                       Style="{StaticResource LabelTextBlockStyle}"
-                       Text="Client de la semaine:"/>
-            <TextBlock Margin="5,2"
-                       Style="{StaticResource LabelTextBlockStyle}">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0} {1} avec un montant de {2:C}">
-                        <Binding Path="WeekBestClient.LastName"/>
-                        <Binding Path="WeekBestClient.FirstName"/>
-                        <Binding Path="WeekBestClientTotal"/>
-                    </MultiBinding>
-                </TextBlock.Text>
+                    Margin="5,2"
+                    Orientation="Horizontal">
+            <TextBlock>
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LabelTextBlockStyle}">
+                        <Setter Property="Text" Value="Le client de la semaine est "/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding WeekBestClient.Sex}" Value="True">
+                                <Setter Property="Text" Value="La cliente de la semaine est "/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
             </TextBlock>
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}" FontWeight="Bold"
+                       Text="{Binding WeekBestClient.FirstName}"/>
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                       Text=" "/>
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}" FontWeight="Bold"
+                       Text="{Binding WeekBestClient.LastName}"/>
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                       Text=" avec un montant de "/>
+            <TextBlock Style="{StaticResource LabelTextBlockStyle}" FontWeight="Bold"
+                       Text="{Binding WeekBestClientTotal, StringFormat=C}"/>
         </StackPanel>
 
-        <!-- Age pie chart -->
-        <lvc:PieChart Grid.Row="1"
-                      Series="{Binding ClientByAgeRangeSeries}"
-                      LegendLocation="Bottom"
-                      Hoverable="False"
-                      DataTooltip="{x:Null}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Age pie chart -->
+            <lvc:PieChart Grid.Column="0"
+                          Series="{Binding ClientByAgeRangeSeries}"
+                          LegendLocation="Bottom"
+                          Hoverable="False"
+                          DataTooltip="{x:Null}"/>
+            <!-- Sex pie chart -->
+            <lvc:PieChart Grid.Column="1"
+                          Series="{Binding ClientBySexSeries}"
+                          LegendLocation="Bottom"
+                          Hoverable="False"
+                          DataTooltip="{x:Null}"/>
+        </Grid>
 
         <!-- Ok -->
-        <Button Grid.Row="2" 
+        <Button Grid.Row="2"
                 Margin="5,2"
                 Width="32"
                 VerticalAlignment="Bottom"

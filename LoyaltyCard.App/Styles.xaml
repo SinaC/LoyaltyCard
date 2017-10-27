@@ -27,4 +27,18 @@
     <Style TargetType="{x:Type DatePicker}" x:Key="DatePickerStyle">
         <Setter Property="FontSize" Value="15"/>
     </Style>
+
+    <!-- Image -->
+    <Style TargetType="{x:Type Image}" x:Key="AliasedImageStyle">
+        <Setter Property="RenderOptions.EdgeMode" Value="Aliased"/>
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+    </Style>
+
+    <Style TargetType="{x:Type Image}" BasedOn="{StaticResource AliasedImageStyle}" x:Key="AutoDisableImageStyle">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

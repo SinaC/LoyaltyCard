@@ -20,8 +20,25 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0"
+        <!-- Date: optional -->
+        <StackPanel Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="OptionalDateCheckBox"
+                          Margin="5,2"
+                          VerticalAlignment="Center">
+                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                               Text="Date manuelle?"/>
+                </CheckBox>
+                <DatePicker Margin="5,2"
+                            IsEnabled="{Binding IsChecked, ElementName=OptionalDateCheckBox}"
+                            Style="{StaticResource DatePickerStyle}"
+                            SelectedDate="{Binding SelectedDate}"/>
+            </StackPanel>
+        </StackPanel>
+        <!-- Amount -->
+        <StackPanel Grid.Row="1"
                     Orientation="Vertical">
             <TextBlock Margin="5,2"
                        Style="{StaticResource LabelTextBlockStyle}"
@@ -40,19 +57,20 @@
             </xctk:DecimalUpDown>
         </StackPanel>
         <!-- Ok/Cancel -->
-        <StackPanel Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
-            <Button Margin="5,2"
-                    Width="24"
+        <UniformGrid Grid.Row="2"
+                     Margin="5,2"
+                     HorizontalAlignment="Stretch"
+                     Rows="1">
+            <Button Width="24"
                     Command="{Binding OkCommand}">
-               <Image Source="{StaticResource OkImage}"/>
+                <Image Style="{StaticResource AliasedImageStyle}"
+                       Source="{StaticResource OkImage}"/>
             </Button>
-            <Button Margin="5,2"
-                    Width="24"
+            <Button Width="24"
                     Command="{Binding CancelCommand}">
-                <Image Source="{StaticResource CancelImage}"/>
+                <Image Style="{StaticResource AliasedImageStyle}"
+                       Source="{StaticResource CancelImage}"/>
             </Button>
-        </StackPanel>
+        </UniformGrid>
     </Grid>
 </UserControl>

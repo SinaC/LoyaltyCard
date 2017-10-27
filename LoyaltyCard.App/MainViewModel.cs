@@ -14,10 +14,12 @@ namespace LoyaltyCard.App
 
     public class MainViewModel : ObservableObject
     {
+        public FooterViewModel FooterViewModel { get; protected set; }
+
         public DisplayClientViewModel DisplayClientViewModel { get; protected set; }
         public SearchClientViewModel SearchClientViewModel { get; protected set; }
         public StatisticsViewModel StatisticsViewModel { get; protected set; }
-
+        
         private Modes _mode;
         public Modes Mode
         {
@@ -27,6 +29,8 @@ namespace LoyaltyCard.App
 
         public MainViewModel()
         {
+            FooterViewModel = new FooterViewModel();
+
             DisplayClientViewModel = new DisplayClientViewModel();
             SearchClientViewModel = new SearchClientViewModel();
             StatisticsViewModel = new StatisticsViewModel();
@@ -72,6 +76,8 @@ namespace LoyaltyCard.App
     {
         public MainViewModelDesignData()
         {
+            FooterViewModel = new FooterViewModelDesignData();
+
             DisplayClientViewModel = new DisplayClientViewModelDesignData();
             SearchClientViewModel = new SearchClientViewModelDesignData();
             StatisticsViewModel = new StatisticsViewModelDesignData();

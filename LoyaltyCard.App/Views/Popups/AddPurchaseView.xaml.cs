@@ -41,11 +41,5 @@ namespace LoyaltyCard.App.Views.Popups
                 partTextBox.SelectAll();
             }, DispatcherPriority.Render);
         }
-
-        private void DecimalUpDown_OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter || e.Key == Key.Return)
-                e.Handled = false;
-        }
     }
 }

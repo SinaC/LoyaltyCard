@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type DataGridRow}" x:Key="ClientDataGridRowStyle">
+                <Setter Property="FontSize" Value="13"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsBirthDay}" Value="True">
                         <Setter Property="Background" Value="Pink" />
@@ -24,7 +25,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}">
+    <!--  FocusManager.FocusedElement="{Binding ElementName=LastNameTextBox}" -->
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -41,9 +43,11 @@
             <StackPanel Grid.Column="0"
                         Margin="5,2"
                         Orientation="Vertical">
-                <TextBlock Text="Nom:"/>
+                <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                           Text="Nom:"/>
                 <TextBox x:Name="LastNameTextBox"
                          MinWidth="200"
+                         Style="{StaticResource InputTextBoxStyle}"
                          behaviours:SelectTextOnFocus.Active="True"
                          Text="{Binding LastNameFilter, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>
@@ -55,8 +59,10 @@
             <StackPanel Grid.Column="1"
                         Margin="5,2"
                         Orientation="Vertical">
-                <TextBlock Text="Prénom:"/>
+                <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                           Text="Prénom:"/>
                 <TextBox MinWidth="200"
+                         Style="{StaticResource InputTextBoxStyle}"
                          behaviours:SelectTextOnFocus.Active="True"
                          Text="{Binding FirstNameFilter, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>
@@ -66,22 +72,25 @@
                 </TextBox>
             </StackPanel>
             <Button Grid.Column="2"
-                    MinWidth="100"
+                    Height="32"
                     Margin="5,2"
                     Command="{Binding SearchCommand}">
-                <TextBlock Text="Rechercher..."/>
+                <Image Style="{StaticResource AliasedImageStyle}"
+                       Source="{StaticResource SearchImage}"/>
             </Button>
             <Button Grid.Column="3"
-                    MinWidth="100"
+                    Height="32"
                     Margin="5,2"
                     Command="{Binding CreateClientCommand}">
-                <TextBlock Text="Nouveau client"/>
+                <Image Style="{StaticResource AliasedImageStyle}"
+                       Source="{StaticResource PlusImage}"/>
             </Button>
             <Button Grid.Column="4"
-                    MinWidth="100"
+                    Height="32"
                     Margin="5,2"
                     Command="{Binding DisplayStatsCommand}">
-                <TextBlock Text="Statistiques"/>
+                <Image Style="{StaticResource AliasedImageStyle}"
+                       Source="{StaticResource StatsImage}"/>
             </Button>
         </Grid>
         <!-- List -->
@@ -98,7 +107,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
                 <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
-                <DataGridTextColumn Header="Total depuis dernier bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                <DataGridTextColumn Header="Total depuis bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 <DataGridTextColumn Header="Total des achats" Binding="{Binding TotalPurchases, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 <DataGridTextColumn Header="Montant dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>

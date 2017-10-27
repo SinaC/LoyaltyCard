@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using LoyaltyCard.App.Interfaces;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.Toolkit;
 
@@ -21,26 +22,31 @@ namespace LoyaltyCard.App.Views
     /// <summary>
     /// Interaction logic for DisplayClientView.xaml
     /// </summary>
-    public partial class DisplayClientView : UserControl
+    public partial class DisplayClientView : UserControl, IFocusInputElementOnActivation
     {
         public DisplayClientView()
         {
             InitializeComponent();
+
+            //https://social.msdn.microsoft.com/Forums/vstudio/en-US/855d5127-e66c-47b6-ae0a-744a203c9096/no-gotfocus-event-for-wpf-datepickertextbox?forum=wpf
+            // GotFocus event is handled internally by DatePicker
+            BirthDatePicker.AddHandler(DatePicker.GotFocusEvent, new RoutedEventHandler(DatePicker_OnGotFocus), true);
+
+            //Loaded += OnLoaded;
         }
 
-        private void DecimalUpDown_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            // DecimalUpDown uses current culture and it seems fr-BE doesn't use . but , as decimal separator
-            DecimalUpDown @this = sender as DecimalUpDown;
-            if (@this == null)
-                return;
-            @this.Text = @this.Text.Replace('.', ',');
+            LastNameTextBox.Dispatcher.BeginInvoke((Action)delegate
+            {
+                LastNameTextBox.Focus();
+                Keyboard.Focus(LastNameTextBox);
+            }, DispatcherPriority.Input);
         }
 
-        private void DecimalUpDown_OnGotFocus(object sender, RoutedEventArgs e)
+        private void DatePicker_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            // Crappy workaround because FocusManager.FocusedElement doesn't set Keyboard focus
-            DecimalUpDown @this = sender as DecimalUpDown;
+            DatePicker @this = sender as DatePicker;
             TextBox partTextBox = @this?.FindVisualChildren<TextBox>().FirstOrDefault(x => x.Name == "PART_TextBox");
             if (partTextBox == null)
                 return;
@@ -50,5 +56,7 @@ namespace LoyaltyCard.App.Views
                 partTextBox.SelectAll();
             }, DispatcherPriority.Render);
         }
+
+        public IInputElement ElementToFocus => LastNameTextBox;
     }
 }

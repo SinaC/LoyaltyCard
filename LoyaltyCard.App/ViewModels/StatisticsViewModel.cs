@@ -15,6 +15,8 @@ namespace LoyaltyCard.App.ViewModels
 {
     public class StatisticsViewModel : ObservableObject
     {
+        protected Func<ChartPoint, string> GenericChartPointFunction => chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})";
+
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
 
         private DateTime _now;
@@ -142,7 +144,8 @@ namespace LoyaltyCard.App.ViewModels
                 {
                     category = g.Key,
                     count = g.Count()
-                });
+                })
+                .OrderBy(x => x.category);
             SeriesCollection collection = new SeriesCollection();
             foreach (var data in clientCountByAgeCategory)
             {
@@ -151,53 +154,49 @@ namespace LoyaltyCard.App.ViewModels
                     Title = data.category.DisplayName(),
                     Values = new ChartValues<int> { data.count },
                     DataLabels = true,
-                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})",
+                    LabelPoint = GenericChartPointFunction
                 });
             }
             ClientByAgeRangeSeries = collection;
-            //ClientByAgeRangeSeries = new SeriesCollection
-            //{
-            //    new PieSeries
-            //    {
-            //        Title = "Maria",
-            //        Values = new ChartValues<int>
-            //        {
-            //            3
-            //        },
-            //        DataLabels = true,
-            //        LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
-            //    },
-            //    new PieSeries
-            //    {
-            //        Title = "Charles",
-            //        Values = new ChartValues<int>
-            //        {
-            //            4
-            //        },
-            //        DataLabels = true,
-            //        LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
-            //    },
-            //    new PieSeries
-            //    {
-            //        Title = "Frida",
-            //        Values = new ChartValues<int>
-            //        {
-            //            6
-            //        },
-            //        DataLabels = true,
-            //        LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
-            //    },
-            //    new PieSeries
-            //    {
-            //        Title = "Frederic",
-            //        Values = new ChartValues<int>
-            //        {
-            //            2
-            //        },
-            //        DataLabels = true,
-            //        LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
-            //    }
-            //};
+        }
+
+        #endregion
+
+        #region Client by sex
+
+        private SeriesCollection _clientBySexSeries;
+        public SeriesCollection ClientBySexSeries
+        {
+            get { return _clientBySexSeries; }
+            protected set { Set(() => ClientBySexSeries, ref _clientBySexSeries, value); }
+        }
+
+        private void CountClientBySex()
+        {
+            var clientCountBySex = _clients.Select(client =>
+                new
+                {
+                    client,
+                    sex = client.Sex
+                })
+                .GroupBy(x => x.sex)
+                .Select(g => new
+                {
+                    sex = g.Key,
+                    count = g.Count()
+                });
+            SeriesCollection collection = new SeriesCollection();
+            foreach (var data in clientCountBySex)
+            {
+                collection.Add(new PieSeries
+                {
+                    Title = data.sex.DisplayName(),
+                    Values = new ChartValues<int> { data.count },
+                    DataLabels = true,
+                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})",
+                });
+            }
+            ClientBySexSeries = collection;
         }
 
         #endregion
@@ -209,6 +208,7 @@ namespace LoyaltyCard.App.ViewModels
 
             SearchWeekBestClient();
             CountClientByAgeRange();
+            CountClientBySex();
         }
     }
 
@@ -216,6 +216,14 @@ namespace LoyaltyCard.App.ViewModels
     {
         public StatisticsViewModelDesignData()
         {
+            WeekBestClientTotal = 150;
+            WeekBestClient = new Client
+            {
+                FirstName = "Pouet",
+                LastName = "Tagada",
+                Sex = Sex.Female
+            };
+
             ClientByAgeRangeSeries = new SeriesCollection
             {
                 new PieSeries
@@ -226,7 +234,7 @@ namespace LoyaltyCard.App.ViewModels
                         3
                     },
                     DataLabels = true,
-                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
+                    LabelPoint = GenericChartPointFunction
                 },
                 new PieSeries
                 {
@@ -236,7 +244,7 @@ namespace LoyaltyCard.App.ViewModels
                         4
                     },
                     DataLabels = true,
-                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
+                    LabelPoint = GenericChartPointFunction
                 },
                 new PieSeries
                 {
@@ -246,7 +254,7 @@ namespace LoyaltyCard.App.ViewModels
                         6
                     },
                     DataLabels = true,
-                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
+                    LabelPoint = GenericChartPointFunction
                 },
                 new PieSeries
                 {
@@ -256,7 +264,41 @@ namespace LoyaltyCard.App.ViewModels
                         2
                     },
                     DataLabels = true,
-                    LabelPoint = chartPoint => $"{chartPoint.Y} ({chartPoint.Participation:P})"
+                    LabelPoint = GenericChartPointFunction
+                }
+            };
+
+            ClientBySexSeries = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title ="Homme",
+                    Values = new ChartValues<int>
+                    {
+                        10
+                    },
+                    DataLabels = true,
+                    LabelPoint = GenericChartPointFunction
+                },
+                new PieSeries
+                {
+                    Title ="Femme",
+                    Values = new ChartValues<int>
+                    {
+                        12
+                    },
+                    DataLabels = true,
+                    LabelPoint = GenericChartPointFunction
+                },
+                new PieSeries
+                {
+                    Title ="Non-spécifié",
+                    Values = new ChartValues<int>
+                    {
+                        1
+                    },
+                    DataLabels = true,
+                    LabelPoint = GenericChartPointFunction
                 }
             };
         }

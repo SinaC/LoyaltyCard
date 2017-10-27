@@ -7,17 +7,6 @@ Statistics:
 	Bar Graph avec montant moyen/tranche d'âge
 	Graphique? de regroupement/ commune. Créer des communes et regrouper nbre de personne suivant le code postal. Créer 3 zones Bruxelles, BW, Wallonie avec un % de client.
 
-DisplayClient:
-	when creating a new client, set focus on LastName
-	when editing an existing client, set focus on PurchaseAmount
-	add purchase in the past (2 new fields + 1 new button)
-	select text on Birth date selection (mouse)
-	Esc: Cancel
-
-AddPurchase:
-	Enter: Ok
-	Esc: Cancel
-
 SearchClient
 	LastName, FirstName max width -> TextTrimming if too long + complete value in tooltîp
 
