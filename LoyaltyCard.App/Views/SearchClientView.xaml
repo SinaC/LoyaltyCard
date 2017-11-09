@@ -41,6 +41,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         Margin="5,2"
@@ -94,6 +95,12 @@
                     Command="{Binding DisplayStatsCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource StatsImage}"/>
+            </Button>
+            <Button Grid.Column="5"
+                    Height="32"
+                    Margin="5,2"
+                    Command="{Binding TestCommand}">
+                <TextBlock Text="TST"/>
             </Button>
         </Grid>
         <!-- List -->

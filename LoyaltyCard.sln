@@ -30,6 +30,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyCard.Services", "LoyaltyCard.Services\LoyaltyCard.Services.csproj", "{DAAB6105-1A4D-4AF9-9CAE-B76204B411D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyCard.MailSender", "LoyaltyCard.MailSender\LoyaltyCard.MailSender.csproj", "{20D0A30A-655D-409C-B256-7B0B5AF66143}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pictures", "Pictures", "{138C290B-0C76-4D63-944D-86034EFDAC3A}"
+	ProjectSection(SolutionItems) = preProject
+		Pictures\logo+nom.png = Pictures\logo+nom.png
+		Pictures\WEBBIRTHVOUCHER2.jpg = Pictures\WEBBIRTHVOUCHER2.jpg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +84,10 @@ Global
 		{DAAB6105-1A4D-4AF9-9CAE-B76204B411D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAAB6105-1A4D-4AF9-9CAE-B76204B411D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAAB6105-1A4D-4AF9-9CAE-B76204B411D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20D0A30A-655D-409C-B256-7B0B5AF66143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D0A30A-655D-409C-B256-7B0B5AF66143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D0A30A-655D-409C-B256-7B0B5AF66143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D0A30A-655D-409C-B256-7B0B5AF66143}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,5 +95,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{38D20E7F-9510-4B80-8755-1DEF2EF07BCF} = {96371BA7-5534-42BA-9EDC-9556B330FAB3}
 		{10833C79-C3FB-4F70-AD1D-7F0173D01966} = {96371BA7-5534-42BA-9EDC-9556B330FAB3}
+		{138C290B-0C76-4D63-944D-86034EFDAC3A} = {AF2FD737-16FD-4B8C-BCD8-A8970D8626C4}
 	EndGlobalSection
 EndGlobal

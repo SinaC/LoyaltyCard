@@ -45,7 +45,7 @@ namespace LoyaltyCard.App.ViewModels
         #region Edit client
 
         private ICommand _editClientCommand;
-        public ICommand EditClientCommand => _editClientCommand = _editClientCommand ?? new RelayCommand(EditClient);
+        public ICommand EditClientCommand => _editClientCommand ?? (_editClientCommand = new RelayCommand(EditClient));
 
         private void EditClient()
         {
@@ -63,7 +63,7 @@ namespace LoyaltyCard.App.ViewModels
         #region Search
 
         private ICommand _searchCommand;
-        public ICommand SearchCommand => _searchCommand = _searchCommand ?? new RelayCommand(Search);
+        public ICommand SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand(Search));
 
         private void Search()
         {
@@ -75,7 +75,7 @@ namespace LoyaltyCard.App.ViewModels
         #region Create
 
         private ICommand _createClientCommand;
-        public ICommand CreateClientCommand => _createClientCommand = _createClientCommand ?? new RelayCommand(CreateClient);
+        public ICommand CreateClientCommand => _createClientCommand ?? (_createClientCommand = new RelayCommand(CreateClient));
 
         private void CreateClient()
         {
@@ -92,7 +92,7 @@ namespace LoyaltyCard.App.ViewModels
         #region Stats
 
         private ICommand _displayStatsCommand;
-        public ICommand DisplayStatsCommand => _displayStatsCommand = _displayStatsCommand ?? new RelayCommand(DisplayStats);
+        public ICommand DisplayStatsCommand => _displayStatsCommand ?? (_displayStatsCommand = new RelayCommand(DisplayStats));
 
         private void DisplayStats()
         {
@@ -101,9 +101,20 @@ namespace LoyaltyCard.App.ViewModels
 
         #endregion
 
-        public void Initialize()
+        #region Test
+
+        private ICommand _testCommand;
+        public ICommand TestCommand => _testCommand ?? (_testCommand = new RelayCommand(Test));
+
+        private void Test()
         {
+            MailSender.MailSender sender = new MailSender.MailSender();
+            //sender.SendHappyBirthdayMailAsync("pouet.brol@gmail.com", "Joël", null);
+            //sender.SendNewClientMailAsync("pouet.brol@gmail.com", "Joël");
+            //sender.SendVoucherMailAsync("pouet.brol@gmail.com", "Joël", 17);
         }
+
+        #endregion
     }
 
     public class SearchClientViewModelDesignData : SearchClientViewModel
@@ -115,7 +126,7 @@ namespace LoyaltyCard.App.ViewModels
                 FirstName = $"Pouet{x}",
                 LastName = "Brol",
                 BirthDate = x == 5 ? new DateTime(1976, DateTime.Today.Month, DateTime.Today.Day) : new DateTime(1999, 12, 31),
-                Email = "pouet.brol@hotmail.com",
+                Email = "pouet.brol@gmail.com",
                 Mobile = null,
                 Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1,1+x/2).Select(y => new Purchase
                 {
