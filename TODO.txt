@@ -1,3 +1,4 @@
+log
 DB instead of Xml
 
 birth day automatic mail

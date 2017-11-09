@@ -109,9 +109,9 @@ namespace LoyaltyCard.App.ViewModels
         private void Test()
         {
             MailSender.MailSender sender = new MailSender.MailSender();
-            //sender.SendHappyBirthdayMailAsync("pouet.brol@gmail.com", "Joël", null);
-            //sender.SendNewClientMailAsync("pouet.brol@gmail.com", "Joël");
-            //sender.SendVoucherMailAsync("pouet.brol@gmail.com", "Joël", 17);
+            sender.SendHappyBirthdayMailAsync("pouet.brol@gmail.com", "Joël", null);
+            sender.SendNewClientMailAsync("pouet.brol@gmail.com", "Joël");
+            sender.SendVoucherMailAsync("pouet.brol@gmail.com", "Joël", 17);
         }
 
         #endregion
