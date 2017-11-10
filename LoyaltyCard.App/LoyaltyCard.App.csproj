@@ -219,6 +219,10 @@
       <Project>{682c685c-6375-4cea-b6a3-61f2f0c5a008}</Project>
       <Name>LoyaltyCard.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.IMailSender\LoyaltyCard.IMailSender.csproj">
+      <Project>{f7b852f2-1fef-4457-b5dd-4f41465e4237}</Project>
+      <Name>LoyaltyCard.IMailSender</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.MailSender\LoyaltyCard.MailSender.csproj">
       <Project>{20d0a30a-655d-409c-b256-7b0b5af66143}</Project>
       <Name>LoyaltyCard.MailSender</Name>
@@ -241,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\stats.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\mail.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,21 +8,44 @@ namespace LoyaltyCard.Business
 {
     public class ClientBL : IClientBL
     {
+        private const int FirstClientId = 100000;
+
         private IClientDL ClientDL => EasyIoc.IocContainer.Default.Resolve<IClientDL>();
 
         public List<Client> GetClients()
         {
-            return ClientDL.GetClients();
+            List<Client> clients = ClientDL.GetClients();
+
+            if (clients != null)
+            {
+                foreach (Client client in clients)
+                    AddMandatoryFields(client);
+            }
+
+            return clients;
         }
 
         public Client GetClient(Guid id)
         {
-            return ClientDL.GetClient(id);
+            Client client = ClientDL.GetClient(id);
+
+            if (client != null)
+                AddMandatoryFields(client);
+
+            return client;
         }
 
         public List<Client> SearchClients(string firstNameFilter, string lastNameFilter)
         {
-            return ClientDL.SearchClients(firstNameFilter, lastNameFilter);
+            List<Client> clients = ClientDL.SearchClients(firstNameFilter, lastNameFilter);
+
+            if (clients != null)
+            {
+                foreach (Client client in clients)
+                    AddMandatoryFields(client);
+            }
+
+            return clients;
         }
 
         public void SaveClient(Client client)
@@ -30,11 +53,12 @@ namespace LoyaltyCard.Business
             if (client == null)
                 throw new ArgumentNullException(nameof(client));
 
-            if (client.Id == Guid.Empty)
-                client.Id = Guid.NewGuid();
+            AddMandatoryFields(client);
 
-            client.FirstName = client.FirstName.Trim();
-            client.LastName = client.LastName.Trim();
+            if (!string.IsNullOrWhiteSpace(client.FirstName))
+                client.FirstName = client.FirstName.Trim();
+            if (!string.IsNullOrWhiteSpace(client.LastName))
+                client.LastName = client.LastName.Trim();
 
             ClientDL.SaveClient(client);
         }
@@ -56,6 +80,35 @@ namespace LoyaltyCard.Business
                 purchase.Id = Guid.NewGuid();
 
             ClientDL.SavePurchase(client, purchase);
+        }
+
+        public List<Client> GetClients(Func<Client, bool> filterFunc)
+        {
+            List<Client> clients = ClientDL.GetClients(filterFunc);
+
+            if (clients != null)
+            {
+                foreach (Client client in clients)
+                    AddMandatoryFields(client);
+            }
+
+            return clients;
+        }
+
+        private void AddMandatoryFields(Client client)
+        {
+            if (client.Id == Guid.Empty)
+                client.Id = Guid.NewGuid();
+
+            if (client.ClientId == 0)
+            {
+                int clientId = ClientDL.GetMaxClientId();
+                if (clientId == 0)
+                    clientId = FirstClientId;
+                else
+                    clientId = clientId + 1;
+                client.ClientId = clientId;
+            }
         }
     }
 }

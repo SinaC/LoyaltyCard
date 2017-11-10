@@ -19,6 +19,8 @@ namespace LoyaltyCard.App
             EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoDL>(new DataAccess.FileBased.GeoDL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoBL>(new GeoBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IMailAutomationBL>(new MailAutomationBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IMailSender.IMailSender>(new MailSender.MailSender());
             EasyIoc.IocContainer.Default.RegisterInstance<IPopupService>(new PopupService(this));
 
             MainViewModel vm = new MainViewModel();

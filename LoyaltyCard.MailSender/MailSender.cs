@@ -13,18 +13,22 @@ using System.Xml.Linq;
 namespace LoyaltyCard.MailSender
 {
     // TODO: better error handling + log
-    public class MailSender
+    public class MailSender : IMailSender.IMailSender
     {
         private static IDictionary<string, string> _config = new Dictionary<string, string>();
 
         //https://stackoverflow.com/questions/2317012/attaching-image-in-the-body-of-mail-in-c-sharp
         //http://www.theukwebdesigncompany.com/articles/entity-escape-characters.php
 
-        private MailMessage BuildMailMessage(MailAddress fromAddress, MailAddress toAddress, string subject, string mailTemplate, IReadOnlyDictionary<string, string> replacements)
+        private MailMessage BuildMailMessage(MailAddress fromAddress, MailAddress toAddress, MailAddress replyToAddress, string subject, string mailTemplate, IReadOnlyDictionary<string, string> replacements)
         {
             MailMessage msg = new MailMessage(fromAddress, toAddress)
             {
                 Subject = subject,
+                ReplyToList =
+                {
+                    replyToAddress
+                },
                 IsBodyHtml = true
             };
 
@@ -72,108 +76,95 @@ namespace LoyaltyCard.MailSender
 
         public async Task SendHappyBirthdayMailAsync(string recipientMail, string firstName, DateTime? birthDate)
         {
-            try
+            string senderMail = GetConfigValue("SenderMail");
+            string senderPassword = GetConfigValue("SenderPassword");
+            string replyToMail = GetConfigValue("ReplyToMail");
+
+            MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
+            MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
+            MailAddress replyToAddress = new MailAddress(replyToMail, "PPC SPRL");
+
+            DateTime maxValidity = (birthDate ?? DateTime.Today).AddMonths(1);
+
+            using (SmtpClient client = new SmtpClient
             {
-                string senderMail = GetConfigValue("SenderMail");
-                string senderPassword = GetConfigValue("SenderPassword");
-
-                MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
-                MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
-
-                DateTime maxValidity = (birthDate ?? DateTime.Today).AddMonths(1);
-
-                using (SmtpClient client = new SmtpClient
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
+            })
+            {
+                using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Joyeux anniversaire de la part de l'équipe PPC", "birthday.html", new Dictionary<string, string>
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
-                })
+                    {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
+                    {"[maxvalidity]", $"{maxValidity:dd/MM/yyyy}"}
+                }))
                 {
-                    using (var message = BuildMailMessage(fromAddress, toAddress, "Joyeux anniversaire de la part de l'équipe PPC", "birthday.html", new Dictionary<string, string>
-                    {
-                        {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
-                        {"[maxvalidity]", $"{maxValidity:dd/MM/yyyy}"}
-                    }))
-                    {
-                        await client.SendMailAsync(message);
-                    }
+                    await client.SendMailAsync(message);
                 }
-            }
-            catch (Exception ex)
-            {
-                // TODO: log
             }
         }
 
         public async Task SendNewClientMailAsync(string recipientMail, string firstName)
         {
-            try
-            {
-                string senderMail = GetConfigValue("SenderMail");
-                string senderPassword = GetConfigValue("SenderPassword");
+            string senderMail = GetConfigValue("SenderMail");
+            string senderPassword = GetConfigValue("SenderPassword");
+            string replyToMail = GetConfigValue("ReplyToMail");
 
-                MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
-                MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
-                using (SmtpClient client = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
-                })
-                {
-                    using (var message = BuildMailMessage(fromAddress, toAddress, "Félicitations de la part de l'équipe PPC", "newclient.html", new Dictionary<string, string>
-                    {
-                        {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
-                    }))
-                    {
-                        await client.SendMailAsync(message);
-                    }
-                }
-            }
-            catch (Exception ex)
+            MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
+            MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
+            MailAddress replyToAddress = new MailAddress(replyToMail, "PPC SPRL");
+
+            using (SmtpClient client = new SmtpClient
             {
-                // TODO: log
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
+            })
+            {
+                using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Félicitations de la part de l'équipe PPC", "newclient.html", new Dictionary<string, string>
+                {
+                    {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
+                }))
+                {
+                    await client.SendMailAsync(message);
+                }
             }
         }
 
         public async Task SendVoucherMailAsync(string recipientMail, string firstName, decimal discount)
         {
-            try
-            {
-                string senderMail = GetConfigValue("SenderMail");
-                string senderPassword = GetConfigValue("SenderPassword");
+            string senderMail = GetConfigValue("SenderMail");
+            string senderPassword = GetConfigValue("SenderPassword");
+            string replyToMail = GetConfigValue("ReplyToMail");
 
-                MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
-                MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
-                using (SmtpClient client = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
-                })
-                {
-                    using (var message = BuildMailMessage(fromAddress, toAddress, "Bon de réduction chez PPC", "voucher.html", new Dictionary<string, string>
-                    {
-                        {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
-                        {"[discount]", $"{discount}%" }
-                    }))
-                    {
-                        await client.SendMailAsync(message);
-                    }
-                }
-            }
-            catch (Exception ex)
+            MailAddress fromAddress = new MailAddress(senderMail, "PPC SPRL");
+            MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
+            MailAddress replyToAddress = new MailAddress(replyToMail, "PPC SPRL");
+
+            using (SmtpClient client = new SmtpClient
             {
-                // TODO: log
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
+            })
+            {
+                using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Bon de réduction chez PPC", "voucher.html", new Dictionary<string, string>
+                {
+                    {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
+                    {"[discount]", $"{discount}%" }
+                }))
+                {
+                    await client.SendMailAsync(message);
+                }
             }
         }
 

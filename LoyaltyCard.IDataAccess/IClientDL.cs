@@ -15,5 +15,9 @@ namespace LoyaltyCard.IDataAccess
         void SaveClient(Client client);
 
         void SavePurchase(Client client, Purchase purchase);
+
+        int GetMaxClientId();
+
+        List<Client> GetClients(Func<Client, bool> filterFunc);
     }
 }

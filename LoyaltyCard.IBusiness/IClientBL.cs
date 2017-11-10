@@ -15,5 +15,7 @@ namespace LoyaltyCard.IBusiness
         void SaveClient(Client client);
 
         void SavePurchase(Client client, Purchase purchase);
+
+        List<Client> GetClients(Func<Client, bool> filterFunc);
     }
 }

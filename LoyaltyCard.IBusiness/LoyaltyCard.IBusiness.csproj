@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IClientBL.cs" />
     <Compile Include="IGeoBL.cs" />
+    <Compile Include="IMailAutomationBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

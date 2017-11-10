@@ -54,6 +54,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -62,8 +63,15 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <!-- Client Id -->
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Grid.ColumnSpan="2"
+                           Margin="5,2"
+                           Style="{StaticResource LabelTextBlockStyle}"
+                           Text="{Binding Client.ClientId, StringFormat={}Numéro de client: {0}}"/>
                 <!-- Last name -->
-                <StackPanel Grid.Row="0"
+                <StackPanel Grid.Row="1"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Margin="5,2"
@@ -76,7 +84,7 @@
                              Text="{Binding LastName}"/>
                 </StackPanel>
                 <!-- First name -->
-                <StackPanel Grid.Row="0"
+                <StackPanel Grid.Row="1"
                             Grid.Column="2"
                             Grid.ColumnSpan="2"
                             Margin="5,2"
@@ -88,7 +96,7 @@
                              Text="{Binding FirstName}"/>
                 </StackPanel>
                 <!-- Street -->
-                <StackPanel Grid.Row="1"
+                <StackPanel Grid.Row="2"
                             Grid.Column="0"
                             Grid.ColumnSpan="3"
                             Margin="5,2"
@@ -100,7 +108,7 @@
                              Text="{Binding StreetName}"/>
                 </StackPanel>
                 <!-- Street number -->
-                <StackPanel Grid.Row="1"
+                <StackPanel Grid.Row="2"
                             Grid.Column="3"
                             Margin="5,2"
                             Orientation="Vertical">
@@ -111,7 +119,7 @@
                              Text="{Binding StreetNumber}"/>
                 </StackPanel>
                 <!-- Zip -->
-                <StackPanel Grid.Row="2"
+                <StackPanel Grid.Row="3"
                             Grid.Column="0"
                             Margin="5,2"
                             Orientation="Vertical">
@@ -122,7 +130,7 @@
                              Text="{Binding ZipCode, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <!-- City -->
-                <StackPanel Grid.Row="2"
+                <StackPanel Grid.Row="3"
                             Grid.Column="1"
                             Grid.ColumnSpan="3"
                             Margin="5,2"
@@ -134,7 +142,7 @@
                              Text="{Binding City}"/>
                 </StackPanel>
                 <!-- Email -->
-                <StackPanel Grid.Row="3"
+                <StackPanel Grid.Row="4"
                             Grid.Column="0"
                             Grid.ColumnSpan="4"
                             Margin="5,2"
@@ -146,7 +154,7 @@
                              Text="{Binding Email}"/>
                 </StackPanel>
                 <!-- Birth date -->
-                <StackPanel Grid.Row="4"
+                <StackPanel Grid.Row="5"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Margin="5,2"
@@ -159,7 +167,7 @@
                                 SelectedDate="{Binding BirthDate}"/>
                 </StackPanel>
                 <!-- Mobile -->
-                <StackPanel Grid.Row="4"
+                <StackPanel Grid.Row="5"
                             Grid.Column="2"
                             Grid.ColumnSpan="2"
                             Margin="5,2"
@@ -170,7 +178,7 @@
                              Text="{Binding Mobile}"/>
                 </StackPanel>
                 <!-- Status -->
-                <ItemsControl Grid.Row="5"
+                <ItemsControl Grid.Row="6"
                               Grid.Column="0"
                               Grid.ColumnSpan="4"
                               Margin="5,2"
@@ -194,7 +202,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <!-- Sex -->
-                <StackPanel Grid.Row="6"
+                <StackPanel Grid.Row="7"
                             Grid.Column="0"
                             Grid.ColumnSpan="4"
                             Orientation="Horizontal">
@@ -212,7 +220,7 @@
                     </RadioButton>
                 </StackPanel>
                 <!-- Comment -->
-                <Grid Grid.Row="7"
+                <Grid Grid.Row="8"
                       Grid.Column="0"
                       Grid.ColumnSpan="4"
                       Margin="5,2">

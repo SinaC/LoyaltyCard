@@ -1,3 +1,5 @@
+Compute if a happy birthday mail must be sent (MailAutomationBL)
+
 log
 DB instead of Xml
 
@@ -16,3 +18,7 @@ Footer with #Client, total EUR from beginning, total EUR for day
  continue FooterData, add DL/BL to fill FooterData, use FooterData in FooterVM init
 
 Client merge
+
+
+If Gmail Error :The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required
+check https://stackoverflow.com/questions/20906077/gmail-error-the-smtp-server-requires-a-secure-connection-or-the-client-was-not

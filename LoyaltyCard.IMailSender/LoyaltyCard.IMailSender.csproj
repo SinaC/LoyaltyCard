@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CF0C4A8A-92C4-4FD4-AE22-3CBCC104D2A9}</ProjectGuid>
+    <ProjectGuid>{F7B852F2-1FEF-4457-B5DD-4F41465E4237}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LoyaltyCard.Business</RootNamespace>
-    <AssemblyName>LoyaltyCard.Business</AssemblyName>
+    <RootNamespace>LoyaltyCard.IMailSender</RootNamespace>
+    <AssemblyName>LoyaltyCard.IMailSender</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,32 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientBL.cs" />
-    <Compile Include="GeoBL.cs" />
-    <Compile Include="MailAutomationBL.cs" />
+    <Compile Include="IMailSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Libraries\EasyIoc\EasyIoc.csproj">
-      <Project>{38d20e7f-9510-4b80-8755-1def2ef07bcf}</Project>
-      <Name>EasyIoc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.IBusiness\LoyaltyCard.IBusiness.csproj">
-      <Project>{15919C85-1781-4608-8333-AE6DEBFCF7AE}</Project>
-      <Name>LoyaltyCard.IBusiness</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.IDataAccess\LoyaltyCard.IDataAccess.csproj">
-      <Project>{65C7761D-9EAC-4B48-B81C-BCD402F38597}</Project>
-      <Name>LoyaltyCard.IDataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
-      <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>
-      <Name>LoyaltyCard.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LoyaltyCard.IMailSender\LoyaltyCard.IMailSender.csproj">
-      <Project>{F7B852F2-1FEF-4457-B5DD-4F41465E4237}</Project>
-      <Name>LoyaltyCard.IMailSender</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

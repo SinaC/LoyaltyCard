@@ -82,6 +82,20 @@ namespace LoyaltyCard.DataAccess.FileBased
             SaveClient(client);
         }
 
+        public int GetMaxClientId()
+        {
+            LoadClients(); // Load clients if needed
+
+            return _clients.Max(x => x.ClientId);
+        }
+
+        public List<Client> GetClients(Func<Client, bool> filterFunc)
+        {
+            LoadClients(); // Load clients if needed
+
+            return _clients.Where(filterFunc).ToList();
+        }
+
         private void LoadClients()
         {
             if (_clients != null)

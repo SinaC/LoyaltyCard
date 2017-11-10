@@ -17,6 +17,9 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public DateTime? CreationDate { get; set; }
 
+        [DataMember]
+        public int ClientId { get; set; }
+
         #region LastName
 
         private string _lastName;
@@ -279,6 +282,12 @@ namespace LoyaltyCard.Domain
         }
 
         #endregion
+
+        [DataMember]
+        public DateTime? WelcomeMailDate { get; set; }
+
+        [DataMember]
+        public DateTime? LastBirthMailDate { get; set; }
 
         [DataMember]
         public virtual ObservableCollection<Purchase> Purchases { get; set; }

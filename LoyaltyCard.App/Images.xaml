@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:LoyaltyCard.App">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <BitmapImage UriSource="Images/plus.png" x:Key="AddPuchaseImage"/>
     <BitmapImage UriSource="Images/plus.png" x:Key="PlusImage"/>
     <BitmapImage UriSource="Images/x.png" x:Key="CancelImage"/>
@@ -8,4 +7,5 @@
     <BitmapImage UriSource="Images/search.png" x:Key="SearchImage"/>
     <BitmapImage UriSource="Images/stats.png" x:Key="StatsImage"/>
     <BitmapImage UriSource="Images/euro.png" x:Key="VoucherImage"/>
+    <BitmapImage UriSource="Images/mail.png" x:Key="MailImage"/>
 </ResourceDictionary>
