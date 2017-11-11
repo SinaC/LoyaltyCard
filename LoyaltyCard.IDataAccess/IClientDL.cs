@@ -12,6 +12,8 @@ namespace LoyaltyCard.IDataAccess
 
         List<Client> SearchClients(string firstNameFilter, string lastNameFilter);
 
+        List<Client> SearchClients(string filter);
+
         void SaveClient(Client client);
 
         void SavePurchase(Client client, Purchase purchase);

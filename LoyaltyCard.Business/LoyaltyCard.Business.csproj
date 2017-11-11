@@ -66,6 +66,10 @@
       <Project>{F7B852F2-1FEF-4457-B5DD-4F41465E4237}</Project>
       <Name>LoyaltyCard.IMailSender</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Log\LoyaltyCard.Log.csproj">
+      <Project>{BCB79B57-39A1-4714-A728-B09C90BB4B35}</Project>
+      <Name>LoyaltyCard.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -43,7 +43,12 @@
       <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -180,6 +185,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -198,6 +209,10 @@
     <ProjectReference Include="..\Libraries\EasyMVVM\EasyMVVM.csproj">
       <Project>{10833c79-c3fb-4f70-ad1d-7f0173d01966}</Project>
       <Name>EasyMVVM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Log\LoyaltyCard.Log.csproj">
+      <Project>{BCB79B57-39A1-4714-A728-B09C90BB4B35}</Project>
+      <Name>LoyalityCard.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.DataAccess.FileBased\LoyaltyCard.DataAccess.FileBased.csproj">
       <Project>{14EF3FDD-92FD-495A-94ED-59FF467F2B3A}</Project>

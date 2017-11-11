@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
+using LoyaltyCard.Log;
 
 namespace LoyaltyCard.App
 {
@@ -16,6 +12,14 @@ namespace LoyaltyCard.App
     /// </summary>
     public partial class App : Application
     {
+        private ILog Logger => EasyIoc.IocContainer.Default.Resolve<ILog>();
+
+        public App()
+        {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            Exit += OnExit;
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-BE");
@@ -26,6 +30,16 @@ namespace LoyaltyCard.App
             //EventManager.RegisterClassHandler(typeof(WatermarkTextBox), UIElement.GotKeyboardFocusEvent, new RoutedEventHandler(SelectAllText), true);
 
             base.OnStartup(e);
+        }
+
+        private void OnExit(object sender, ExitEventArgs exitEventArgs)
+        {
+            Logger.Info("Application stopped");
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            Logger.Exception("Unhandled Exception", unhandledExceptionEventArgs.ExceptionObject as Exception);
         }
     }
 }

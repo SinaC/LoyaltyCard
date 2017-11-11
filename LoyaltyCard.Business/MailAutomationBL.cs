@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IBusiness;
+using LoyaltyCard.Log;
 
 namespace LoyaltyCard.Business
 {
@@ -9,6 +10,7 @@ namespace LoyaltyCard.Business
     {
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
         private IMailSender.IMailSender MailSender => EasyIoc.IocContainer.Default.Resolve<IMailSender.IMailSender>();
+        private ILog Logger => EasyIoc.IocContainer.Default.Resolve<ILog>();
 
         public async Task SendAutomatedMailsAsync()
         {
@@ -24,7 +26,7 @@ namespace LoyaltyCard.Business
                 }
                 catch (Exception ex)
                 {
-                    // TODO: log
+                    Logger.Exception($"Failed to send welcome mail to {client.Email}", ex);
                 }
             }
 
@@ -40,7 +42,7 @@ namespace LoyaltyCard.Business
                 }
                 catch (Exception ex)
                 {
-                    // TODO: log
+                    Logger.Exception($"Failed to send happy birth mail to {client.Email}", ex);
                 }
             }
         }

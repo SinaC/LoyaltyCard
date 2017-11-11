@@ -1,6 +1,6 @@
 Compute if a happy birthday mail must be sent (MailAutomationBL)
+SearchClient pagination
 
-log
 DB instead of Xml
 
 birth day automatic mail

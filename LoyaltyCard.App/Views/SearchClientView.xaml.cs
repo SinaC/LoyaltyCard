@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Threading;
 using LoyaltyCard.App.Interfaces;
 
 namespace LoyaltyCard.App.Views
@@ -18,7 +14,7 @@ namespace LoyaltyCard.App.Views
             InitializeComponent();
         }
 
-        public IInputElement ElementToFocusOnActivation => LastNameTextBox;
+        public IInputElement ElementToFocusOnActivation => FilterTextBox;
 
         //private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         //{

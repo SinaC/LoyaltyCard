@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System.Configuration;
+using System.Windows;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.IDataAccess;
 using LoyaltyCard.Business;
+using LoyaltyCard.Log;
 using LoyaltyCard.Services.Popup;
 
 namespace LoyaltyCard.App
@@ -15,6 +17,7 @@ namespace LoyaltyCard.App
         {
             InitializeComponent();
 
+            EasyIoc.IocContainer.Default.RegisterInstance<ILog>(new NLogger());
             EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(new DataAccess.FileBased.ClientDL());
             EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoDL>(new DataAccess.FileBased.GeoDL());
@@ -22,6 +25,11 @@ namespace LoyaltyCard.App
             EasyIoc.IocContainer.Default.RegisterInstance<IMailAutomationBL>(new MailAutomationBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IMailSender.IMailSender>(new MailSender.MailSender());
             EasyIoc.IocContainer.Default.RegisterInstance<IPopupService>(new PopupService(this));
+
+
+            // Initialize log
+            EasyIoc.IocContainer.Default.Resolve<ILog>().Initialize(ConfigurationManager.AppSettings["LogPath"], "${shortdate}.log");
+            EasyIoc.IocContainer.Default.Resolve<ILog>().Info("Application started");
 
             MainViewModel vm = new MainViewModel();
             DataContext = vm;

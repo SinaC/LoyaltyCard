@@ -7,6 +7,7 @@ using EasyMVVM;
 using LoyaltyCard.App.Messages;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
+using LoyaltyCard.Log;
 
 namespace LoyaltyCard.App.ViewModels
 {
@@ -14,18 +15,11 @@ namespace LoyaltyCard.App.ViewModels
     {
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
 
-        private string _firstNameFilter;
-        public string FirstNameFilter
+        private string _filter;
+        public string Filter
         {
-            get { return _firstNameFilter; }
-            set { Set(() => FirstNameFilter, ref _firstNameFilter, value); }
-        }
-
-        private string _lastNameFilter;
-        public string LastNameFilter
-        {
-            get { return _lastNameFilter; }
-            set { Set(() => LastNameFilter, ref _lastNameFilter, value); }
+            get { return _filter; }
+            set { Set(() => Filter, ref _filter, value); }
         }
 
         private Client _selectedClient;
@@ -67,7 +61,7 @@ namespace LoyaltyCard.App.ViewModels
 
         private void Search()
         {
-            Clients = ClientBL.SearchClients(FirstNameFilter, LastNameFilter);
+            Clients = ClientBL.SearchClients(Filter);
         }
 
         #endregion
@@ -80,11 +74,7 @@ namespace LoyaltyCard.App.ViewModels
         private void CreateClient()
         {
             // Create a new client
-            Mediator.Default.Send(new CreateClientMessage
-            {
-                FirstNameFilter = FirstNameFilter,
-                LastNameFilter = LastNameFilter
-            });
+            Mediator.Default.Send(new CreateClientMessage());
         }
 
         #endregion
@@ -108,10 +98,6 @@ namespace LoyaltyCard.App.ViewModels
 
         private void Test()
         {
-            //MailSender.MailSender sender = new MailSender.MailSender();
-            //sender.SendHappyBirthdayMailAsync("pouet.brol@gmail.com", "Joël", null);
-            //sender.SendNewClientMailAsync("pouet.brol@gmail.com", "Joël");
-            //sender.SendVoucherMailAsync("pouet.brol@gmail.com", "Joël", 17);
             IMailAutomationBL mailAutomationBL = EasyIoc.IocContainer.Default.Resolve<IMailAutomationBL>();
             mailAutomationBL.SendAutomatedMailsAsync();
         }

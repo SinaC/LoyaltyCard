@@ -41,18 +41,17 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         Margin="5,2"
                         Orientation="Vertical">
                 <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                           Text="Nom:"/>
-                <TextBox x:Name="LastNameTextBox"
-                         MinWidth="200"
+                           Text="Nom/Prénom/Email/Numéro de client:"/>
+                <TextBox x:Name="FilterTextBox"
+                         MinWidth="400"
                          Style="{StaticResource InputTextBoxStyle}"
                          behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding LastNameFilter, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>
                         <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
                         <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
@@ -60,43 +59,28 @@
                     </TextBox.InputBindings>
                 </TextBox>
             </StackPanel>
-            <StackPanel Grid.Column="1"
-                        Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                           Text="Prénom:"/>
-                <TextBox MinWidth="200"
-                         Style="{StaticResource InputTextBoxStyle}"
-                         behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding FirstNameFilter, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.InputBindings>
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
-                    </TextBox.InputBindings>
-                </TextBox>
-            </StackPanel>
-            <Button Grid.Column="2"
+            <Button Grid.Column="1"
                     Height="32"
                     Margin="5,2"
                     Command="{Binding SearchCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource SearchImage}"/>
             </Button>
-            <Button Grid.Column="3"
+            <Button Grid.Column="2"
                     Height="32"
                     Margin="5,2"
                     Command="{Binding CreateClientCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource PlusImage}"/>
             </Button>
-            <Button Grid.Column="4"
+            <Button Grid.Column="3"
                     Height="32"
                     Margin="5,2"
                     Command="{Binding DisplayStatsCommand}">
                 <Image Style="{StaticResource AliasedImageStyle}"
                        Source="{StaticResource StatsImage}"/>
             </Button>
-            <Button Grid.Column="5"
+            <Button Grid.Column="4"
                     Height="32"
                     Margin="5,2"
                     Command="{Binding TestCommand}">

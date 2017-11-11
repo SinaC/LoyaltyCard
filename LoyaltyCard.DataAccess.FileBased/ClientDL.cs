@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -46,6 +47,24 @@ namespace LoyaltyCard.DataAccess.FileBased
                 query = query.Where(x => !string.IsNullOrWhiteSpace(x.LastName) && x.LastName.ToLowerInvariant().StartsWith(lastNameFilter));
             }
 
+            return query.ToList();
+        }
+
+        public List<Client> SearchClients(string filter)
+        {
+            LoadClients(); // Load clients if needed
+
+            IQueryable<Client> query = _clients.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                string[] tokens = filter.Split(' ');
+
+                foreach (string token in tokens)
+                    query = query.Where(c => Contains(c.FirstName ?? string.Empty, token) ||
+                    Contains(c.LastName ?? string.Empty, token) ||
+                    Contains(c.Email ?? string.Empty, token) ||
+                    c.ClientId.ToString().StartsWith(token));
+            }
             return query.ToList();
         }
 
@@ -128,6 +147,12 @@ namespace LoyaltyCard.DataAccess.FileBased
                 DataContractSerializer serializer = new DataContractSerializer(typeof(List<Client>));
                 serializer.WriteObject(writer, _clients);
             }
+        }
+
+        private bool Contains(string s, string filter)
+        {
+            //http://stackoverflow.com/questions/359827/ignoring-accented-letters-in-string-comparison/7720903#7720903
+            return CultureInfo.CurrentCulture.CompareInfo.IndexOf(s, filter, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) >= 0;
         }
     }
 }

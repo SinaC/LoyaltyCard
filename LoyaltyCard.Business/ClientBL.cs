@@ -48,6 +48,19 @@ namespace LoyaltyCard.Business
             return clients;
         }
 
+        public List<Client> SearchClients(string filter)
+        {
+            List<Client> clients = ClientDL.SearchClients(filter);
+
+            if (clients != null)
+            {
+                foreach (Client client in clients)
+                    AddMandatoryFields(client);
+            }
+
+            return clients;
+        }
+
         public void SaveClient(Client client)
         {
             if (client == null)
