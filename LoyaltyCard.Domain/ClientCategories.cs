@@ -28,6 +28,10 @@ namespace LoyaltyCard.Domain
 
         [Description("Atelier Gibloux")]
         [EnumMember]
-        AtelierGibloux = 5
+        AtelierGibloux = 5,
+
+        [Description("Cours de dessin")]
+        [EnumMember]
+        CoursDeDessin = 6,
     }
 }

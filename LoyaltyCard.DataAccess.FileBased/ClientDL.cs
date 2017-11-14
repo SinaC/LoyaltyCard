@@ -105,7 +105,8 @@ namespace LoyaltyCard.DataAccess.FileBased
         {
             LoadClients(); // Load clients if needed
 
-            return _clients.Max(x => x.ClientId);
+            //return _clients.Max(x => x.ClientId);
+            return _clients.Count == 0 ? -1 : _clients.Max(x => x.ClientId);
         }
 
         public List<Client> GetClients(Func<Client, bool> filterFunc)

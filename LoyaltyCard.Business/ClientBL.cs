@@ -112,11 +112,13 @@ namespace LoyaltyCard.Business
         {
             if (client.Id == Guid.Empty)
                 client.Id = Guid.NewGuid();
+            if (!client.CreationDate.HasValue)
+                client.CreationDate = DateTime.Now;
 
             if (client.ClientId == 0)
             {
                 int clientId = ClientDL.GetMaxClientId();
-                if (clientId == 0)
+                if (clientId <= 0)
                     clientId = FirstClientId;
                 else
                     clientId = clientId + 1;

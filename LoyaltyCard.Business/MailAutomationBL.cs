@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IBusiness;
@@ -15,10 +16,12 @@ namespace LoyaltyCard.Business
         public async Task SendAutomatedMailsAsync()
         {
             // Welcome mails
-            foreach (Client client in ClientBL.GetClients(c => !string.IsNullOrWhiteSpace(c.Email) && !c.WelcomeMailDate.HasValue && (c.CreationDate ?? DateTime.Today).AddMonths(1) >= DateTime.Today))
+            foreach (Client client in ClientBL.GetClients(c => !string.IsNullOrWhiteSpace(c.Email) && !c.WelcomeMailDate.HasValue && (c.CreationDate ?? DateTime.Today).AddMonths(1) <= DateTime.Today))
             {
                 try
                 {
+                    Logger.WriteLine(LogLevels.Info, $"Sending welcome mail to {client.FirstName ?? "???"} at {client.Email}");
+
                     await MailSender.SendNewClientMailAsync(client.Email, client.FirstName);
 
                     client.WelcomeMailDate = DateTime.Now;
@@ -31,10 +34,14 @@ namespace LoyaltyCard.Business
             }
 
             // Birthday mails
-            foreach (Client client in ClientBL.GetClients(c => !string.IsNullOrWhiteSpace(c.Email) && IsBirthDayInThePast(c)))
+            foreach (Client client in ClientBL.GetClients(c => !string.IsNullOrWhiteSpace(c.Email) && c.BirthDate.HasValue && IsBirthDayInThePast(c)))
             {
                 try
                 {
+                    Debug.Assert(client.BirthDate.HasValue);
+
+                    Logger.WriteLine(LogLevels.Info, $"Sending happy birthday to {client.FirstName ?? "???"} at {client.Email} birth date {client.BirthDate.Value:dd/MM/yyyy}");
+
                     await MailSender.SendHappyBirthdayMailAsync(client.Email, client.FirstName, client.BirthDate);
 
                     client.LastBirthMailDate = DateTime.Now;
@@ -42,7 +49,7 @@ namespace LoyaltyCard.Business
                 }
                 catch (Exception ex)
                 {
-                    Logger.Exception($"Failed to send happy birth mail to {client.Email}", ex);
+                    Logger.Exception($"Failed to send happy birthday mail to {client.Email}", ex);
                 }
             }
         }
