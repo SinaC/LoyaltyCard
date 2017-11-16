@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using LoyaltyCard.Business;
+using LoyaltyCard.IBusiness;
+using LoyaltyCard.IDataAccess;
 using LoyaltyCard.Log;
 
 namespace LoyaltyCard.App
@@ -16,6 +20,22 @@ namespace LoyaltyCard.App
 
         public App()
         {
+
+            // Register instances
+            EasyIoc.IocContainer.Default.RegisterInstance<ILog>(new NLogger());
+            EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(new DataAccess.FileBased.ClientDL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IGeoDL>(new DataAccess.FileBased.GeoDL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IGeoBL>(new GeoBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IMailAutomationBL>(new MailAutomationBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IStatisticsBL>(new StatisticsBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IMailSender.IMailSender>(new MailSender.MailSender());
+
+            // Initialize log
+            Logger.Initialize(ConfigurationManager.AppSettings["LogPath"], "${shortdate}.log");
+            Logger.Info("Application started");
+
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             Exit += OnExit;
         }

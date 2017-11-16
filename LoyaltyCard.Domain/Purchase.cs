@@ -17,5 +17,7 @@ namespace LoyaltyCard.Domain
 
         [DataMember]
         public decimal Amount { get; set; }
+
+        public bool IsPurchaseDeletable { get; set; }
     }
 }

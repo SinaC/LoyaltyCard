@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LoyaltyCard.App"
         xmlns:views="clr-namespace:LoyaltyCard.App.Views"
-        xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
         xmlns:customControls="clr-namespace:LoyaltyCard.App.CustomControls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainViewModelDesignData, IsDesignTimeCreatable=True}"
         Height="600"
         Width="800"
-        Title="Fidelis PPC">
+        Title="Fidelis PPC"
+        Icon="logo.png">
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:MainViewModel}" x:Key="DisplayClientTemplate">
             <views:DisplayClientView DataContext="{Binding DisplayClientViewModel}"/>

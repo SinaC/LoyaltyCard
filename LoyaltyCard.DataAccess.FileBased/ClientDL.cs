@@ -1,5 +1,4 @@
-﻿using LoyaltyCard.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
@@ -9,6 +8,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
+using LoyaltyCard.Common.Extensions;
+using LoyaltyCard.Domain;
 using LoyaltyCard.IDataAccess;
 
 namespace LoyaltyCard.DataAccess.FileBased
@@ -16,6 +17,8 @@ namespace LoyaltyCard.DataAccess.FileBased
     public class ClientDL : IClientDL
     {
         private List<Client> _clients;
+
+        private Func<Client, DateTime, DateTime, decimal?> PurchaseInPeriodFunc => (client, from, till) => client.Purchases?.Where(p => p.Date >= from && p.Date <= till).SumNullIfEmpty(p => p.Amount);
 
         public List<Client> GetClients()
         {
@@ -114,6 +117,109 @@ namespace LoyaltyCard.DataAccess.FileBased
             LoadClients(); // Load clients if needed
 
             return _clients.Where(filterFunc).ToList();
+        }
+
+        public void DeleteClient(Client client)
+        {
+            LoadClients(); // Load clients if needed
+
+            _clients.RemoveAll(x => x.Id == client.Id);
+
+            SaveClients();
+        }
+
+        public BestClient GetBestClientInPeriod(DateTime from, DateTime till)
+        {
+            LoadClients(); // Load clients if needed
+
+            var weekPurchaseByClient = _clients.Select(client =>
+                    new
+                    {
+                        client,
+                        total = PurchaseInPeriodFunc(client, from, till)
+                    })
+                .Where(x => x.total.HasValue)
+                .WhereMax(x => x.total.Value);
+            BestClient bestClient = null;
+            if (weekPurchaseByClient != null)
+            {
+                bestClient = new BestClient
+                {
+                    Client = weekPurchaseByClient.client,
+                    Amount = weekPurchaseByClient.total
+                };
+            }
+            return bestClient;
+        }
+
+        public Dictionary<AgeCategories, int> GetClientCountByAgeCategory()
+        {
+            LoadClients(); // Load clients if needed
+
+            var clientCountByAgeCategories = _clients.Select(client =>
+                    new
+                    {
+                        client,
+                        category = client.AgeCategory
+                    })
+                .GroupBy(x => x.category)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return clientCountByAgeCategories;
+        }
+
+        public Dictionary<Sex, int> GetClientCountBySex()
+        {
+            LoadClients(); // Load clients if needed
+
+            var clientCountBySex = _clients.Select(client =>
+                    new
+                    {
+                        client,
+                        sex = client.Sex
+                    })
+                .GroupBy(x => x.sex)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return clientCountBySex;
+        }
+
+        public Dictionary<AgeCategories, decimal> GetClientAverageAmountByAgeCategory()
+        {
+            LoadClients(); // Load clients if needed
+
+            var averageAmountByAgeCategories = _clients.Select(client =>
+                    new
+                    {
+                        client,
+                        category = client.AgeCategory
+                    })
+                .GroupBy(x => x.category)
+                .ToDictionary(g => g.Key, g => g.Where(x => x.client?.Purchases.Any() == true).Average(x => x.client.Purchases?.Average(p => p.Amount)) ?? 0);
+
+            return averageAmountByAgeCategories;
+        }
+
+        public FooterInformations GetFooterInformations()
+        {
+            LoadClients(); // Load clients if needed
+
+            DateTime today = DateTime.Today;
+            DateTime weekStart = today.AddDays(-(int)DateTime.Today.DayOfWeek);
+            DateTime weekEnd = weekStart.AddDays(7).AddSeconds(-1);
+
+            int clientCount = _clients.Count;
+            int newClientCount = _clients.Count(x => x.CreationDate.HasValue && x.CreationDate.Value.Date == today);
+            decimal daySales = _clients.Where(x => x.Purchases?.Any() == true).SelectMany(x => x.Purchases).Where(p => p.Date.Date == today).Sum(p => p.Amount);
+            decimal weekSales = _clients.Where(x => x.Purchases?.Any() == true).SelectMany(x => x.Purchases).Where(p => p.Date >= weekStart && p.Date <= weekEnd).Sum(p => p.Amount);
+
+            return new FooterInformations
+            {
+                TotalClientCount = clientCount,
+                TotalNewClientCount = newClientCount,
+                DaySales = daySales,
+                WeekSales = weekSales
+            };
         }
 
         private void LoadClients()

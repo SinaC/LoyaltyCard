@@ -151,7 +151,7 @@ namespace LoyaltyCard.Services.Popup
                     modalPopupWindow.Closing += ModalPopupWindowOnClosing;
                     lock (_windowsLockObject)
                         _windows.Add(modalPopupWindow);
-                    modalPopupWindow.SourceInitialized += ModalPopupWindow_SourceInitialized; ;
+                    modalPopupWindow.SourceInitialized += ModalPopupWindow_SourceInitialized;
                     modalPopupWindow.ShowDialog();
                     onCloseAction?.Invoke();
                 },

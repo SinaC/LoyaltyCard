@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace LoyaltyCard.App.Helpers
+namespace LoyaltyCard.Common.Extensions
 {
     public static class EnumExtensions
     {

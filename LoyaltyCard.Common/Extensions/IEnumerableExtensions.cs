@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LoyaltyCard.App.Helpers
+namespace LoyaltyCard.Common.Extensions
 {
     public static class IEnumerableExtensions
     {
@@ -10,7 +10,8 @@ namespace LoyaltyCard.App.Helpers
         {
             if (!items.Any())
             {
-                throw new InvalidOperationException("Empty input sequence");
+                //throw new InvalidOperationException("Empty input sequence");
+                return default(T);
             }
 
             var comparer = Comparer<U>.Default;
@@ -29,6 +30,20 @@ namespace LoyaltyCard.App.Helpers
             }
 
             return maxItem;
+        }
+
+        public static int? SumNullIfEmpty<T>(this IEnumerable<T> items, Func<T, int> filterFunc)
+        {
+            if (!items.Any())
+                return null;
+            return items.Sum(filterFunc);
+        }
+
+        public static decimal? SumNullIfEmpty<T>(this IEnumerable<T> items, Func<T,decimal> filterFunc)
+        {
+            if (!items.Any())
+                return null;
+            return items.Sum(filterFunc);
         }
     }
 }

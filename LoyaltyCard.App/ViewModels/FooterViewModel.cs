@@ -1,9 +1,17 @@
-﻿using EasyMVVM;
+﻿using System;
+using System.Threading.Tasks;
+using EasyMVVM;
+using LoyaltyCard.App.Messages;
+using LoyaltyCard.Common;
+using LoyaltyCard.Domain;
+using LoyaltyCard.IBusiness;
 
 namespace LoyaltyCard.App.ViewModels
 {
-    public class FooterViewModel : ObservableObject
+    public class FooterViewModel : ViewModelBase
     {
+        private IStatisticsBL StatisticsBL => EasyIoc.IocContainer.Default.Resolve<IStatisticsBL>();
+
         private int _totalClientCount;
         public int TotalClientCount
         {
@@ -34,7 +42,32 @@ namespace LoyaltyCard.App.ViewModels
 
         public FooterViewModel()
         {
-            // TODO: register to NewClient event and NewSale event
+            Mediator.Default.Register<SaveClientMessage>(this, async x => await RefreshAsync());
+
+            RefreshAsync();
+        }
+
+        private async Task RefreshAsync()
+        {
+            try
+            {
+                IsBusy = true;
+
+                FooterInformations infos = await AsyncFake.CallAsync(StatisticsBL, x => x.GetFooterInformations());
+
+                TotalClientCount = infos.TotalClientCount;
+                TotalNewClientCount = infos.TotalNewClientCount;
+                DaySales = infos.DaySales;
+                WeekSales = infos.WeekSales;
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 

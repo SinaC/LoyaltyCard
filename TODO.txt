@@ -1,23 +1,19 @@
-Compute if a happy birthday mail must be sent (MailAutomationBL)
-SearchClient pagination
+Display errors in Footer
+Birthday mail: instead Today is your birthday   but  'Date' is/was your birthday
 
 DB instead of Xml
 
-birth day automatic mail
 get GPS coordinates from client address -> will be used to do a chart with distance from client to shop
 
 Statistics:
-	Bar Graph avec montant moyen/tranche d'âge
 	Graphique? de regroupement/ commune. Créer des communes et regrouper nbre de personne suivant le code postal. Créer 3 zones Bruxelles, BW, Wallonie avec un % de client.
 
 SearchClient
-	LastName, FirstName max width -> TextTrimming if too long + complete value in tooltîp
+	LastName, FirstName max width -> TextTrimming if too long + complete value in tooltip
+	pagination
 
-Footer with #Client, total EUR from beginning, total EUR for day
- -> use creation date
- continue FooterData, add DL/BL to fill FooterData, use FooterData in FooterVM init
+Client merge (if two or more identical client)
 
-Client merge
 
 
 If Gmail Error :The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required

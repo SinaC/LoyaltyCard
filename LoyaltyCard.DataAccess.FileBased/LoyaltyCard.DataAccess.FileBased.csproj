@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">
+      <Project>{0B8C42FA-DE35-4247-A9E7-4FADFE6A5D10}</Project>
+      <Name>LoyaltyCard.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.IDataAccess\LoyaltyCard.IDataAccess.csproj">
       <Project>{65C7761D-9EAC-4B48-B81C-BCD402F38597}</Project>
       <Name>LoyaltyCard.IDataAccess</Name>

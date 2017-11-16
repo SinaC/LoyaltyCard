@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using EasyMVVM;
 using LoyaltyCard.App.Messages;
+using LoyaltyCard.Common;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
-using LoyaltyCard.Log;
 
 namespace LoyaltyCard.App.ViewModels
 {
-    public class SearchClientViewModel : ObservableObject
+    public class SearchClientViewModel : ViewModelBase
     {
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
 
@@ -57,11 +59,24 @@ namespace LoyaltyCard.App.ViewModels
         #region Search
 
         private ICommand _searchCommand;
-        public ICommand SearchCommand => _searchCommand ?? (_searchCommand = new RelayCommand(Search));
+        public ICommand SearchCommand => _searchCommand ?? (_searchCommand = new AsyncRelayCommand(SearchAsync));
 
-        private void Search()
+        private async Task SearchAsync()
         {
-            Clients = ClientBL.SearchClients(Filter);
+            try
+            {
+                IsBusy = true;
+
+                Clients = await AsyncFake.CallAsync(ClientBL, x => x.SearchClients(Filter));
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         #endregion
@@ -94,12 +109,12 @@ namespace LoyaltyCard.App.ViewModels
         #region Test
 
         private ICommand _testCommand;
-        public ICommand TestCommand => _testCommand ?? (_testCommand = new RelayCommand(Test));
+        public ICommand TestCommand => _testCommand ?? (_testCommand = new AsyncRelayCommand(TestAsync));
 
-        private void Test()
+        private async Task TestAsync()
         {
             IMailAutomationBL mailAutomationBL = EasyIoc.IocContainer.Default.Resolve<IMailAutomationBL>();
-            mailAutomationBL.SendAutomatedMailsAsync();
+            await mailAutomationBL.SendAutomatedMailsAsync();
         }
 
         #endregion

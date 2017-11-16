@@ -38,6 +38,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncRelayCommand.cs" />
     <Compile Include="DesignMode.cs" />
     <Compile Include="IMediator.cs" />
     <Compile Include="Mediator.cs" />

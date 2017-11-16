@@ -13,6 +13,9 @@ namespace LoyaltyCard.App.ViewModels.Popups
 
         private readonly Action<decimal, DateTime> _okAction;
 
+        public DateTime? MinimumDate { get; set; }
+        public DateTime MaximumDate { get; set; }
+
         private DateTime? _selectedDate;
         public DateTime? SelectedDate
         {
@@ -31,12 +34,15 @@ namespace LoyaltyCard.App.ViewModels.Popups
         public ICommand OkCommand => _okCommand = _okCommand ?? new RelayCommand(Ok);
         private void Ok()
         {
-            PopupService?.Close(this);
-
             if (Amount > 0)
             {
-                DateTime date = SelectedDate ?? DateTime.Now;
-                _okAction?.Invoke(Amount, date);
+                PopupService?.Close(this);
+
+                if (Amount > 0)
+                {
+                    DateTime date = SelectedDate ?? DateTime.Now;
+                    _okAction?.Invoke(Amount, date);
+                }
             }
         }
 
@@ -47,15 +53,17 @@ namespace LoyaltyCard.App.ViewModels.Popups
             PopupService?.Close(this);
         }
 
-        public AddPurchaseViewModel(Action<decimal, DateTime> okAction)
+        public AddPurchaseViewModel(DateTime?minDate, Action<decimal, DateTime> okAction)
         {
+            MinimumDate = minDate;
+            MaximumDate = DateTime.Today;
             _okAction = okAction;
         }
     }
 
     public class AddPurchaseViewModelDesignData : AddPurchaseViewModel
     {
-        public AddPurchaseViewModelDesignData() : base((amount, when) => { })
+        public AddPurchaseViewModelDesignData() : base(null, (amount, when) => { })
         {
         }
     }

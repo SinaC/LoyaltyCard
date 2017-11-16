@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:LoyaltyCard.App.Views"
              xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels"
              xmlns:behaviours="clr-namespace:LoyaltyCard.App.Behaviours"
+             xmlns:customControls="clr-namespace:LoyaltyCard.App.CustomControls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:SearchClientViewModelDesignData, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="800">
@@ -28,91 +29,96 @@
     <!--<UserControl.CommandBindings>
         <CommandBinding Command="ComponentCommands.MoveFocusDown" Executed="CommandBinding_Executed" />
     </UserControl.CommandBindings>-->
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <!-- Search criterias -->
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0"
+    <customControls:AdornedControl IsAdornerVisible="{Binding IsBusy}">
+        <customControls:AdornedControl.AdornerContent>
+            <customControls:LoadingWait />
+        </customControls:AdornedControl.AdornerContent>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- Search criterias -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"
+                            Margin="5,2"
+                            Orientation="Vertical">
+                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                               Text="Nom/Prénom/Email/Numéro de client:"/>
+                    <TextBox x:Name="FilterTextBox"
+                             MinWidth="400"
+                             Style="{StaticResource InputTextBoxStyle}"
+                             behaviours:SelectTextOnFocus.Active="True"
+                             Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                            <!--<KeyBinding Command="ComponentCommands.MoveFocusDown" Gesture="DOWN"/>-->
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Height="32"
                         Margin="5,2"
-                        Orientation="Vertical">
-                <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                           Text="Nom/Prénom/Email/Numéro de client:"/>
-                <TextBox x:Name="FilterTextBox"
-                         MinWidth="400"
-                         Style="{StaticResource InputTextBoxStyle}"
-                         behaviours:SelectTextOnFocus.Active="True"
-                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.InputBindings>
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
-                        <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
-                        <!--<KeyBinding Command="ComponentCommands.MoveFocusDown" Gesture="DOWN"/>-->
-                    </TextBox.InputBindings>
-                </TextBox>
-            </StackPanel>
-            <Button Grid.Column="1"
-                    Height="32"
-                    Margin="5,2"
-                    Command="{Binding SearchCommand}">
-                <Image Style="{StaticResource AliasedImageStyle}"
-                       Source="{StaticResource SearchImage}"/>
-            </Button>
-            <Button Grid.Column="2"
-                    Height="32"
-                    Margin="5,2"
-                    Command="{Binding CreateClientCommand}">
-                <Image Style="{StaticResource AliasedImageStyle}"
-                       Source="{StaticResource PlusImage}"/>
-            </Button>
-            <Button Grid.Column="3"
-                    Height="32"
-                    Margin="5,2"
-                    Command="{Binding DisplayStatsCommand}">
-                <Image Style="{StaticResource AliasedImageStyle}"
-                       Source="{StaticResource StatsImage}"/>
-            </Button>
-            <Button Grid.Column="4"
-                    Height="32"
-                    Margin="5,2"
-                    Command="{Binding TestCommand}">
-                <Image Style="{StaticResource AliasedImageStyle}"
-                       Source="{StaticResource MailImage}"/>
-            </Button>
+                        Command="{Binding SearchCommand}">
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource SearchImage}"/>
+                </Button>
+                <Button Grid.Column="2"
+                        Height="32"
+                        Margin="5,2"
+                        Command="{Binding CreateClientCommand}">
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource PlusImage}"/>
+                </Button>
+                <Button Grid.Column="3"
+                        Height="32"
+                        Margin="5,2"
+                        Command="{Binding DisplayStatsCommand}">
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource StatsImage}"/>
+                </Button>
+                <!--<Button Grid.Column="4"
+                        Height="32"
+                        Margin="5,2"
+                        Command="{Binding TestCommand}">
+                    <Image Style="{StaticResource AliasedImageStyle}"
+                           Source="{StaticResource MailImage}"/>
+                </Button>-->
+            </Grid>
+            <!-- List -->
+            <DataGrid x:Name="ClientsDataGrid"
+                      Grid.Row="1"
+                      Margin="5,2"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      AutoGenerateColumns="False"
+                      SelectedItem="{Binding SelectedClient}"
+                      behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditClientCommand}"
+                      RowStyle="{StaticResource ClientDataGridRowStyle}"
+                      ItemsSource="{Binding Clients}">
+                <DataGrid.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding EditClientCommand}"/>
+                    <KeyBinding Key="Return" Command="{Binding EditClientCommand}"/>
+                </DataGrid.InputBindings>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="N° client" Binding="{Binding ClientId}"/>
+                    <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
+                    <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
+                    <DataGridTextColumn Header="Total depuis bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="Total" Binding="{Binding TotalPurchases, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="€ dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
-        <!-- List -->
-        <DataGrid x:Name="ClientsDataGrid"
-                  Grid.Row="1"
-                  Margin="5,2"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  AutoGenerateColumns="False"
-                  SelectedItem="{Binding SelectedClient}"
-                  behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditClientCommand}"
-                  RowStyle="{StaticResource ClientDataGridRowStyle}"
-                  ItemsSource="{Binding Clients}">
-            <DataGrid.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding EditClientCommand}"/>
-                <KeyBinding Key="Return" Command="{Binding EditClientCommand}"/>
-            </DataGrid.InputBindings>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="N° client" Binding="{Binding ClientId}"/>
-                <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
-                <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
-                <DataGridTextColumn Header="Total depuis bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                <DataGridTextColumn Header="Total" Binding="{Binding TotalPurchases, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                <DataGridTextColumn Header="€ dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+    </customControls:AdornedControl>
 </UserControl>

@@ -41,9 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgeCategories.cs" />
+    <Compile Include="BestClient.cs" />
     <Compile Include="CityByZip.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientCategories.cs" />
+    <Compile Include="FooterInformations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Purchase.cs" />
     <Compile Include="Sex.cs" />

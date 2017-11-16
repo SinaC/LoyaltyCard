@@ -289,8 +289,25 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public DateTime? LastBirthMailDate { get; set; }
 
+        #region Purchases
+
+        private ObservableCollection<Purchase> _purchases;
+
         [DataMember]
-        public virtual ObservableCollection<Purchase> Purchases { get; set; }
+        public virtual ObservableCollection<Purchase> Purchases
+        {
+            get { return _purchases; }
+            set
+            {
+                if (_purchases != value)
+                {
+                    _purchases = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
         #region INotifyPropertyChanged
 
@@ -318,10 +335,50 @@ namespace LoyaltyCard.Domain
             ? Purchases?.Where(x => x.Date > LastVoucherDate.Value).Sum(x => x.Amount)
             : TotalPurchases;
 
-        public bool IsBirthDay => BirthDate.HasValue && DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day; // TODO: 29th february =D
+        public bool IsBirthDay => BirthDate.HasValue && ((DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day) || (BirthDate.Value.Month == 2 && BirthDate.Value.Day == 29 && DateTime.Today.Month == 2 && DateTime.Today.Day == 28));
 
-        public int? Age => BirthDate.HasValue
-            ? DateTime.Today.Year - BirthDate.Value.Date.Year
-            : (int?) null;
+        public int? Age
+        {
+            get
+            {
+                //https://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
+                if (!BirthDate.HasValue)
+                    return null;
+                DateTime today = DateTime.Today;
+                int age = DateTime.Today.Year - BirthDate.Value.Year;
+
+                if (today.Month < BirthDate.Value.Month || (today.Month == BirthDate.Value.Month && today.Day < BirthDate.Value.Day))
+                    age--;
+
+                return age;
+            }
+        }
+
+        public AgeCategories AgeCategory
+        {
+            get
+            {
+                int? clientAge = Age;
+                if (!clientAge.HasValue)
+                    return AgeCategories.Undefined;
+                if (clientAge <= 10)
+                    return AgeCategories.LessThan10;
+                if (clientAge > 10 && clientAge <= 15)
+                    return AgeCategories.Between11And15;
+                if (clientAge > 15 && clientAge <= 20)
+                    return AgeCategories.Between16And20;
+                if (clientAge > 20 && clientAge <= 30)
+                    return AgeCategories.Between20And30;
+                if (clientAge > 30 && clientAge <= 40)
+                    return AgeCategories.Between31And40;
+                if (clientAge > 40 && clientAge <= 50)
+                    return AgeCategories.Between41And50;
+                if (clientAge > 51 && clientAge <= 60)
+                    return AgeCategories.Between51And60;
+                if (clientAge > 61 && clientAge <= 70)
+                    return AgeCategories.Between61And70;
+                return AgeCategories.MoreThan71;
+            }
+        }
     }
 }

@@ -17,8 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}"
-          behaviours:EnterKeyTraversal.IsEnabled="True">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -36,6 +35,8 @@
                 <DatePicker Margin="5,2"
                             IsEnabled="{Binding IsChecked, ElementName=OptionalDateCheckBox}"
                             Style="{StaticResource DatePickerStyle}"
+                            DisplayDateStart="{Binding MinimumDate}"
+                            DisplayDateEnd="{Binding MaximumDate}"
                             SelectedDate="{Binding SelectedDate}"/>
             </StackPanel>
         </StackPanel>

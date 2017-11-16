@@ -13,7 +13,7 @@ using LoyaltyCard.Services.Popup;
 
 namespace LoyaltyCard.App.ViewModels
 {
-    public class DisplayClientViewModel : ObservableObject
+    public class DisplayClientViewModel : ViewModelBase
     {
         private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
@@ -128,28 +128,11 @@ namespace LoyaltyCard.App.ViewModels
         #region Save
 
         private ICommand _saveCommand;
-        public ICommand SaveCommand => _saveCommand = _saveCommand ?? new RelayCommand(Save);
+        public ICommand SaveCommand => _saveCommand = _saveCommand ?? new RelayCommand(SaveAndSwitchToSearch);
 
-        private void Save()
+        private void SaveAndSwitchToSearch()
         {
-            if (string.IsNullOrWhiteSpace(FirstName)
-                || string.IsNullOrWhiteSpace(LastName))
-                return; // TODO: inform user
-
-            Client.LastName = LastName;
-            Client.FirstName = FirstName;
-            Client.BirthDate = BirthDate;
-            Client.Email = Email;
-            Client.Mobile = Mobile;
-            Client.StreetName = StreetName;
-            Client.StreetNumber = StreetNumber;
-            Client.ZipCode = ZipCode;
-            Client.City = City;
-            Client.Comment = Comment;
-            Client.Sex = Sex;
-            Client.Categories = Categories.Where(x => x.IsSelected).Select(x => x.Category).ToList();
-
-            ClientBL.SaveClient(Client);
+           SaveClient();
 
             // Switch to search mode
             Mediator.Default.Send(new SwitchToSearchClientMessage());
@@ -177,7 +160,7 @@ namespace LoyaltyCard.App.ViewModels
 
         private void DisplayAddPurchasePopup()
         {
-            AddPurchaseViewModel vm = new AddPurchaseViewModel(AddPurchase);
+            AddPurchaseViewModel vm = new AddPurchaseViewModel(Client.LastVoucherDate, AddPurchase);
             PopupService.DisplayModal(vm, "Ajout achat");
         }
 
@@ -186,7 +169,8 @@ namespace LoyaltyCard.App.ViewModels
             Purchase purchase = new Purchase
             {
                 Amount = amount,
-                Date = when
+                Date = when,
+                IsPurchaseDeletable = true
             };
             // Add purchase
             Client.Purchases = Client.Purchases ?? new ObservableCollection<Purchase>();
@@ -196,7 +180,26 @@ namespace LoyaltyCard.App.ViewModels
                 Client.PurchaseAdded();
             }
             // Save client and purchase
+            SaveClient();
             ClientBL.SavePurchase(Client, purchase);
+        }
+
+        #endregion
+
+        #region Delete purchase
+
+        private ICommand _deletePurchaseCommand;
+        public ICommand DeletePurchaseCommand => _deletePurchaseCommand = _deletePurchaseCommand ?? new RelayCommand<Purchase>(DeletePurchase);
+
+        private void DeletePurchase(Purchase purchase)
+        {
+            PopupService.DisplayQuestion("Suppression d'achat", "Etes-vous certain de vouloir supprimer cet achat?", QuestionActionButton.Yes(() => DeletePurchaseConfirmed(purchase)), QuestionActionButton.No());
+        }
+
+        private void DeletePurchaseConfirmed(Purchase purchase)
+        {
+            Client.Purchases.Remove(purchase);
+            SaveClient();
         }
 
         #endregion
@@ -247,6 +250,18 @@ namespace LoyaltyCard.App.ViewModels
 
             Client = client;
 
+            // Initialize IsPurchaseDeletable
+            if (Client.Purchases != null)
+            {
+                if (Client.LastVoucherDate.HasValue)
+                    foreach (Purchase purchase in Client.Purchases)
+                        purchase.IsPurchaseDeletable = purchase.Date > Client.LastVoucherDate.Value;
+                else
+                    foreach (Purchase purchase in Client.Purchases)
+                        purchase.IsPurchaseDeletable = true;
+            }
+
+            // Initialize input fields
             _automaticCitySearch = false; // desactivate while filling client fields
             LastName = client.LastName;
             FirstName = client.FirstName;
@@ -262,6 +277,31 @@ namespace LoyaltyCard.App.ViewModels
             foreach (ClientCategoryModel categoryModel in Categories)
                 categoryModel.IsSelected = client.Categories?.Contains(categoryModel.Category) == true;
             _automaticCitySearch = true;
+        }
+
+        private void SaveClient()
+        {
+            // Save input fields to client
+            Client.LastName = LastName;
+            Client.FirstName = FirstName;
+            Client.BirthDate = BirthDate;
+            Client.Email = Email;
+            Client.Mobile = Mobile;
+            Client.StreetName = StreetName;
+            Client.StreetNumber = StreetNumber;
+            Client.ZipCode = ZipCode;
+            Client.City = City;
+            Client.Comment = Comment;
+            Client.Sex = Sex;
+            Client.Categories = Categories.Where(x => x.IsSelected).Select(x => x.Category).ToList();
+
+            ClientBL.SaveClient(Client);
+
+            //
+            Mediator.Default.Send(new SaveClientMessage
+            {
+                Client = Client
+            });
         }
     }
 

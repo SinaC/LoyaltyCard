@@ -25,6 +25,7 @@
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
             <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid behaviours:EnterKeyTraversal.IsEnabled="True">
@@ -274,10 +275,23 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date d'achat" 
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Visibility="{Binding IsPurchaseDeletable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Command="{Binding DataContext.DeletePurchaseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Style="{StaticResource AliasedImageStyle}"
+                                           Width="8" Height="8"
+                                           Source="{StaticResource CancelImage}"/>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Date d'achat"
                                         Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" 
                                         ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                    <DataGridTextColumn Header="Montant de l'achat" 
+                    <DataGridTextColumn Header="Montant de l'achat"
                                         Binding="{Binding Amount, StringFormat=C}" 
                                         ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 </DataGrid.Columns>

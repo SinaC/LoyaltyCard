@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
@@ -41,7 +44,6 @@
     </Reference>
     <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
@@ -96,15 +98,21 @@
     <Compile Include="Behaviours\EnterKeyTraversal.cs" />
     <Compile Include="Behaviours\SelectTextOnFocus.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
+    <Compile Include="CustomControls\AdornedControl.cs" />
+    <Compile Include="CustomControls\AdornerPlacement.cs" />
     <Compile Include="CustomControls\ContentControlExt.cs" />
-    <Compile Include="Helpers\EnumExtensions.cs" />
-    <Compile Include="Helpers\IEnumerableExtensions.cs" />
+    <Compile Include="CustomControls\FrameworkElementAdorner.cs" />
+    <Compile Include="CustomControls\LoadingWait.xaml.cs">
+      <DependentUpon>LoadingWait.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\IFocusInputElementOnActivation.cs" />
     <Compile Include="Messages\CreateClientMessage.cs" />
+    <Compile Include="Messages\SaveClientMessage.cs" />
     <Compile Include="Messages\SwitchToDisplayClientMessage.cs" />
     <Compile Include="Messages\SwitchToStatisticsMessage.cs" />
     <Compile Include="Messages\SwitchToSearchClientMessage.cs" />
     <Compile Include="Models\ClientCategoryModel.cs" />
+    <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModels\DisplayClientViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ViewModels\FooterViewModel.cs" />
@@ -126,6 +134,10 @@
     <Compile Include="Views\SearchClientView.xaml.cs">
       <DependentUpon>SearchClientView.xaml</DependentUpon>
     </Compile>
+    <Page Include="CustomControls\LoadingWait.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Images.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -185,6 +197,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <SplashScreen Include="logo.png" />
+    <Resource Include="logo.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -209,6 +223,10 @@
     <ProjectReference Include="..\Libraries\EasyMVVM\EasyMVVM.csproj">
       <Project>{10833c79-c3fb-4f70-ad1d-7f0173d01966}</Project>
       <Name>EasyMVVM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">
+      <Project>{0B8C42FA-DE35-4247-A9E7-4FADFE6A5D10}</Project>
+      <Name>LoyaltyCard.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.Log\LoyaltyCard.Log.csproj">
       <Project>{BCB79B57-39A1-4714-A728-B09C90BB4B35}</Project>
@@ -264,7 +282,14 @@
   <ItemGroup>
     <Resource Include="Images\mail.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem move $(TargetDir)$(TargetFileName) $(TargetDir)PPC.Fidelis.exe
+rem move $(TargetDir)$(TargetFileName).config $(TargetDir)PPC.Fidelis.exe.config</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

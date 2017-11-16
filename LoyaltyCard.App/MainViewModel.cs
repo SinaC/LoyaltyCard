@@ -12,7 +12,7 @@ namespace LoyaltyCard.App
         Stats
     }
 
-    public class MainViewModel : ObservableObject
+    public class MainViewModel : ViewModelBase
     {
         public FooterViewModel FooterViewModel { get; protected set; }
 
@@ -45,7 +45,7 @@ namespace LoyaltyCard.App
 
         private void HandleSwitchToStatisticsMessage(SwitchToStatisticsMessage switchToStatisticsMessage)
         {
-            StatisticsViewModel.Initialize();
+            StatisticsViewModel.Refresh();
             Mode = Modes.Stats;
         }
 

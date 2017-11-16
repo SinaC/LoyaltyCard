@@ -1,5 +1,5 @@
 ﻿using EasyMVVM;
-using LoyaltyCard.App.Helpers;
+using LoyaltyCard.Common.Extensions;
 using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.App.Models

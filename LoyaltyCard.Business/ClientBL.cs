@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IDataAccess;
@@ -108,12 +110,19 @@ namespace LoyaltyCard.Business
             return clients;
         }
 
+        public void DeleteClient(Client client)
+        {
+            ClientDL.DeleteClient(client);
+        }
+
         private void AddMandatoryFields(Client client)
         {
             if (client.Id == Guid.Empty)
                 client.Id = Guid.NewGuid();
             if (!client.CreationDate.HasValue)
                 client.CreationDate = DateTime.Now;
+            if (!client.LastBirthMailDate.HasValue)
+                client.LastBirthMailDate = DateTime.Today.AddDays(-1);
 
             if (client.ClientId == 0)
             {
