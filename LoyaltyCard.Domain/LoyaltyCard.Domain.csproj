@@ -52,6 +52,12 @@
     <Compile Include="Sex.cs" />
     <Compile Include="FooterData.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">
+      <Project>{0B8C42FA-DE35-4247-A9E7-4FADFE6A5D10}</Project>
+      <Name>LoyaltyCard.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -248,13 +248,13 @@
                 <Button Width="32"
                         Margin="35,2"
                         Command="{Binding SaveCommand}">
-                    <Image Style="{StaticResource AliasedImageStyle}"
+                    <Image Style="{StaticResource AutoDisableImageStyle}"
                            Source="{StaticResource OkImage}"/>
                 </Button>
                 <Button Width="32"
                         Margin="35,2"
                         Command="{Binding CancelCommand}">
-                    <Image Style="{StaticResource AliasedImageStyle}"
+                    <Image Style="{StaticResource AutoDisableImageStyle}"
                            Source="{StaticResource CancelImage}"/>
                 </Button>
             </StackPanel>
@@ -281,7 +281,7 @@
                                 <Button Visibility="{Binding IsPurchaseDeletable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         Command="{Binding DataContext.DeletePurchaseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
                                         CommandParameter="{Binding}">
-                                    <Image Style="{StaticResource AliasedImageStyle}"
+                                    <Image Style="{StaticResource AutoDisableImageStyle}"
                                            Width="8" Height="8"
                                            Source="{StaticResource CancelImage}"/>
                                 </Button>
@@ -318,13 +318,13 @@
                 <Button Width="32"
                         Margin="35,2"
                         Command="{Binding AddPurchaseCommand}">
-                    <Image Style="{StaticResource AliasedImageStyle}"
+                    <Image Style="{StaticResource AutoDisableImageStyle}"
                            Source="{StaticResource AddPuchaseImage}"/>
                 </Button>
                 <Button Width="32"
                         Margin="35,2"
                         Command="{Binding CreateVoucherCommand}">
-                    <Image Style="{StaticResource AliasedImageStyle}"
+                    <Image Style="{StaticResource AutoDisableImageStyle}"
                            Source="{StaticResource VoucherImage}"/>
                 </Button>
             </StackPanel>

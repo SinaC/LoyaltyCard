@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace LoyaltyCard.Domain
 {
     [DataContract(Namespace = "")]
-    public class Purchase
+    public class Purchase : INotifyPropertyChanged
     {
         [DataMember]
         public Guid Id { get; set; }
@@ -18,6 +20,29 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public decimal Amount { get; set; }
 
-        public bool IsPurchaseDeletable { get; set; }
+        private bool _isPurchaseDeletable;
+        public bool IsPurchaseDeletable
+        {
+            get { return _isPurchaseDeletable; }
+            set
+            {
+                if (_isPurchaseDeletable != value)
+                {
+                    _isPurchaseDeletable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

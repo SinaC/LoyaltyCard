@@ -1,3 +1,5 @@
+Bug: CreateVoucherCommand should be disabled after a voucher has been emitted (CanExecute does it work when bound on property and propertychanged is raised)
+
 Display errors in Footer
 Birthday mail: instead Today is your birthday   but  'Date' is/was your birthday
 

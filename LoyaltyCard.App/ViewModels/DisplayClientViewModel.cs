@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using EasyMVVM;
 using LoyaltyCard.App.Messages;
@@ -18,6 +19,7 @@ namespace LoyaltyCard.App.ViewModels
         private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
         private IGeoBL GeoBL => EasyIoc.IocContainer.Default.Resolve<IGeoBL>();
+        private IMailSender.IMailSender MailSenderBL => EasyIoc.IocContainer.Default.Resolve<IMailSender.IMailSender>();
 
         private bool _automaticCitySearch;
 
@@ -207,16 +209,16 @@ namespace LoyaltyCard.App.ViewModels
         #region Voucher
 
         private ICommand _createVoucherCommand;
-        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(AskVoucherCreationConfirmation);
+        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(AskVoucherCreationConfirmation, () => !string.IsNullOrWhiteSpace(Client.Email) && Client.TotalSinceLastVoucher > 0);
 
         private void AskVoucherCreationConfirmation()
         {
             PopupService.DisplayQuestion("Emission d'un bon d'achat", 
-                "Etes-vous certain(e) de vouloir émettre un bon d'achat ?", 
+                "Etes-vous certain(e) de vouloir envoyer un bon d'achat par mail ?", 
                 new QuestionActionButton
                 {
                     Caption = "Oui",
-                    ClickCallback = CreateVoucher
+                    ClickCallback = async () => await CreateVoucherAsync()
                 },
                 new QuestionActionButton
                 {
@@ -224,10 +226,26 @@ namespace LoyaltyCard.App.ViewModels
                 });
         }
 
-        private void CreateVoucher()
+        private async Task CreateVoucherAsync()
         {
-            Client.LastVoucherDate = DateTime.Now;
-            ClientBL.SaveClient(Client);
+            // Send mail if client has an email
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(Client.Email))
+                    await MailSenderBL.SendVoucherMailAsync(Client.Email, Client.FirstName, 20);
+
+                Client.LastVoucherDate = DateTime.Now;
+                ClientBL.SaveClient(Client);
+
+                // Purchases cannot be deleted anymore
+                foreach (Purchase purchase in Client.Purchases)
+                    purchase.IsPurchaseDeletable = false;
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                PopupService.DisplayError("Emission d'un bon d'achat", "Erreur lors de l'envoi du mail");
+            }
         }
 
         #endregion

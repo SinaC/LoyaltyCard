@@ -197,8 +197,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <SplashScreen Include="logo.png" />
     <Resource Include="logo.ico" />
+    <SplashScreen Include="logo.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -282,9 +282,7 @@
   <ItemGroup>
     <Resource Include="Images\mail.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rem move $(TargetDir)$(TargetFileName) $(TargetDir)PPC.Fidelis.exe

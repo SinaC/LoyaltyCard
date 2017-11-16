@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoyaltyCard.Common.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -327,12 +328,12 @@ namespace LoyaltyCard.Domain
             OnPropertyChanged("TotalSinceLastVoucher");
         }
 
-        public decimal? TotalPurchases => Purchases?.Sum(x => x.Amount);
+        public decimal? TotalPurchases => Purchases?.SumNullIfEmpty(x => x.Amount);
 
         public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault();
 
         public decimal? TotalSinceLastVoucher => LastVoucherDate.HasValue
-            ? Purchases?.Where(x => x.Date > LastVoucherDate.Value).Sum(x => x.Amount)
+            ? Purchases?.Where(x => x.Date > LastVoucherDate.Value).SumNullIfEmpty(x => x.Amount)
             : TotalPurchases;
 
         public bool IsBirthDay => BirthDate.HasValue && ((DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day) || (BirthDate.Value.Month == 2 && BirthDate.Value.Day == 29 && DateTime.Today.Month == 2 && DateTime.Today.Day == 28));
