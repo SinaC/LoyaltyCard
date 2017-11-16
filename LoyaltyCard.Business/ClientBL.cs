@@ -121,8 +121,6 @@ namespace LoyaltyCard.Business
                 client.Id = Guid.NewGuid();
             if (!client.CreationDate.HasValue)
                 client.CreationDate = DateTime.Now;
-            if (!client.LastBirthMailDate.HasValue)
-                client.LastBirthMailDate = DateTime.Today.AddDays(-1);
 
             if (client.ClientId == 0)
             {

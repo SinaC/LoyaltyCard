@@ -188,14 +188,14 @@ namespace LoyaltyCard.DataAccess.FileBased
         {
             LoadClients(); // Load clients if needed
 
-            var averageAmountByAgeCategories = _clients.Select(client =>
+            var averageAmountByAgeCategories = _clients.Where(x => x.Purchases.Any()).Select(client =>
                     new
                     {
-                        client,
+                        averageAmount = client.Purchases.Average(p => p.Amount),
                         category = client.AgeCategory
                     })
                 .GroupBy(x => x.category)
-                .ToDictionary(g => g.Key, g => g.Where(x => x.client?.Purchases.Any() == true).Average(x => x.client.Purchases?.Average(p => p.Amount)) ?? 0);
+                .ToDictionary(g => g.Key, g => g.Average(x => x.averageAmount));
 
             return averageAmountByAgeCategories;
         }

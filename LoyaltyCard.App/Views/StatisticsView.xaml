@@ -37,7 +37,7 @@
                 <TextBlock>
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource LabelTextBlockStyle}">
-                            <Setter Property="Text" Value="Le client de la semaine est"/>
+                            <Setter Property="Text" Value="Le client de la semaine est "/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding WeekBestClient.Sex}" Value="True">
                                     <Setter Property="Text" Value="La cliente de la semaine est "/>
