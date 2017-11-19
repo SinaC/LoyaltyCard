@@ -2,7 +2,7 @@
 
 namespace LoyaltyCard.Domain
 {
-    [DataContract]
+    [DataContract(Namespace = "")]
     public class FooterInformations
     {
         [DataMember]

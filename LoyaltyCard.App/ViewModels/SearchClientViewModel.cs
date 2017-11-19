@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using EasyMVVM;
@@ -31,8 +29,8 @@ namespace LoyaltyCard.App.ViewModels
             set { Set(() => SelectedClient, ref _selectedClient, value); }
         }
 
-        private List<Client> _clients;
-        public List<Client> Clients
+        private List<ClientSummary> _clients;
+        public List<ClientSummary> Clients
         {
             get { return _clients; }
             set { Set(() => Clients, ref _clients, value); }
@@ -67,7 +65,7 @@ namespace LoyaltyCard.App.ViewModels
             {
                 IsBusy = true;
 
-                Clients = await AsyncFake.CallAsync(ClientBL, x => x.SearchClients(Filter));
+                Clients = await AsyncFake.CallAsync(ClientBL, x => x.GetClientSummaries(Filter));
             }
             catch (Exception ex)
             {
@@ -124,18 +122,14 @@ namespace LoyaltyCard.App.ViewModels
     {
         public SearchClientViewModelDesignData()
         {
-            Clients = Enumerable.Range(0, 50).Select(x => new Client
+            Clients = Enumerable.Range(0, 50).Select(x => new ClientSummary
             {
                 FirstName = $"Pouet{x}",
                 LastName = "Brol",
-                BirthDate = x == 5 ? new DateTime(1976, DateTime.Today.Month, DateTime.Today.Day) : new DateTime(1999, 12, 31),
-                Email = "pouet.brol@gmail.com",
-                Mobile = null,
-                Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1,1+x/2).Select(y => new Purchase
-                {
-                    Amount = x+y*10,
-                    Date = DateTime.Now.AddDays(-y*2)
-                }))
+                Total = x*10,
+                TotalSinceLastVoucher = x*5,
+                LastPurchaseDate = DateTime.Now.AddDays(-x * 2),
+                LastPurchaseAmount = x
             }).ToList();
         }
     }

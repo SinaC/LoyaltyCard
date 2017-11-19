@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="IClientDL.cs" />
     <Compile Include="IGeoDL.cs" />
+    <Compile Include="IPurchaseDL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

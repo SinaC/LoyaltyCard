@@ -26,7 +26,7 @@ namespace EasyIoc
 
         void UnregisterFactory<TInterface>()
             where TInterface : class;
-        
+
         void UnregisterInstance<TInterface>()
             where TInterface : class;
 

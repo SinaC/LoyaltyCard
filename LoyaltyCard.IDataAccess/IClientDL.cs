@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.IDataAccess
 {
     public interface IClientDL
     {
+        List<ClientSummary> GetClientSummaries(string filter);
+
         List<Client> GetClients();
 
         Client GetClient(Guid id);
@@ -27,6 +28,10 @@ namespace LoyaltyCard.IDataAccess
 
         // Statistics
 
+        int GetClientCount();
+
+        int GetNewClientCount();
+
         BestClient GetBestClientInPeriod(DateTime from, DateTime till);
 
         Dictionary<AgeCategories, int> GetClientCountByAgeCategory();
@@ -34,7 +39,5 @@ namespace LoyaltyCard.IDataAccess
         Dictionary<Sex, int> GetClientCountBySex();
 
         Dictionary<AgeCategories, decimal> GetClientAverageAmountByAgeCategory();
-
-        FooterInformations GetFooterInformations();
     }
 }

@@ -1,7 +1,6 @@
-Bug: CreateVoucherCommand should be disabled after a voucher has been emitted (CanExecute does it work when bound on property and propertychanged is raised)
-
 Display errors in Footer
 Birthday mail: instead Today is your birthday   but  'Date' is/was your birthday
+Continue to split code between IClientDL and IPurchaseDL (such as SavePurchase)
 
 DB instead of Xml
 
@@ -18,5 +17,5 @@ Client merge (if two or more identical client)
 
 
 
-If Gmail Error :The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required
+If Gmail Error : The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required
 check https://stackoverflow.com/questions/20906077/gmail-error-the-smtp-server-requires-a-secure-connection-or-the-client-was-not

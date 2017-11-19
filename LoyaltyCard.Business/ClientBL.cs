@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IDataAccess;
@@ -13,6 +11,11 @@ namespace LoyaltyCard.Business
         private const int FirstClientId = 100000;
 
         private IClientDL ClientDL => EasyIoc.IocContainer.Default.Resolve<IClientDL>();
+
+        public List<ClientSummary> GetClientSummaries(string filter)
+        {
+            return ClientDL.GetClientSummaries(filter);
+        }
 
         public List<Client> GetClients()
         {

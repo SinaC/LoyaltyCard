@@ -14,11 +14,41 @@ using LoyaltyCard.IDataAccess;
 
 namespace LoyaltyCard.DataAccess.FileBased
 {
-    public class ClientDL : IClientDL
+    public partial class ClientDL : IClientDL
     {
         private List<Client> _clients;
 
         private Func<Client, DateTime, DateTime, decimal?> PurchaseInPeriodFunc => (client, from, till) => client.Purchases?.Where(p => p.Date >= from && p.Date <= till).SumNullIfEmpty(p => p.Amount);
+
+        public List<ClientSummary> GetClientSummaries(string filter)
+        {
+            LoadClients(); // load clients if needed
+
+            IEnumerable<Client> query = _clients.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                string[] tokens = filter.Split(' ');
+
+                foreach (string token in tokens)
+                    query = query.Where(c => Contains(c.FirstName ?? string.Empty, token) ||
+                                             Contains(c.LastName ?? string.Empty, token) ||
+                                             Contains(c.Email ?? string.Empty, token) ||
+                                             c.ClientId.ToString().StartsWith(token));
+            }
+
+            return query.Select(x => new ClientSummary
+            {
+                Id = x.Id,
+                ClientId = x.ClientId,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                TotalSinceLastVoucher = x.TotalSinceLastVoucher,
+                Total = x.TotalPurchases,
+                LastPurchaseDate = x.LastPurchase?.Date,
+                LastPurchaseAmount = x.LastPurchase?.Amount,
+                IsBirthDay = x.IsBirthDay
+            }).ToList();
+        }
 
         public List<Client> GetClients()
         {
@@ -38,7 +68,7 @@ namespace LoyaltyCard.DataAccess.FileBased
         {
             LoadClients(); // Load clients if needed
 
-            IQueryable<Client> query = _clients.AsQueryable();
+            IEnumerable<Client> query = _clients.AsQueryable();
             if (!string.IsNullOrWhiteSpace(firstNameFilter))
             {
                 firstNameFilter = firstNameFilter.ToLowerInvariant();
@@ -57,7 +87,7 @@ namespace LoyaltyCard.DataAccess.FileBased
         {
             LoadClients(); // Load clients if needed
 
-            IQueryable<Client> query = _clients.AsQueryable();
+            IEnumerable<Client> query = _clients.AsQueryable();
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 string[] tokens = filter.Split(' ');
@@ -126,6 +156,28 @@ namespace LoyaltyCard.DataAccess.FileBased
             _clients.RemoveAll(x => x.Id == client.Id);
 
             SaveClients();
+        }
+
+        // Statistics
+
+        public int GetClientCount()
+        {
+            LoadClients(); // Load clients if needed
+
+            int clientCount = _clients.Count;
+
+            return clientCount;
+        }
+
+        public int GetNewClientCount()
+        {
+            LoadClients(); // Load clients if needed
+
+            DateTime today = DateTime.Today;
+
+            int newClientCount = _clients.Count(x => x.CreationDate.HasValue && x.CreationDate.Value.Date == today);
+
+            return newClientCount;
         }
 
         public BestClient GetBestClientInPeriod(DateTime from, DateTime till)
@@ -200,27 +252,7 @@ namespace LoyaltyCard.DataAccess.FileBased
             return averageAmountByAgeCategories;
         }
 
-        public FooterInformations GetFooterInformations()
-        {
-            LoadClients(); // Load clients if needed
-
-            DateTime today = DateTime.Today;
-            DateTime weekStart = today.AddDays(-(int)DateTime.Today.DayOfWeek);
-            DateTime weekEnd = weekStart.AddDays(7).AddSeconds(-1);
-
-            int clientCount = _clients.Count;
-            int newClientCount = _clients.Count(x => x.CreationDate.HasValue && x.CreationDate.Value.Date == today);
-            decimal daySales = _clients.Where(x => x.Purchases?.Any() == true).SelectMany(x => x.Purchases).Where(p => p.Date.Date == today).Sum(p => p.Amount);
-            decimal weekSales = _clients.Where(x => x.Purchases?.Any() == true).SelectMany(x => x.Purchases).Where(p => p.Date >= weekStart && p.Date <= weekEnd).Sum(p => p.Amount);
-
-            return new FooterInformations
-            {
-                TotalClientCount = clientCount,
-                TotalNewClientCount = newClientCount,
-                DaySales = daySales,
-                WeekSales = weekSales
-            };
-        }
+        //
 
         private void LoadClients()
         {

@@ -20,6 +20,10 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public decimal Amount { get; set; }
 
+        //[DataMember]
+        //public virtual Client Client { get; set; }
+
+        // Computed fields
         private bool _isPurchaseDeletable;
         public bool IsPurchaseDeletable
         {

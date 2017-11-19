@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.IBusiness
 {
     public interface IClientBL
     {
+        List<ClientSummary> GetClientSummaries(string filter);
+
         List<Client> GetClients();
 
         Client GetClient(Guid id);

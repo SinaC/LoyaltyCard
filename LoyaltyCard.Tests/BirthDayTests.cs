@@ -211,6 +211,11 @@ namespace LoyaltyCard.Tests
             _clients.Add(client);
         }
 
+        public List<ClientSummary> GetClientSummaries(string filter)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Client> GetClients()
         {
             return _clients.ToList();
@@ -257,6 +262,16 @@ namespace LoyaltyCard.Tests
         }
 
         // Statistics
+
+        public int GetClientCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetNewClientCount()
+        {
+            throw new NotImplementedException();
+        }
 
         public BestClient GetBestClientInPeriod(DateTime @from, DateTime till)
         {

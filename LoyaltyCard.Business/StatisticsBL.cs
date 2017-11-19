@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.IDataAccess;
-using LoyaltyCard.Log;
 
 namespace LoyaltyCard.Business
 {
     public class StatisticsBL : IStatisticsBL
     {
         private IClientDL ClientDL => EasyIoc.IocContainer.Default.Resolve<IClientDL>();
+        private IPurchaseDL PurchaseDL => EasyIoc.IocContainer.Default.Resolve<IPurchaseDL>();
 
         public BestClient GetBestClientInPeriod(DateTime from, DateTime till)
         {
@@ -33,7 +33,18 @@ namespace LoyaltyCard.Business
 
         public FooterInformations GetFooterInformations()
         {
-            return ClientDL.GetFooterInformations();
+            int clientCount = ClientDL.GetClientCount();
+            int newClientCount = ClientDL.GetNewClientCount();
+            decimal daySales = PurchaseDL.GetDaySales();
+            decimal weekSales = PurchaseDL.GetWeekSales();
+
+            return new FooterInformations
+            {
+                TotalClientCount = clientCount,
+                TotalNewClientCount = newClientCount,
+                DaySales = daySales,
+                WeekSales = weekSales
+            };
         }
     }
 }

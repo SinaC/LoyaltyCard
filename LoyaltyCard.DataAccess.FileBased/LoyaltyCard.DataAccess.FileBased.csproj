@@ -45,6 +45,7 @@
     <Compile Include="ClientDL.cs" />
     <Compile Include="GeoDL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseDL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">

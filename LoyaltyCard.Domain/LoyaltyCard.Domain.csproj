@@ -46,6 +46,7 @@
     <Compile Include="CityByZip.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ClientCategories.cs" />
+    <Compile Include="ClientSummary.cs" />
     <Compile Include="FooterInformations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Purchase.cs" />

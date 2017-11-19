@@ -134,7 +134,7 @@ namespace LoyaltyCard.App.ViewModels
 
         private void SaveAndSwitchToSearch()
         {
-           SaveClient();
+           SaveClient(Client);
 
             // Switch to search mode
             Mediator.Default.Send(new SwitchToSearchClientMessage());
@@ -182,7 +182,7 @@ namespace LoyaltyCard.App.ViewModels
                 Client.PurchaseAdded();
             }
             // Save client and purchase
-            SaveClient();
+            SaveClient(Client);
             ClientBL.SavePurchase(Client, purchase);
         }
 
@@ -201,7 +201,7 @@ namespace LoyaltyCard.App.ViewModels
         private void DeletePurchaseConfirmed(Purchase purchase)
         {
             Client.Purchases.Remove(purchase);
-            SaveClient();
+            SaveClient(Client);
         }
 
         #endregion
@@ -213,7 +213,7 @@ namespace LoyaltyCard.App.ViewModels
 
         private void AskVoucherCreationConfirmation()
         {
-            PopupService.DisplayQuestion("Emission d'un bon d'achat", 
+            PopupService.DisplayQuestion("Envoi d'un bon d'achat", 
                 "Etes-vous certain(e) de vouloir envoyer un bon d'achat par mail ?", 
                 new QuestionActionButton
                 {
@@ -228,23 +228,24 @@ namespace LoyaltyCard.App.ViewModels
 
         private async Task CreateVoucherAsync()
         {
+            Client client = Client; // Store a local reference to Client in case async method is really really slow and user has opened another client in the meantime
             // Send mail if client has an email
             try
             {
-                if (!string.IsNullOrWhiteSpace(Client.Email))
-                    await MailSenderBL.SendVoucherMailAsync(Client.Email, Client.FirstName, 20);
+                if (!string.IsNullOrWhiteSpace(client.Email))
+                    await MailSenderBL.SendVoucherMailAsync(client.Email, client.FirstName, 20);
 
-                Client.LastVoucherDate = DateTime.Now;
-                ClientBL.SaveClient(Client);
+                client.LastVoucherDate = DateTime.Now;
+                ClientBL.SaveClient(client);
 
                 // Purchases cannot be deleted anymore
-                foreach (Purchase purchase in Client.Purchases)
+                foreach (Purchase purchase in client.Purchases)
                     purchase.IsPurchaseDeletable = false;
             }
             catch (Exception ex)
             {
                 Logger.Exception(ex);
-                PopupService.DisplayError("Emission d'un bon d'achat", "Erreur lors de l'envoi du mail");
+                PopupService.DisplayError("Envoi d'un bon d'achat", $"Erreur lors de l'envoi du mail à {client.Email} (numéro de client {client.ClientId})");
             }
         }
 
@@ -297,28 +298,28 @@ namespace LoyaltyCard.App.ViewModels
             _automaticCitySearch = true;
         }
 
-        private void SaveClient()
+        private void SaveClient(Client client)
         {
             // Save input fields to client
-            Client.LastName = LastName;
-            Client.FirstName = FirstName;
-            Client.BirthDate = BirthDate;
-            Client.Email = Email;
-            Client.Mobile = Mobile;
-            Client.StreetName = StreetName;
-            Client.StreetNumber = StreetNumber;
-            Client.ZipCode = ZipCode;
-            Client.City = City;
-            Client.Comment = Comment;
-            Client.Sex = Sex;
-            Client.Categories = Categories.Where(x => x.IsSelected).Select(x => x.Category).ToList();
+            client.LastName = LastName;
+            client.FirstName = FirstName;
+            client.BirthDate = BirthDate;
+            client.Email = Email;
+            client.Mobile = Mobile;
+            client.StreetName = StreetName;
+            client.StreetNumber = StreetNumber;
+            client.ZipCode = ZipCode;
+            client.City = City;
+            client.Comment = Comment;
+            client.Sex = Sex;
+            client.Categories = Categories.Where(x => x.IsSelected).Select(x => x.Category).ToList();
 
-            ClientBL.SaveClient(Client);
+            ClientBL.SaveClient(client);
 
             //
             Mediator.Default.Send(new SaveClientMessage
             {
-                Client = Client
+                Client = client
             });
         }
     }
@@ -334,10 +335,10 @@ namespace LoyaltyCard.App.ViewModels
                 BirthDate = new DateTime(1999, 12, 31),
                 Email = "pouet.brol@hotmail.com",
                 Mobile = null,
-                Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1, 20).Select(y => new Purchase
+                Purchases = new ObservableCollection<Purchase>(Enumerable.Range(1, 20).Select(x => new Purchase
                 {
-                    Amount = y * 10,
-                    Date = DateTime.Now.AddDays(-y * 2)
+                    Amount = x * 10,
+                    Date = DateTime.Now.AddDays(-x * 2)
                 }))
             };
             Initialize(client);
