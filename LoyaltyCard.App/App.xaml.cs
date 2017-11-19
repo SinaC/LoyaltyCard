@@ -22,8 +22,10 @@ namespace LoyaltyCard.App
         {
 
             // Register instances
+            var clientDL = new DataAccess.FileBased.ClientDL();
             EasyIoc.IocContainer.Default.RegisterInstance<ILog>(new NLogger());
-            EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(new DataAccess.FileBased.ClientDL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(clientDL);
+            EasyIoc.IocContainer.Default.RegisterInstance<IPurchaseDL>(clientDL);
             EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoDL>(new DataAccess.FileBased.GeoDL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoBL>(new GeoBL());
