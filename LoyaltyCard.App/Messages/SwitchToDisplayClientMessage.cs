@@ -4,6 +4,6 @@ namespace LoyaltyCard.App.Messages
 {
     public class SwitchToDisplayClientMessage
     {
-        public Client Client { get; set; }
+        public ClientSummary Client { get; set; }
     }
 }

@@ -240,7 +240,7 @@ namespace LoyaltyCard.DataAccess.FileBased
         {
             LoadClients(); // Load clients if needed
 
-            var averageAmountByAgeCategories = _clients.Where(x => x.Purchases.Any()).Select(client =>
+            var averageAmountByAgeCategories = _clients.Where(x => x.Purchases?.Any() == true).Select(client =>
                     new
                     {
                         averageAmount = client.Purchases.Average(p => p.Amount),

@@ -22,8 +22,8 @@ namespace LoyaltyCard.App.ViewModels
             set { Set(() => Filter, ref _filter, value); }
         }
 
-        private Client _selectedClient;
-        public Client SelectedClient
+        private ClientSummary _selectedClient;
+        public ClientSummary SelectedClient
         {
             get { return _selectedClient; }
             set { Set(() => SelectedClient, ref _selectedClient, value); }

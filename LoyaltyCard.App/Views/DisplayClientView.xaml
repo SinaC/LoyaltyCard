@@ -9,6 +9,7 @@
              xmlns:models="clr-namespace:LoyaltyCard.App.Models"
              xmlns:converters="clr-namespace:LoyaltyCard.App.Converters"
              xmlns:domain="clr-namespace:LoyaltyCard.Domain;assembly=LoyaltyCard.Domain"
+             xmlns:customControls="clr-namespace:LoyaltyCard.App.CustomControls"
              mc:Ignorable="d" 
              Focusable="False"
              d:DataContext="{d:DesignInstance viewModels:DisplayClientViewModelDesignData, IsDesignTimeCreatable=True}"
@@ -28,307 +29,312 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid behaviours:EnterKeyTraversal.IsEnabled="True">
-        <Grid.InputBindings>
-            <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
-            <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddPurchaseCommand}"/>
-            <KeyBinding Key="B" Modifiers="Alt" Command="{Binding CreateVoucherCommand}"/>
-        </Grid.InputBindings>
-        <!-- Client info + status + Ok/Cancel | History + Add/Voucher -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <!-- Client info + status + Ok/Cancel -->
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <!-- Client info + status -->
-            <Grid Grid.Row="0">
+    <customControls:AdornedControl IsAdornerVisible="{Binding IsBusy}">
+        <customControls:AdornedControl.AdornerContent>
+            <customControls:LoadingWait />
+        </customControls:AdornedControl.AdornerContent>
+        <Grid behaviours:EnterKeyTraversal.IsEnabled="True">
+            <Grid.InputBindings>
+                <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
+                <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddPurchaseCommand}"/>
+                <KeyBinding Key="B" Modifiers="Alt" Command="{Binding CreateVoucherCommand}"/>
+            </Grid.InputBindings>
+            <!-- Client info + status + Ok/Cancel | History + Add/Voucher -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!-- Client info + status + Ok/Cancel -->
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <!-- Client Id -->
-                <TextBlock Grid.Row="0"
-                           Grid.Column="0"
-                           Grid.ColumnSpan="2"
-                           Margin="5,2"
-                           Style="{StaticResource LabelTextBlockStyle}"
-                           Text="{Binding Client.ClientId, StringFormat={}Numéro de client: {0}}"/>
-                <!-- Last name -->
-                <StackPanel Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Nom:"/>
-                    <TextBox x:Name="LastNameTextBox"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding LastName}"/>
-                </StackPanel>
-                <!-- First name -->
-                <StackPanel Grid.Row="1"
-                            Grid.Column="2"
-                            Grid.ColumnSpan="2"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Prénom:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding FirstName}"/>
-                </StackPanel>
-                <!-- Street -->
-                <StackPanel Grid.Row="2"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="3"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Rue:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding StreetName}"/>
-                </StackPanel>
-                <!-- Street number -->
-                <StackPanel Grid.Row="2"
-                            Grid.Column="3"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="N° rue:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding StreetNumber}"/>
-                </StackPanel>
-                <!-- Zip -->
-                <StackPanel Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Code postal:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding ZipCode, UpdateSourceTrigger=LostFocus}"/>
-                </StackPanel>
-                <!-- City -->
-                <StackPanel Grid.Row="3"
-                            Grid.Column="1"
-                            Grid.ColumnSpan="3"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Localité:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding City}"/>
-                </StackPanel>
-                <!-- Email -->
-                <StackPanel Grid.Row="4"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="4"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Email:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             behaviours:SelectTextOnFocus.Active="True"
-                             Text="{Binding Email}"/>
-                </StackPanel>
-                <!-- Birth date -->
-                <StackPanel Grid.Row="5"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Date de naissance:"/>
-                    <DatePicker x:Name="BirthDatePicker"
-                                Style="{StaticResource DatePickerStyle}"
-                                GotFocus="DatePicker_OnGotFocus"
-                                SelectedDate="{Binding BirthDate}"/>
-                </StackPanel>
-                <!-- Mobile -->
-                <StackPanel Grid.Row="5"
-                            Grid.Column="2"
-                            Grid.ColumnSpan="2"
-                            Margin="5,2"
-                            Orientation="Vertical">
-                    <TextBlock Style="{StaticResource LabelTextBlockStyle}"
-                               Text="GSM:"/>
-                    <TextBox Style="{StaticResource InputTextBoxStyle}"
-                             Text="{Binding Mobile}"/>
-                </StackPanel>
-                <!-- Status -->
-                <ItemsControl Grid.Row="6"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="4"
-                              Margin="5,2"
-                              Focusable="False"
-                              ItemsSource="{Binding Categories}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <!--<WrapPanel Orientation="Horizontal"/>-->
-                            <UniformGrid Rows="2"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:ClientCategoryModel}">
-                            <CheckBox Margin="2"
-                                      IsChecked="{Binding IsSelected}"
-                                      VerticalContentAlignment="Center">
-                                <TextBlock FontSize="13"
-                                           Text="{Binding DisplayName}"/>
-                            </CheckBox>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <!-- Sex -->
-                <StackPanel Grid.Row="7"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="4"
-                            Orientation="Horizontal">
-                    <RadioButton Margin="5,2"
-                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Male}}">
-                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Homme"/>
-                    </RadioButton>
-                    <RadioButton Margin="5,2"
-                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Female}}">
-                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Femme"/>
-                    </RadioButton>
-                    <RadioButton Margin="5,2"
-                                 IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Unspecified}}">
-                        <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Non-spécifié"/>
-                    </RadioButton>
-                </StackPanel>
-                <!-- Comment -->
-                <Grid Grid.Row="8"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="4"
-                      Margin="5,2">
+                <!-- Client info + status -->
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Client Id -->
                     <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Margin="5,2"
                                Style="{StaticResource LabelTextBlockStyle}"
-                               Text="Commentaire:"/>
-                    <TextBox Grid.Row="1"
-                             TextWrapping="Wrap"
-                             VerticalScrollBarVisibility="Auto" 
-                             AcceptsReturn="True"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Text="{Binding Comment}"/>
+                               Text="{Binding Client.ClientId, StringFormat={}Numéro de client: {0}}"/>
+                    <!-- Last name -->
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Nom:"/>
+                        <TextBox x:Name="LastNameTextBox"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding LastName}"/>
+                    </StackPanel>
+                    <!-- First name -->
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Prénom:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding FirstName}"/>
+                    </StackPanel>
+                    <!-- Street -->
+                    <StackPanel Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Rue:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding StreetName}"/>
+                    </StackPanel>
+                    <!-- Street number -->
+                    <StackPanel Grid.Row="2"
+                                Grid.Column="3"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="N° rue:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding StreetNumber}"/>
+                    </StackPanel>
+                    <!-- Zip -->
+                    <StackPanel Grid.Row="3"
+                                Grid.Column="0"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Code postal:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding ZipCode, UpdateSourceTrigger=LostFocus}"/>
+                    </StackPanel>
+                    <!-- City -->
+                    <StackPanel Grid.Row="3"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="3"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Localité:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding City}"/>
+                    </StackPanel>
+                    <!-- Email -->
+                    <StackPanel Grid.Row="4"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Email:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 behaviours:SelectTextOnFocus.Active="True"
+                                 Text="{Binding Email}"/>
+                    </StackPanel>
+                    <!-- Birth date -->
+                    <StackPanel Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Date de naissance:"/>
+                        <DatePicker x:Name="BirthDatePicker"
+                                    Style="{StaticResource DatePickerStyle}"
+                                    GotFocus="DatePicker_OnGotFocus"
+                                    SelectedDate="{Binding BirthDate}"/>
+                    </StackPanel>
+                    <!-- Mobile -->
+                    <StackPanel Grid.Row="5"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                Margin="5,2"
+                                Orientation="Vertical">
+                        <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="GSM:"/>
+                        <TextBox Style="{StaticResource InputTextBoxStyle}"
+                                 Text="{Binding Mobile}"/>
+                    </StackPanel>
+                    <!-- Status -->
+                    <ItemsControl Grid.Row="6"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="4"
+                                  Margin="5,2"
+                                  Focusable="False"
+                                  ItemsSource="{Binding Categories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <!--<WrapPanel Orientation="Horizontal"/>-->
+                                <UniformGrid Rows="2"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:ClientCategoryModel}">
+                                <CheckBox Margin="2"
+                                          IsChecked="{Binding IsSelected}"
+                                          VerticalContentAlignment="Center">
+                                    <TextBlock FontSize="13"
+                                               Text="{Binding DisplayName}"/>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!-- Sex -->
+                    <StackPanel Grid.Row="7"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Orientation="Horizontal">
+                        <RadioButton Margin="5,2"
+                                     IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Male}}">
+                            <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Homme"/>
+                        </RadioButton>
+                        <RadioButton Margin="5,2"
+                                     IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Female}}">
+                            <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Femme"/>
+                        </RadioButton>
+                        <RadioButton Margin="5,2"
+                                     IsChecked="{Binding Sex, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static domain:Sex.Unspecified}}">
+                            <TextBlock Style="{StaticResource LabelTextBlockStyle}" Text="Non-spécifié"/>
+                        </RadioButton>
+                    </StackPanel>
+                    <!-- Comment -->
+                    <Grid Grid.Row="8"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="4"
+                          Margin="5,2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Style="{StaticResource LabelTextBlockStyle}"
+                                   Text="Commentaire:"/>
+                        <TextBox Grid.Row="1"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" 
+                                 AcceptsReturn="True"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 Text="{Binding Comment}"/>
+                    </Grid>
                 </Grid>
-            </Grid>
 
-            <!-- Ok/Cancel -->
-            <StackPanel Grid.Row="1"
+                <!-- Ok/Cancel -->
+                <StackPanel Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Button Width="32"
+                            Margin="35,2"
+                            Command="{Binding SaveCommand}">
+                        <Image Style="{StaticResource AutoDisableImageStyle}"
+                               Source="{StaticResource OkImage}"/>
+                    </Button>
+                    <Button Width="32"
+                            Margin="35,2"
+                            Command="{Binding CancelCommand}">
+                        <Image Style="{StaticResource AutoDisableImageStyle}"
+                               Source="{StaticResource CancelImage}"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <!-- Purchase history + total since last voucher + new purchase/voucher -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!-- Purchase history -->
+                <DataGrid Grid.Row="0"
+                          Margin="5,2"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Visibility="{Binding IsPurchaseDeletable, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                            Command="{Binding DataContext.DeletePurchaseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                            CommandParameter="{Binding}">
+                                        <Image Style="{StaticResource AutoDisableImageStyle}"
+                                               Width="8" Height="8"
+                                               Source="{StaticResource CancelImage}"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Date d'achat"
+                                            Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" 
+                                            ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                        <DataGridTextColumn Header="Montant de l'achat"
+                                            Binding="{Binding Amount, StringFormat=C}" 
+                                            ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Grid.Row="1"
+                            Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5,2"
+                                   Text="Total depuis dernier bon:"/>
+                        <TextBlock Margin="5,2"
+                                   Text="{Binding Client.TotalSinceLastVoucher, StringFormat=C, TargetNullValue=Néant}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5,2"
+                                   Text="Date du dernier bon:"/>
+                        <TextBlock Margin="5,2"
+                                   Text="{Binding Client.LastVoucherDate, StringFormat=dd/MM/yyyy, TargetNullValue=Néant}"/>
+                    </StackPanel>
+                </StackPanel>
+                <!-- New purchase/voucher -->
+                <StackPanel Grid.Row="2"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
-                <Button Width="32"
-                        Margin="35,2"
-                        Command="{Binding SaveCommand}">
-                    <Image Style="{StaticResource AutoDisableImageStyle}"
-                           Source="{StaticResource OkImage}"/>
-                </Button>
-                <Button Width="32"
-                        Margin="35,2"
-                        Command="{Binding CancelCommand}">
-                    <Image Style="{StaticResource AutoDisableImageStyle}"
-                           Source="{StaticResource CancelImage}"/>
-                </Button>
-            </StackPanel>
-        </Grid>
-        <!-- Purchase history + total since last voucher + new purchase/voucher -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <!-- Purchase history -->
-            <DataGrid Grid.Row="0"
-                      Margin="5,2"
-                      IsReadOnly="True"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      AutoGenerateColumns="False"
-                      ItemsSource="{Binding Source={StaticResource PurchaseItems}}">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Visibility="{Binding IsPurchaseDeletable, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Command="{Binding DataContext.DeletePurchaseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                        CommandParameter="{Binding}">
-                                    <Image Style="{StaticResource AutoDisableImageStyle}"
-                                           Width="8" Height="8"
-                                           Source="{StaticResource CancelImage}"/>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Date d'achat"
-                                        Binding="{Binding Date, StringFormat=dd/MM/yyyy HH:mm}" 
-                                        ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                    <DataGridTextColumn Header="Montant de l'achat"
-                                        Binding="{Binding Amount, StringFormat=C}" 
-                                        ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-            <StackPanel Grid.Row="1"
-                        Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="5,2"
-                               Text="Total depuis dernier bon:"/>
-                    <TextBlock Margin="5,2"
-                               Text="{Binding Client.TotalSinceLastVoucher, StringFormat=C, TargetNullValue=Néant}"/>
+                    <Button Width="32"
+                            Margin="35,2"
+                            Command="{Binding AddPurchaseCommand}">
+                        <Image Style="{StaticResource AutoDisableImageStyle}"
+                               Source="{StaticResource AddPuchaseImage}"/>
+                    </Button>
+                    <Button Width="32"
+                            Margin="35,2"
+                            Command="{Binding CreateVoucherCommand}">
+                        <Image Style="{StaticResource AutoDisableImageStyle}"
+                               Source="{StaticResource VoucherImage}"/>
+                    </Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="5,2"
-                               Text="Date du dernier bon:"/>
-                    <TextBlock Margin="5,2"
-                               Text="{Binding Client.LastVoucherDate, StringFormat=dd/MM/yyyy, TargetNullValue=Néant}"/>
-                </StackPanel>
-            </StackPanel>
-            <!-- New purchase/voucher -->
-            <StackPanel Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
-                <Button Width="32"
-                        Margin="35,2"
-                        Command="{Binding AddPurchaseCommand}">
-                    <Image Style="{StaticResource AutoDisableImageStyle}"
-                           Source="{StaticResource AddPuchaseImage}"/>
-                </Button>
-                <Button Width="32"
-                        Margin="35,2"
-                        Command="{Binding CreateVoucherCommand}">
-                    <Image Style="{StaticResource AutoDisableImageStyle}"
-                           Source="{StaticResource VoucherImage}"/>
-                </Button>
-            </StackPanel>
+            </Grid>
         </Grid>
-    </Grid>
+    </customControls:AdornedControl>
 </UserControl>
 

@@ -1,3 +1,10 @@
+Issues:
+SearchClientView: Total since last voucher not refreshed when a voucher is sent --> ClientSummary should be refreshed when client is saved
+ClientId should be displayed when creating a new client until save/add purchase is performed
+
+Features:
+CheckBox in AddPurchare Popup to select voucher -> new date voucher 'encaissé'
+-> in SearchClient display in turquoise if client has a 'running' voucher      !!!!! multiple running vouchers can happen -> new structure to store voucher
 Display errors in Footer
 Birthday mail: instead Today is your birthday   but  'Date' is/was your birthday
 Continue to split code between IClientDL and IPurchaseDL (such as SavePurchase)

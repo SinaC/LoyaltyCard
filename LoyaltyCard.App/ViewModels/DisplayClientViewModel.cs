@@ -8,6 +8,7 @@ using EasyMVVM;
 using LoyaltyCard.App.Messages;
 using LoyaltyCard.App.Models;
 using LoyaltyCard.App.ViewModels.Popups;
+using LoyaltyCard.Common;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
 using LoyaltyCard.Services.Popup;
@@ -219,6 +220,7 @@ namespace LoyaltyCard.App.ViewModels
                 {
                     Caption = "Oui",
                     ClickCallback = async () => await CreateVoucherAsync()
+                    //ClickCallback =() => CreateVoucherAsync()
                 },
                 new QuestionActionButton
                 {
@@ -232,6 +234,8 @@ namespace LoyaltyCard.App.ViewModels
             // Send mail if client has an email
             try
             {
+                IsBusy = true;
+
                 if (!string.IsNullOrWhiteSpace(client.Email))
                     await MailSenderBL.SendVoucherMailAsync(client.Email, client.FirstName, 20);
 
@@ -241,11 +245,17 @@ namespace LoyaltyCard.App.ViewModels
                 // Purchases cannot be deleted anymore
                 foreach (Purchase purchase in client.Purchases)
                     purchase.IsPurchaseDeletable = false;
+
+                PopupService.DisplayQuestion("Envoi d'un bon d'achat", $"Le bon a bien été envoyé par mail à l'adresse {client.Email}", QuestionActionButton.Ok());
             }
             catch (Exception ex)
             {
                 Logger.Exception(ex);
                 PopupService.DisplayError("Envoi d'un bon d'achat", $"Erreur lors de l'envoi du mail à {client.Email} (numéro de client {client.ClientId})");
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -262,40 +272,18 @@ namespace LoyaltyCard.App.ViewModels
             }).ToList();
         }
 
-        public void Initialize(Client client)
+        public void Initialize(ClientSummary clientSummary)
         {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
+            if (clientSummary == null)
+                throw new ArgumentNullException(nameof(clientSummary));
 
-            Client = client;
+            LoadClientAsync(clientSummary.Id);
+        }
 
-            // Initialize IsPurchaseDeletable
-            if (Client.Purchases != null)
-            {
-                if (Client.LastVoucherDate.HasValue)
-                    foreach (Purchase purchase in Client.Purchases)
-                        purchase.IsPurchaseDeletable = purchase.Date > Client.LastVoucherDate.Value;
-                else
-                    foreach (Purchase purchase in Client.Purchases)
-                        purchase.IsPurchaseDeletable = true;
-            }
-
-            // Initialize input fields
-            _automaticCitySearch = false; // desactivate while filling client fields
-            LastName = client.LastName;
-            FirstName = client.FirstName;
-            BirthDate = client.BirthDate;
-            Email = client.Email;
-            Mobile = client.Mobile;
-            StreetName = client.StreetName;
-            StreetNumber = client.StreetNumber;
-            ZipCode = client.ZipCode;
-            City = client.City;
-            Comment = client.Comment;
-            Sex = client.Sex;
-            foreach (ClientCategoryModel categoryModel in Categories)
-                categoryModel.IsSelected = client.Categories?.Contains(categoryModel.Category) == true;
-            _automaticCitySearch = true;
+        public void Initialize()
+        {
+            // Create new client
+            Client = new Client();
         }
 
         private void SaveClient(Client client)
@@ -322,6 +310,54 @@ namespace LoyaltyCard.App.ViewModels
                 Client = client
             });
         }
+
+        private async Task LoadClientAsync(Guid id)
+        {
+            try
+            {
+                IsBusy = true;
+
+                Client = await AsyncFake.CallAsync(ClientBL, x => x.GetClient(id));
+
+                // Initialize IsPurchaseDeletable
+                if (Client.Purchases != null)
+                {
+                    if (Client.LastVoucherDate.HasValue)
+                        foreach (Purchase purchase in Client.Purchases)
+                            purchase.IsPurchaseDeletable = purchase.Date > Client.LastVoucherDate.Value;
+                    else
+                        foreach (Purchase purchase in Client.Purchases)
+                            purchase.IsPurchaseDeletable = true;
+                }
+
+                // Initialize input fields
+                _automaticCitySearch = false; // desactivate while filling client fields
+                LastName = Client.LastName;
+                FirstName = Client.FirstName;
+                BirthDate = Client.BirthDate;
+                Email = Client.Email;
+                Mobile = Client.Mobile;
+                StreetName = Client.StreetName;
+                StreetNumber = Client.StreetNumber;
+                ZipCode = Client.ZipCode;
+                City = Client.City;
+                Comment = Client.Comment;
+                Sex = Client.Sex;
+                foreach (ClientCategoryModel categoryModel in Categories)
+                    categoryModel.IsSelected = Client.Categories?.Contains(categoryModel.Category) == true;
+                _automaticCitySearch = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                PopupService.DisplayQuestion("Ouverture client", "Le client n'a pu être chargé.");
+                Mediator.Default.Send(new SwitchToSearchClientMessage()); // Switch back to Search Client
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
     }
 
     public class DisplayClientViewModelDesignData : DisplayClientViewModel
@@ -341,7 +377,8 @@ namespace LoyaltyCard.App.ViewModels
                     Date = DateTime.Now.AddDays(-x * 2)
                 }))
             };
-            Initialize(client);
+
+            Client = client;
         }
     }
 }

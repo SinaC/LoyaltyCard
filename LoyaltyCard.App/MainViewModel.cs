@@ -62,12 +62,7 @@ namespace LoyaltyCard.App
 
         private void HandleCreateClientMessage(CreateClientMessage createClientMessage)
         {
-            Client client = new Client
-            {
-                LastName = createClientMessage.LastNameFilter,
-                FirstName = createClientMessage.FirstNameFilter
-            };
-            DisplayClientViewModel.Initialize(client);
+            DisplayClientViewModel.Initialize();
             Mode = Modes.Display;
         }
     }
