@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.IBusiness
@@ -21,7 +20,11 @@ namespace LoyaltyCard.IBusiness
 
         void SavePurchase(Client client, Purchase purchase);
 
+        void SaveVoucher(Client client, Voucher voucher);
+
         List<Client> GetClients(Func<Client, bool> filterFunc);
+
+        Client CreateClient();
 
         void DeleteClient(Client client);
     }

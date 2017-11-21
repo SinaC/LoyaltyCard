@@ -11,6 +11,7 @@ using System.Xml;
 using LoyaltyCard.Common.Extensions;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IDataAccess;
+using LoyaltyCard.Log;
 
 namespace LoyaltyCard.DataAccess.FileBased
 {
@@ -19,6 +20,8 @@ namespace LoyaltyCard.DataAccess.FileBased
         private List<Client> _clients;
 
         private Func<Client, DateTime, DateTime, decimal?> PurchaseInPeriodFunc => (client, from, till) => client.Purchases?.Where(p => p.Date >= from && p.Date <= till).SumNullIfEmpty(p => p.Amount);
+
+        private ILog Logger => EasyIoc.IocContainer.Default.Resolve<ILog>();
 
         public List<ClientSummary> GetClientSummaries(string filter)
         {
@@ -33,21 +36,10 @@ namespace LoyaltyCard.DataAccess.FileBased
                     query = query.Where(c => Contains(c.FirstName ?? string.Empty, token) ||
                                              Contains(c.LastName ?? string.Empty, token) ||
                                              Contains(c.Email ?? string.Empty, token) ||
-                                             c.ClientId.ToString().StartsWith(token));
+                                             c.ClientBusinessId.ToString().StartsWith(token));
             }
 
-            return query.Select(x => new ClientSummary
-            {
-                Id = x.Id,
-                ClientId = x.ClientId,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                TotalSinceLastVoucher = x.TotalSinceLastVoucher,
-                Total = x.TotalPurchases,
-                LastPurchaseDate = x.LastPurchase?.Date,
-                LastPurchaseAmount = x.LastPurchase?.Amount,
-                IsBirthDay = x.IsBirthDay
-            }).ToList();
+            return query.Select(x => new ClientSummary(x)).ToList();
         }
 
         public List<Client> GetClients()
@@ -96,7 +88,7 @@ namespace LoyaltyCard.DataAccess.FileBased
                     query = query.Where(c => Contains(c.FirstName ?? string.Empty, token) ||
                     Contains(c.LastName ?? string.Empty, token) ||
                     Contains(c.Email ?? string.Empty, token) ||
-                    c.ClientId.ToString().StartsWith(token));
+                    c.ClientBusinessId.ToString().StartsWith(token));
             }
             return query.ToList();
         }
@@ -124,6 +116,14 @@ namespace LoyaltyCard.DataAccess.FileBased
                         if (existingClient.Purchases.All(p => p.Id != purchase.Id))
                             existingClient.Purchases.Add(purchase);
                 }
+                // Merge vouchers
+                existingClient.Vouchers = existingClient.Vouchers ?? new ObservableCollection<Voucher>();
+                if (client.Vouchers?.Any() == true)
+                {
+                    foreach (Voucher voucher in client.Vouchers)
+                        if (existingClient.Vouchers.All(p => p.Id != voucher.Id))
+                            existingClient.Vouchers.Add(voucher);
+                }
             }
 
             SaveClients();
@@ -134,12 +134,17 @@ namespace LoyaltyCard.DataAccess.FileBased
             SaveClient(client);
         }
 
+        public void SaveVoucher(Client client, Voucher voucher)
+        {
+            SaveClient(client);
+        }
+
         public int GetMaxClientId()
         {
             LoadClients(); // Load clients if needed
 
             //return _clients.Max(x => x.ClientId);
-            return _clients.Count == 0 ? -1 : _clients.Max(x => x.ClientId);
+            return _clients.Count == 0 ? -1 : _clients.Max(x => x.ClientBusinessId);
         }
 
         public List<Client> GetClients(Func<Client, bool> filterFunc)
@@ -250,6 +255,26 @@ namespace LoyaltyCard.DataAccess.FileBased
                 .ToDictionary(g => g.Key, g => g.Average(x => x.averageAmount));
 
             return averageAmountByAgeCategories;
+        }
+
+        //
+        public void Backup()
+        {
+            try
+            {
+                Logger.Info("Performing client DB backup");
+
+                string clientFile = ConfigurationManager.AppSettings["ClientFile"];
+                string backupFile = Path.Combine(Path.GetDirectoryName(clientFile)+$@"\backup\client_{DateTime.Now:yyyyMMdd_HHmmss}_{Guid.NewGuid()}.xml");
+
+                File.Copy(clientFile, backupFile);
+
+                Logger.Info("Client DB backup done");
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception("DB backup failed", ex);
+            }
         }
 
         //

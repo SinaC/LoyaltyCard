@@ -45,6 +45,7 @@
     <Compile Include="IMailAutomationBL.cs" />
     <Compile Include="IPurchaseBL.cs" />
     <Compile Include="IStatisticsBL.cs" />
+    <Compile Include="IVoucherBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

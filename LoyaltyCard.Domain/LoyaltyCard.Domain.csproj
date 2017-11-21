@@ -52,6 +52,7 @@
     <Compile Include="Purchase.cs" />
     <Compile Include="Sex.cs" />
     <Compile Include="FooterData.cs" />
+    <Compile Include="Voucher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">

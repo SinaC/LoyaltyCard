@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,8 +30,8 @@ namespace LoyaltyCard.App.ViewModels
             set { Set(() => SelectedClient, ref _selectedClient, value); }
         }
 
-        private List<ClientSummary> _clients;
-        public List<ClientSummary> Clients
+        private ObservableCollection<ClientSummary> _clients;
+        public ObservableCollection<ClientSummary> Clients
         {
             get { return _clients; }
             set { Set(() => Clients, ref _clients, value); }
@@ -65,7 +66,8 @@ namespace LoyaltyCard.App.ViewModels
             {
                 IsBusy = true;
 
-                Clients = await AsyncFake.CallAsync(ClientBL, x => x.GetClientSummaries(Filter));
+                List<ClientSummary> clients = await AsyncFake.CallAsync(ClientBL, x => x.GetClientSummaries(Filter));
+                Clients = new ObservableCollection<ClientSummary>(clients);
             }
             catch (Exception ex)
             {
@@ -116,21 +118,50 @@ namespace LoyaltyCard.App.ViewModels
         }
 
         #endregion
+
+        public SearchClientViewModel()
+        {
+            Mediator.Default.Register<SaveClientMessage>(this, HandleSaveClientMessage);
+        }
+
+        private void HandleSaveClientMessage(SaveClientMessage msg)
+        {
+            // Refresh client summary
+            ClientSummary existingSummary = Clients?.FirstOrDefault(x => x.Id == msg.Client.Id);
+            if (existingSummary != null)
+                existingSummary.Initialize(msg.Client);
+            else
+            {
+                ClientSummary clientSummary = new ClientSummary(msg.Client);
+                Clients = Clients ?? new ObservableCollection<ClientSummary>();
+                Clients.Insert(0, clientSummary); // insert at the beginning
+            }
+        }
     }
 
     public class SearchClientViewModelDesignData : SearchClientViewModel
     {
         public SearchClientViewModelDesignData()
         {
-            Clients = Enumerable.Range(0, 50).Select(x => new ClientSummary
+            Clients = new ObservableCollection<ClientSummary>(Enumerable.Range(0, 50).Select(x => new ClientSummary
             {
+                ClientBusinessId = 10000+x,
                 FirstName = $"Pouet{x}",
                 LastName = "Brol",
-                Total = x*10,
-                TotalSinceLastVoucher = x*5,
-                LastPurchaseDate = DateTime.Now.AddDays(-x * 2),
-                LastPurchaseAmount = x
-            }).ToList();
+                Total = x * 10,
+                TotalSinceLastVoucher = x * 5,
+                LastPurchase = new Purchase
+                {
+                    Date = DateTime.Now.AddDays(-x * 2),
+                    Amount = x
+                },
+                OldestActiveVoucher = new Voucher
+                {
+                    IssueDate = DateTime.Now.AddDays(-x),
+                    Percentage = 20,
+                    ValidityEndDate = DateTime.Now.AddDays(-x).AddMonths(1)
+                }
+            }));
         }
     }
 }

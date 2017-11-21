@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
+      <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>
+      <Name>LoyaltyCard.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.IMailSender\LoyaltyCard.IMailSender.csproj">
       <Project>{f7b852f2-1fef-4457-b5dd-4f41465e4237}</Project>
       <Name>LoyaltyCard.IMailSender</Name>

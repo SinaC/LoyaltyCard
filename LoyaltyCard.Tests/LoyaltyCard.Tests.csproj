@@ -63,6 +63,10 @@
       <Project>{CF0C4A8A-92C4-4FD4-AE22-3CBCC104D2A9}</Project>
       <Name>LoyaltyCard.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">
+      <Project>{0B8C42FA-DE35-4247-A9E7-4FADFE6A5D10}</Project>
+      <Name>LoyaltyCard.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
       <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>
       <Name>LoyaltyCard.Domain</Name>

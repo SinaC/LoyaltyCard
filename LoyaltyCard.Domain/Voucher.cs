@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace LoyaltyCard.Domain
 {
     [DataContract(Namespace = "")]
-    public class Purchase : INotifyPropertyChanged
+    public class Voucher : INotifyPropertyChanged
     {
         [DataMember]
         public Guid Id { get; set; }
@@ -15,34 +15,37 @@ namespace LoyaltyCard.Domain
         public Guid ClientId { get; set; }
 
         [DataMember]
-        public DateTime Date { get; set; }
+        public DateTime IssueDate { get; set; }
 
         [DataMember]
-        public decimal Amount { get; set; }
+        public decimal Percentage { get; set; }
 
         [DataMember]
-        public Guid? VoucherId { get; set; }
+        public DateTime ValidityEndDate { get; set; }
 
-        //[DataMember]
-        //public virtual Client Client { get; set; }
+        #region Collect date
 
-        //[DataMember]
-        //public virtual Voucher Voucher { get; set; }
+        private DateTime? _collectDate;
 
-        // Computed fields
-        private bool _isPurchaseDeletable;
-        public bool IsPurchaseDeletable
+        [DataMember]
+        public DateTime? CollectDate
         {
-            get { return _isPurchaseDeletable; }
-            set
-            {
-                if (_isPurchaseDeletable != value)
+            get { return _collectDate; }
+            set {
+                if (_collectDate != value)
                 {
-                    _isPurchaseDeletable = value;
+                    _collectDate = value;
                     OnPropertyChanged();
                 }
             }
         }
+
+        #endregion
+
+        //[DataMember]
+        //public virtual Client Client { get; set; }
+
+        public string PercentageDisplay => $"{Percentage / 100:P0}";
 
         #region INotifyPropertyChanged
 

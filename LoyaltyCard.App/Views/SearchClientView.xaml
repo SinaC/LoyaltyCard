@@ -22,6 +22,9 @@
                     <DataTrigger Binding="{Binding IsBirthDay}" Value="True">
                         <Setter Property="Background" Value="Pink" />
                     </DataTrigger>
+                    <DataTrigger Binding="{Binding HasActiveVoucher}" Value="True">
+                        <Setter Property="Background" Value="Turquoise"/>
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
@@ -110,13 +113,13 @@
                     <KeyBinding Key="Return" Command="{Binding EditClientCommand}"/>
                 </DataGrid.InputBindings>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="N° client" Binding="{Binding ClientId}"/>
+                    <DataGridTextColumn Header="N° client" Binding="{Binding ClientBusinessId}"/>
                     <DataGridTextColumn Header="Nom" MinWidth="150" Binding="{Binding LastName}"/>
                     <DataGridTextColumn Header="Prénom" MinWidth="150" Binding="{Binding FirstName}"/>
                     <DataGridTextColumn Header="Total depuis bon" Binding="{Binding TotalSinceLastVoucher, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                     <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                    <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchaseDate, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
-                    <DataGridTextColumn Header="€ dernier achat" Binding="{Binding LastPurchaseAmount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTextColumn Header="€ dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

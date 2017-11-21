@@ -163,28 +163,37 @@ namespace LoyaltyCard.App.ViewModels
 
         private void DisplayAddPurchasePopup()
         {
-            AddPurchaseViewModel vm = new AddPurchaseViewModel(Client.LastVoucherDate, AddPurchase);
+            AddPurchaseViewModel vm = new AddPurchaseViewModel(Client.LastVoucherIssueDate, Client.OldestActiveVoucher, AddPurchase);
             PopupService.DisplayModal(vm, "Ajout achat");
         }
 
-        private void AddPurchase(decimal amount, DateTime when)
+        private void AddPurchase(decimal amount, bool collectVoucher, DateTime when)
         {
+            Voucher oldestActiveVoucher = null;
+            if (collectVoucher)
+                oldestActiveVoucher = Client.OldestActiveVoucher;
             Purchase purchase = new Purchase
             {
                 Amount = amount,
                 Date = when,
-                IsPurchaseDeletable = true
+                IsPurchaseDeletable = true,
             };
+            if (collectVoucher)
+                purchase.VoucherId = oldestActiveVoucher.Id;
             // Add purchase
             Client.Purchases = Client.Purchases ?? new ObservableCollection<Purchase>();
-            if (Client.Purchases.All(p => p.Id != purchase.Id))
-            {
-                Client.Purchases.Add(purchase);
-                Client.PurchaseAdded();
-            }
+            Client.Purchases.Add(purchase);
+            Client.PurchaseModified();
             // Save client and purchase
             SaveClient(Client);
             ClientBL.SavePurchase(Client, purchase);
+            // Voucher
+            if (collectVoucher)
+            {
+                oldestActiveVoucher.CollectDate = DateTime.Now;
+                ClientBL.SaveVoucher(Client, oldestActiveVoucher);
+                Client.VoucherModified();
+            }
         }
 
         #endregion
@@ -201,7 +210,18 @@ namespace LoyaltyCard.App.ViewModels
 
         private void DeletePurchaseConfirmed(Purchase purchase)
         {
+            // Reactivate voucher if needed
+            if (purchase.VoucherId.HasValue)
+            {
+                Voucher voucher = Client.Vouchers.FirstOrDefault(x => x.Id == purchase.VoucherId.Value);
+                if (voucher != null)
+                    voucher.CollectDate = null;
+                ClientBL.SaveVoucher(Client, voucher);
+                Client.VoucherModified();
+            }
+            // Remove purchase
             Client.Purchases.Remove(purchase);
+            Client.PurchaseModified();
             SaveClient(Client);
         }
 
@@ -210,7 +230,7 @@ namespace LoyaltyCard.App.ViewModels
         #region Voucher
 
         private ICommand _createVoucherCommand;
-        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(AskVoucherCreationConfirmation, () => !string.IsNullOrWhiteSpace(Client.Email) && Client.TotalSinceLastVoucher > 0);
+        public ICommand CreateVoucherCommand => _createVoucherCommand = _createVoucherCommand ?? new RelayCommand(AskVoucherCreationConfirmation, () => !string.IsNullOrWhiteSpace(Email) && Client.TotalSinceLastVoucher > 0);
 
         private void AskVoucherCreationConfirmation()
         {
@@ -230,28 +250,48 @@ namespace LoyaltyCard.App.ViewModels
 
         private async Task CreateVoucherAsync()
         {
-            Client client = Client; // Store a local reference to Client in case async method is really really slow and user has opened another client in the meantime
             // Send mail if client has an email
             try
             {
                 IsBusy = true;
 
-                if (!string.IsNullOrWhiteSpace(client.Email))
-                    await MailSenderBL.SendVoucherMailAsync(client.Email, client.FirstName, 20);
+                decimal percentage = 20;
+                DateTime maxValidity = DateTime.Today.AddMonths(1);
 
-                client.LastVoucherDate = DateTime.Now;
-                ClientBL.SaveClient(client);
+                bool byMail = false;
+                if (!string.IsNullOrWhiteSpace(Email))
+                {
+                    await MailSenderBL.SendVoucherMailAsync(Email, FirstName, Sex, percentage, maxValidity);
+                    byMail = true;
+                }
+
+                Voucher voucher = new Voucher
+                {
+                    IssueDate = DateTime.Now,
+                    Percentage = percentage,
+                    ValidityEndDate = maxValidity,
+                };
+                // Add voucher
+                Client.Vouchers = Client.Vouchers ?? new ObservableCollection<Voucher>();
+                Client.Vouchers.Add(voucher);
+                Client.VoucherModified();
+                // Save client and voucher
+                ClientBL.SaveVoucher(Client, voucher);
+                ClientBL.SaveClient(Client);
 
                 // Purchases cannot be deleted anymore
-                foreach (Purchase purchase in client.Purchases)
+                foreach (Purchase purchase in Client.Purchases)
                     purchase.IsPurchaseDeletable = false;
 
-                PopupService.DisplayQuestion("Envoi d'un bon d'achat", $"Le bon a bien été envoyé par mail à l'adresse {client.Email}", QuestionActionButton.Ok());
+                if (byMail)
+                    PopupService.DisplayQuestion("Envoi d'un bon d'achat", $"Le bon a bien été envoyé par mail à l'adresse {Email} et sera valable jusqu'au {maxValidity:dd/MM/yyyy}", QuestionActionButton.Ok());
+                else
+                    PopupService.DisplayQuestion("Envoi d'un bon d'achat", $"Un bon d'achat a été émis et sera valable jusqu'au {maxValidity:dd/MM/yyyy}", QuestionActionButton.Ok());
             }
             catch (Exception ex)
             {
                 Logger.Exception(ex);
-                PopupService.DisplayError("Envoi d'un bon d'achat", $"Erreur lors de l'envoi du mail à {client.Email} (numéro de client {client.ClientId})");
+                PopupService.DisplayError("Envoi d'un bon d'achat", $"Erreur lors de l'envoi du mail à {Email} (numéro de client {Client.ClientBusinessId})");
             }
             finally
             {
@@ -283,7 +323,7 @@ namespace LoyaltyCard.App.ViewModels
         public void Initialize()
         {
             // Create new client
-            Client = new Client();
+            Client = ClientBL.CreateClient();
         }
 
         private void SaveClient(Client client)
@@ -322,9 +362,10 @@ namespace LoyaltyCard.App.ViewModels
                 // Initialize IsPurchaseDeletable
                 if (Client.Purchases != null)
                 {
-                    if (Client.LastVoucherDate.HasValue)
+                    DateTime? lastVoucherIssueDate = Client.LastVoucherIssueDate;
+                    if (lastVoucherIssueDate.HasValue)
                         foreach (Purchase purchase in Client.Purchases)
-                            purchase.IsPurchaseDeletable = purchase.Date > Client.LastVoucherDate.Value;
+                            purchase.IsPurchaseDeletable = purchase.Date > lastVoucherIssueDate.Value;
                     else
                         foreach (Purchase purchase in Client.Purchases)
                             purchase.IsPurchaseDeletable = true;
@@ -375,8 +416,19 @@ namespace LoyaltyCard.App.ViewModels
                 {
                     Amount = x * 10,
                     Date = DateTime.Now.AddDays(-x * 2)
-                }))
+                })),
+                Vouchers = new ObservableCollection<Voucher>
+                {
+                    new Voucher
+                    {
+                        IssueDate = DateTime.Today.AddMonths(-1).AddDays(5),
+                        ValidityEndDate = DateTime.Today.AddDays(5),
+                        Percentage = 20,
+                    }
+                }
             };
+            Client.PurchaseModified();
+            Client.VoucherModified();
 
             Client = client;
         }

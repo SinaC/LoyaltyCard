@@ -15,10 +15,12 @@
                 <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Images.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/LoyaltyCard.App;component/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid FocusManager.FocusedElement="{Binding ElementName=AmountDecimalUpDown}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -40,8 +42,19 @@
                             SelectedDate="{Binding SelectedDate}"/>
             </StackPanel>
         </StackPanel>
-        <!-- Amount -->
+        <!-- Collect voucher? -->
         <StackPanel Grid.Row="1"
+                    Margin="5,2"
+                    Orientation="Horizontal"
+                    Visibility="{Binding HasActiveVoucher, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <CheckBox VerticalContentAlignment="Center"
+                      IsChecked="{Binding IsCollectingVoucher}">
+                <TextBlock Style="{StaticResource LabelTextBlockStyle}"
+                           Text="{Binding VoucherValue, StringFormat={}Encaisser bon d\'achat de {0} ?}"/>
+            </CheckBox>
+        </StackPanel>
+        <!-- Amount -->
+        <StackPanel Grid.Row="2"
                     Orientation="Vertical">
             <TextBlock Margin="5,2"
                        Style="{StaticResource LabelTextBlockStyle}"
@@ -60,7 +73,7 @@
             </xctk:DecimalUpDown>
         </StackPanel>
         <!-- Ok/Cancel -->
-        <StackPanel Grid.Row="2"
+        <StackPanel Grid.Row="3"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
             <Button Width="24"

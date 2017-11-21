@@ -43,6 +43,12 @@
     <Compile Include="IMailSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LoyaltyCard.Domain\LoyaltyCard.Domain.csproj">
+      <Project>{682C685C-6375-4CEA-B6A3-61F2F0C5A008}</Project>
+      <Name>LoyaltyCard.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

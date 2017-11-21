@@ -75,7 +75,7 @@
                                Grid.ColumnSpan="2"
                                Margin="5,2"
                                Style="{StaticResource LabelTextBlockStyle}"
-                               Text="{Binding Client.ClientId, StringFormat={}Numéro de client: {0}}"/>
+                               Text="{Binding Client.ClientBusinessId, StringFormat={}Numéro de client: {0}}"/>
                     <!-- Last name -->
                     <StackPanel Grid.Row="1"
                                 Grid.Column="0"
@@ -301,6 +301,7 @@
                                             ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <!-- Total since last voucher + Last voucher date + Active voucher infos -->
                 <StackPanel Grid.Row="1"
                             Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -313,7 +314,17 @@
                         <TextBlock Margin="5,2"
                                    Text="Date du dernier bon:"/>
                         <TextBlock Margin="5,2"
-                                   Text="{Binding Client.LastVoucherDate, StringFormat=dd/MM/yyyy, TargetNullValue=Néant}"/>
+                                   Text="{Binding Client.LastVoucherIssueDate, StringFormat=dd/MM/yyyy, TargetNullValue=Néant}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5,2">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Bon de {0} valable jusqu'au {1:dd/MM/yyyy}">
+                                    <Binding Path="Client.OldestActiveVoucher.PercentageDisplay"/>
+                                    <Binding Path="Client.OldestActiveVoucher.ValidityEndDate"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
                 <!-- New purchase/voucher -->
@@ -330,7 +341,7 @@
                             Margin="35,2"
                             Command="{Binding CreateVoucherCommand}">
                         <Image Style="{StaticResource AutoDisableImageStyle}"
-                               Source="{StaticResource VoucherImage}"/>
+                               Source="{StaticResource EuroImage}"/>
                     </Button>
                 </StackPanel>
             </Grid>

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using EasyMVVM;
 using LoyaltyCard.App.Views.Popups;
+using LoyaltyCard.Domain;
 using LoyaltyCard.Services.Popup;
 
 namespace LoyaltyCard.App.ViewModels.Popups
@@ -11,7 +12,10 @@ namespace LoyaltyCard.App.ViewModels.Popups
     {
         private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
 
-        private readonly Action<decimal, DateTime> _okAction;
+        private readonly Action<decimal, bool, DateTime> _okAction;
+
+        public bool HasActiveVoucher { get; protected set; }
+        public string VoucherValue { get; protected set; }
 
         public DateTime? MinimumDate { get; set; }
         public DateTime MaximumDate { get; set; }
@@ -21,6 +25,13 @@ namespace LoyaltyCard.App.ViewModels.Popups
         {
             get { return _selectedDate; }
             set { Set(() => SelectedDate, ref _selectedDate, value); }
+        }
+
+        private bool _isCollectingVoucher;
+        public bool IsCollectingVoucher
+        {
+            get { return _isCollectingVoucher; }
+            set { Set(() => IsCollectingVoucher, ref _isCollectingVoucher, value); }
         }
 
         private decimal _amount;
@@ -41,7 +52,7 @@ namespace LoyaltyCard.App.ViewModels.Popups
                 if (Amount > 0)
                 {
                     DateTime date = SelectedDate ?? DateTime.Now;
-                    _okAction?.Invoke(Amount, date);
+                    _okAction?.Invoke(Amount, IsCollectingVoucher, date);
                 }
             }
         }
@@ -53,17 +64,19 @@ namespace LoyaltyCard.App.ViewModels.Popups
             PopupService?.Close(this);
         }
 
-        public AddPurchaseViewModel(DateTime?minDate, Action<decimal, DateTime> okAction)
+        public AddPurchaseViewModel(DateTime?minDate, Voucher activeVoucher, Action<decimal, bool, DateTime> okAction)
         {
             MinimumDate = minDate;
             MaximumDate = DateTime.Today;
+            HasActiveVoucher = activeVoucher != null;
+            VoucherValue = activeVoucher?.PercentageDisplay;
             _okAction = okAction;
         }
     }
 
     public class AddPurchaseViewModelDesignData : AddPurchaseViewModel
     {
-        public AddPurchaseViewModelDesignData() : base(null, (amount, when) => { })
+        public AddPurchaseViewModelDesignData() : base(null, null, (amount, collect, when) => { })
         {
         }
     }

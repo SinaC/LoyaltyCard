@@ -1,7 +1,6 @@
 ﻿using EasyMVVM;
 using LoyaltyCard.App.Messages;
 using LoyaltyCard.App.ViewModels;
-using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.App
 {

@@ -199,6 +199,8 @@
     </EmbeddedResource>
     <Resource Include="logo.ico" />
     <SplashScreen Include="logo.png" />
+    <Resource Include="Images\voucher.png" />
+    <Resource Include="Images\cake.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

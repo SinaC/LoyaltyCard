@@ -18,8 +18,8 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public DateTime? CreationDate { get; set; }
 
-        [DataMember]
-        public int ClientId { get; set; }
+        [DataMember(Name = "ClientId")]
+        public int ClientBusinessId { get; set; }
 
         #region LastName
 
@@ -223,27 +223,6 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
-        #region Last voucher date
-
-        private DateTime? _lastVoucherDate;
-
-        [DataMember]
-        public DateTime? LastVoucherDate
-        {
-            get { return _lastVoucherDate; }
-            set
-            {
-                if (_lastVoucherDate != value)
-                {
-                    _lastVoucherDate = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged("TotalSinceLastVoucher");
-                }
-            }
-        }
-
-        #endregion
-
         #region Categories
 
         private List<ClientCategories> _categories;
@@ -290,6 +269,36 @@ namespace LoyaltyCard.Domain
         [DataMember]
         public DateTime? LastBirthMailDate { get; set; }
 
+        #region Vouchers
+
+        private ObservableCollection<Voucher> _vouchers;
+
+        [DataMember]
+        public virtual ObservableCollection<Voucher> Vouchers
+        {
+            get { return _vouchers; }
+            set
+            {
+                if (_vouchers != value)
+                {
+                    _vouchers = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        public void VoucherModified() // TODO: should be called automatically when Vouchers collection is modified
+        {
+            OnPropertyChanged("OldestActiveVoucher");
+            OnPropertyChanged("LastVoucherIssueDate");
+            OnPropertyChanged("TotalSinceLastVoucher");
+        }
+
+        public Voucher OldestActiveVoucher => Vouchers?.Where(x => !x.CollectDate.HasValue && x.ValidityEndDate >= DateTime.Today).OrderBy(x => x.IssueDate).FirstOrDefault();
+        public DateTime? LastVoucherIssueDate => Vouchers?.OrderByDescending(x => x.IssueDate).FirstOrDefault()?.IssueDate;
+
         #region Purchases
 
         private ObservableCollection<Purchase> _purchases;
@@ -310,18 +319,7 @@ namespace LoyaltyCard.Domain
 
         #endregion
 
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        public void PurchaseAdded() // TODO: should be called automatically when Purchases collection is modified
+        public void PurchaseModified() // TODO: should be called automatically when Purchases collection is modified
         {
             OnPropertyChanged("TotalPurchases");
             OnPropertyChanged("LastPurchase");
@@ -332,9 +330,16 @@ namespace LoyaltyCard.Domain
 
         public Purchase LastPurchase => Purchases?.OrderByDescending(x => x.Date).FirstOrDefault();
 
-        public decimal? TotalSinceLastVoucher => LastVoucherDate.HasValue
-            ? Purchases?.Where(x => x.Date > LastVoucherDate.Value).SumNullIfEmpty(x => x.Amount)
-            : TotalPurchases;
+        public decimal? TotalSinceLastVoucher
+        {
+            get
+            {
+                DateTime? lastVoucherIssueDate = LastVoucherIssueDate;
+                return lastVoucherIssueDate.HasValue
+                    ? Purchases?.Where(x => x.Date > lastVoucherIssueDate.Value).SumNullIfEmpty(x => x.Amount)
+                    : TotalPurchases;
+            }
+        }
 
         public bool IsBirthDay => BirthDate.HasValue && ((DateTime.Today.Month == BirthDate.Value.Month && DateTime.Today.Day == BirthDate.Value.Day) || (BirthDate.Value.Month == 2 && BirthDate.Value.Day == 29 && DateTime.Today.Month == 2 && DateTime.Today.Day == 28));
 
@@ -381,5 +386,16 @@ namespace LoyaltyCard.Domain
                 return AgeCategories.MoreThan71;
             }
         }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

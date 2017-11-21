@@ -9,6 +9,7 @@ using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.MailSender
 {
@@ -74,7 +75,7 @@ namespace LoyaltyCard.MailSender
             return msg;
         }
 
-        public async Task SendHappyBirthdayMailAsync(string recipientMail, string firstName, DateTime? birthDate)
+        public async Task SendHappyBirthdayMailAsync(string recipientMail, string firstName, Sex sex, DateTime birthDate)
         {
             string senderMail = GetConfigValue("SenderMail");
             string senderPassword = GetConfigValue("SenderPassword");
@@ -84,7 +85,9 @@ namespace LoyaltyCard.MailSender
             MailAddress toAddress = new MailAddress(recipientMail, firstName ?? "vous");
             MailAddress replyToAddress = new MailAddress(replyToMail, "PPC SPRL");
 
-            DateTime maxValidity = (birthDate ?? DateTime.Today).AddMonths(1);
+            DateTime today = DateTime.Today;
+            DateTime maxValidity = today.AddMonths(1);
+            bool birthDayInPast = birthDate.Month < today.Month || (birthDate.Month == today.Month && birthDate.Day < today.Day);
 
             using (SmtpClient client = new SmtpClient
             {
@@ -96,10 +99,14 @@ namespace LoyaltyCard.MailSender
                 Credentials = new NetworkCredential(fromAddress.Address, senderPassword)
             })
             {
+
                 using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Joyeux anniversaire de la part de l'équipe PPC", "birthday.html", new Dictionary<string, string>
                 {
                     {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
-                    {"[maxvalidity]", $"{maxValidity:dd/MM/yyyy}"}
+                    {"[birthday]", birthDayInPast ? $"Le {birthDate:dd MMMM}" : "Aujourd'hui"},
+                    {"[iswas]", birthDayInPast ? "était" : "est" },
+                    {"[maxvalidity]", $"{maxValidity:dd MMMM yyyy}"},
+                    {"[dear]", MapSexToDear(sex) }
                 }))
                 {
                     await client.SendMailAsync(message);
@@ -107,7 +114,7 @@ namespace LoyaltyCard.MailSender
             }
         }
 
-        public async Task SendNewClientMailAsync(string recipientMail, string firstName)
+        public async Task SendNewClientMailAsync(string recipientMail, string firstName, Sex sex)
         {
             string senderMail = GetConfigValue("SenderMail");
             string senderPassword = GetConfigValue("SenderPassword");
@@ -130,6 +137,7 @@ namespace LoyaltyCard.MailSender
                 using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Félicitations de la part de l'équipe PPC", "newclient.html", new Dictionary<string, string>
                 {
                     {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
+                    {"[dear]", MapSexToDear(sex) }
                 }))
                 {
                     await client.SendMailAsync(message);
@@ -137,7 +145,7 @@ namespace LoyaltyCard.MailSender
             }
         }
 
-        public async Task SendVoucherMailAsync(string recipientMail, string firstName, decimal discount)
+        public async Task SendVoucherMailAsync(string recipientMail, string firstName, Sex sex, decimal discount, DateTime maxValidity)
         {
             string senderMail = GetConfigValue("SenderMail");
             string senderPassword = GetConfigValue("SenderPassword");
@@ -160,7 +168,9 @@ namespace LoyaltyCard.MailSender
                 using (var message = BuildMailMessage(fromAddress, toAddress, replyToAddress, "Bon de réduction chez PPC", "voucher.html", new Dictionary<string, string>
                 {
                     {"[firstname]", string.IsNullOrWhiteSpace(firstName) ? "client" : firstName},
-                    {"[discount]", $"{discount}%" }
+                    {"[discount]", $"{discount}%" },
+                    {"[maxvalidity]", $"{maxValidity:dd MMMM yyyy}"},
+                    {"[dear]", MapSexToDear(sex) }
                 }))
                 {
                     await client.SendMailAsync(message);
@@ -181,6 +191,15 @@ namespace LoyaltyCard.MailSender
             if (_config?.TryGetValue(key, out value) == true)
                 return value;
             return null;
+        }
+
+        private string MapSexToDear(Sex sex)
+        {
+            if (sex == Sex.Female)
+                return "Chère";
+            if (sex == Sex.Male)
+                return "Cher";
+            return "Cher/Chère";
         }
     }
 }

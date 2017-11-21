@@ -6,6 +6,8 @@
     <BitmapImage UriSource="Images/greentick.png" x:Key="OkImage"/>
     <BitmapImage UriSource="Images/search.png" x:Key="SearchImage"/>
     <BitmapImage UriSource="Images/stats.png" x:Key="StatsImage"/>
-    <BitmapImage UriSource="Images/euro.png" x:Key="VoucherImage"/>
+    <BitmapImage UriSource="Images/euro.png" x:Key="EuroImage"/>
     <BitmapImage UriSource="Images/mail.png" x:Key="MailImage"/>
+    <BitmapImage UriSource="Images/voucher.png" x:Key="VoucherImage"/>
+    <BitmapImage UriSource="Images/cake.png" x:Key="BirthdayImage"/>
 </ResourceDictionary>

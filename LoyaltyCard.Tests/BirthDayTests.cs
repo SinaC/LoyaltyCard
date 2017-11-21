@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LoyaltyCard.Business;
+using LoyaltyCard.Common.Extensions;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.IDataAccess;
@@ -23,12 +24,11 @@ namespace LoyaltyCard.Tests
         [TestMethod]
         public void BirthDayNotInDateRange()
         {
-            MailAutomationBL bl = new MailAutomationBL();
             DateTime birthDay = new DateTime(1976, 12, 07);
             DateTime from = new DateTime(2017,01,01);
             DateTime to = new DateTime(2017,11,15);
 
-            bool isInRange = bl.IsBirthdayInRange(birthDay, from, to);
+            bool isInRange = birthDay.IsBirthdayInRange(from, to);
 
             Assert.IsFalse(isInRange);
         }
@@ -36,12 +36,11 @@ namespace LoyaltyCard.Tests
         [TestMethod]
         public void BirthDayInDateRange()
         {
-            MailAutomationBL bl = new MailAutomationBL();
             DateTime birthDay = new DateTime(1976, 11, 07);
             DateTime from = new DateTime(2017, 01, 01);
             DateTime to = new DateTime(2017, 11, 15);
 
-            bool isInRange = bl.IsBirthdayInRange(birthDay, from, to);
+            bool isInRange = birthDay.IsBirthdayInRange(from, to);
 
             Assert.IsTrue(isInRange);
         }
@@ -60,7 +59,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10),
                 Email = "pouet@brol.net"
@@ -86,7 +85,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10).AddDays(5),
                 Email = "pouet@brol.net"
@@ -111,7 +110,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10).AddDays(-2),
                 Email = "pouet@brol.net"
@@ -137,7 +136,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10).AddDays(-20),
                 Email = "pouet@brol.net"
@@ -162,7 +161,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10),
                 Email = "pouet@brol.net"
@@ -189,7 +188,7 @@ namespace LoyaltyCard.Tests
             clientDLMock.AddClient(new Client
             {
                 Id = Guid.NewGuid(),
-                ClientId = 1,
+                ClientBusinessId = 1,
                 FirstName = "Test",
                 BirthDate = DateTime.Today.AddYears(-10).AddDays(-1),
                 LastBirthMailDate = DateTime.Today,
@@ -246,6 +245,11 @@ namespace LoyaltyCard.Tests
             throw new NotImplementedException();
         }
 
+        public void SaveVoucher(Client client, Voucher voucher)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetMaxClientId()
         {
             throw new NotImplementedException();
@@ -273,7 +277,7 @@ namespace LoyaltyCard.Tests
             throw new NotImplementedException();
         }
 
-        public BestClient GetBestClientInPeriod(DateTime @from, DateTime till)
+        public BestClient GetBestClientInPeriod(DateTime from, DateTime till)
         {
             throw new NotImplementedException();
         }
@@ -303,19 +307,19 @@ namespace LoyaltyCard.Tests
     {
         public List<string> Mails { get; } = new List<string>();
 
-        public async Task SendHappyBirthdayMailAsync(string recipientMail, string firstName, DateTime? birthDate)
+        public async Task SendHappyBirthdayMailAsync(string recipientMail, string firstName, Sex sex, DateTime birthDate)
         {
             Mails.Add($"BIRTHDAY_{firstName}");
             await Task.Delay(0);
         }
 
-        public async Task SendNewClientMailAsync(string recipientMail, string firstName)
+        public async Task SendNewClientMailAsync(string recipientMail, string firstName, Sex sex)
         {
             Mails.Add($"WELCOME_{firstName}");
             await Task.Delay(0);
         }
 
-        public async Task SendVoucherMailAsync(string recipientMail, string firstName, decimal discount)
+        public async Task SendVoucherMailAsync(string recipientMail, string firstName, Sex sex, decimal discount, DateTime maxValidity)
         {
             Mails.Add($"VOUCHER_{firstName}");
             await Task.Delay(0);
@@ -362,7 +366,7 @@ namespace LoyaltyCard.Tests
 
         public void Exception(string msg, Exception ex)
         {
-            ExceptionMessages.Add(msg + Environment.NewLine + ex.ToString());
+            ExceptionMessages.Add(msg + Environment.NewLine + ex);
         }
 
         public void WriteLine(LogLevels level, string format, params object[] args)

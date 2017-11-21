@@ -51,6 +51,10 @@
       <Project>{38d20e7f-9510-4b80-8755-1def2ef07bcf}</Project>
       <Name>EasyIoc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LoyaltyCard.Common\LoyaltyCard.Common.csproj">
+      <Project>{0B8C42FA-DE35-4247-A9E7-4FADFE6A5D10}</Project>
+      <Name>LoyaltyCard.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LoyaltyCard.IBusiness\LoyaltyCard.IBusiness.csproj">
       <Project>{15919C85-1781-4608-8333-AE6DEBFCF7AE}</Project>
       <Name>LoyaltyCard.IBusiness</Name>
