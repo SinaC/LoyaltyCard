@@ -23,13 +23,15 @@ namespace LoyaltyCard.App
             // Register instances
             EasyIoc.IocContainer.Default.RegisterInstance<ILog>(new NLogger());
 
-            var clientDL = new DataAccess.FileBased.ClientDL();
+            var clientDL = new DataAccess.FileBased.ClientDL(); // one DL for client, purchase and voucher
             EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(clientDL);
             EasyIoc.IocContainer.Default.RegisterInstance<IPurchaseDL>(clientDL);
             EasyIoc.IocContainer.Default.RegisterInstance<IVoucherDL>(clientDL);
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoDL>(new DataAccess.FileBased.GeoDL());
 
             EasyIoc.IocContainer.Default.RegisterInstance<IClientBL>(new ClientBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IPurchaseBL>(new PurchaseBL());
+            EasyIoc.IocContainer.Default.RegisterInstance<IVoucherBL>(new VoucherBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IGeoBL>(new GeoBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IMailAutomationBL>(new MailAutomationBL());
             EasyIoc.IocContainer.Default.RegisterInstance<IStatisticsBL>(new StatisticsBL());

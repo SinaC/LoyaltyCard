@@ -66,7 +66,7 @@ namespace LoyaltyCard.App.ViewModels
             {
                 IsBusy = true;
 
-                List<ClientSummary> clients = await AsyncFake.CallAsync(ClientBL, x => x.GetClientSummaries(Filter));
+                List<ClientSummary> clients = await AsyncFake.CallAsync(ClientBL, x => x.SearchClientSummaries(Filter));
                 Clients = new ObservableCollection<ClientSummary>(clients);
             }
             catch (Exception ex)

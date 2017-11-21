@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
 using LoyaltyCard.IDataAccess;
+using LoyaltyCard.Log;
 
 namespace LoyaltyCard.Business
 {
@@ -11,23 +12,11 @@ namespace LoyaltyCard.Business
         private const int FirstClientId = 100000;
 
         private IClientDL ClientDL => EasyIoc.IocContainer.Default.Resolve<IClientDL>();
+        private ILog Logger => EasyIoc.IocContainer.Default.Resolve<ILog>();
 
-        public List<ClientSummary> GetClientSummaries(string filter)
+        public List<ClientSummary> SearchClientSummaries(string filter)
         {
-            return ClientDL.GetClientSummaries(filter);
-        }
-
-        public List<Client> GetClients()
-        {
-            List<Client> clients = ClientDL.GetClients();
-
-            if (clients != null)
-            {
-                foreach (Client client in clients)
-                    AddMandatoryFields(client);
-            }
-
-            return clients;
+            return ClientDL.SearchClientSummaries(filter);
         }
 
         public Client GetClient(Guid id)
@@ -38,32 +27,6 @@ namespace LoyaltyCard.Business
                 AddMandatoryFields(client);
 
             return client;
-        }
-
-        public List<Client> SearchClients(string firstNameFilter, string lastNameFilter)
-        {
-            List<Client> clients = ClientDL.SearchClients(firstNameFilter, lastNameFilter);
-
-            if (clients != null)
-            {
-                foreach (Client client in clients)
-                    AddMandatoryFields(client);
-            }
-
-            return clients;
-        }
-
-        public List<Client> SearchClients(string filter)
-        {
-            List<Client> clients = ClientDL.SearchClients(filter);
-
-            if (clients != null)
-            {
-                foreach (Client client in clients)
-                    AddMandatoryFields(client);
-            }
-
-            return clients;
         }
 
         public void SaveClient(Client client)
@@ -79,44 +42,6 @@ namespace LoyaltyCard.Business
                 client.LastName = client.LastName.Trim();
 
             ClientDL.SaveClient(client);
-        }
-
-        public void SavePurchase(Client client, Purchase purchase)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-            if (purchase == null)
-                throw new ArgumentNullException(nameof(purchase));
-            if (client.Id == Guid.Empty)
-                throw new ArgumentException("Cannot add a purchase to an unregistered client", nameof(client));
-            if (purchase.ClientId == Guid.Empty)
-                purchase.ClientId = client.Id;
-            if (purchase.ClientId != client.Id)
-                throw new ArgumentException("Cannot save a purchase to a different client", nameof(purchase));
-
-            if (purchase.Id == Guid.Empty)
-                purchase.Id = Guid.NewGuid();
-
-            ClientDL.SavePurchase(client, purchase);
-        }
-
-        public void SaveVoucher(Client client, Voucher voucher)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-            if (voucher == null)
-                throw new ArgumentNullException(nameof(voucher));
-            if (client.Id == Guid.Empty)
-                throw new ArgumentException("Cannot add a voucher to an unregistered client", nameof(client));
-            if (voucher.ClientId == Guid.Empty)
-                voucher.ClientId = client.Id;
-            if (voucher.ClientId != client.Id)
-                throw new ArgumentException("Cannot save a voucher to a different client", nameof(voucher));
-
-            if (voucher.Id == Guid.Empty)
-                voucher.Id = Guid.NewGuid();
-
-            ClientDL.SaveVoucher(client, voucher);
         }
 
         public List<Client> GetClients(Func<Client, bool> filterFunc)
@@ -144,6 +69,7 @@ namespace LoyaltyCard.Business
             ClientDL.DeleteClient(client);
         }
 
+        //
         private void AddMandatoryFields(Client client)
         {
             if (client.Id == Guid.Empty)

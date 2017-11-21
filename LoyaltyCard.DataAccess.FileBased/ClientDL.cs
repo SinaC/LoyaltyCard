@@ -23,7 +23,7 @@ namespace LoyaltyCard.DataAccess.FileBased
 
         private ILog Logger => EasyIoc.IocContainer.Default.Resolve<ILog>();
 
-        public List<ClientSummary> GetClientSummaries(string filter)
+        public List<ClientSummary> SearchClientSummaries(string filter)
         {
             LoadClients(); // load clients if needed
 
@@ -42,55 +42,11 @@ namespace LoyaltyCard.DataAccess.FileBased
             return query.Select(x => new ClientSummary(x)).ToList();
         }
 
-        public List<Client> GetClients()
-        {
-            LoadClients(); // Load clients if needed
-
-            return _clients;
-        }
-
         public Client GetClient(Guid id)
         {
             LoadClients(); // Load clients if needed
 
             return _clients.FirstOrDefault(x => x.Id == id);
-        }
-
-        public List<Client> SearchClients(string firstNameFilter, string lastNameFilter)
-        {
-            LoadClients(); // Load clients if needed
-
-            IEnumerable<Client> query = _clients.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(firstNameFilter))
-            {
-                firstNameFilter = firstNameFilter.ToLowerInvariant();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.FirstName) && x.FirstName.ToLowerInvariant().StartsWith(firstNameFilter));
-            }
-            if (!string.IsNullOrWhiteSpace(lastNameFilter))
-            {
-                lastNameFilter = lastNameFilter.ToLowerInvariant();
-                query = query.Where(x => !string.IsNullOrWhiteSpace(x.LastName) && x.LastName.ToLowerInvariant().StartsWith(lastNameFilter));
-            }
-
-            return query.ToList();
-        }
-
-        public List<Client> SearchClients(string filter)
-        {
-            LoadClients(); // Load clients if needed
-
-            IEnumerable<Client> query = _clients.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                string[] tokens = filter.Split(' ');
-
-                foreach (string token in tokens)
-                    query = query.Where(c => Contains(c.FirstName ?? string.Empty, token) ||
-                    Contains(c.LastName ?? string.Empty, token) ||
-                    Contains(c.Email ?? string.Empty, token) ||
-                    c.ClientBusinessId.ToString().StartsWith(token));
-            }
-            return query.ToList();
         }
 
         public void SaveClient(Client client)
@@ -127,11 +83,6 @@ namespace LoyaltyCard.DataAccess.FileBased
             }
 
             SaveClients();
-        }
-
-        public void SavePurchase(Client client, Purchase purchase)
-        {
-            SaveClient(client);
         }
 
         public void SaveVoucher(Client client, Voucher voucher)

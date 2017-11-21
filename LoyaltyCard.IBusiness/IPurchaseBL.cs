@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LoyaltyCard.Domain;
+﻿using LoyaltyCard.Domain;
 
 namespace LoyaltyCard.IBusiness
 {
     public interface IPurchaseBL
     {
+        void SavePurchase(Purchase purchase);
+        void DeletePurchase(Purchase purchase);
     }
 }

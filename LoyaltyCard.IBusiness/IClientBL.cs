@@ -6,21 +6,11 @@ namespace LoyaltyCard.IBusiness
 {
     public interface IClientBL
     {
-        List<ClientSummary> GetClientSummaries(string filter);
-
-        List<Client> GetClients();
+        List<ClientSummary> SearchClientSummaries(string filter);
 
         Client GetClient(Guid id);
 
-        List<Client> SearchClients(string firstNameFilter, string lastNameFilter);
-
-        List<Client> SearchClients(string filter);
-
         void SaveClient(Client client);
-
-        void SavePurchase(Client client, Purchase purchase);
-
-        void SaveVoucher(Client client, Voucher voucher);
 
         List<Client> GetClients(Func<Client, bool> filterFunc);
 

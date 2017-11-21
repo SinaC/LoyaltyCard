@@ -8,11 +8,18 @@ namespace LoyaltyCard.DataAccess.FileBased
 {
     public partial class ClientDL : IVoucherDL
     {
-        public List<Voucher> GetClientVouchers(Guid id)
+        public List<Voucher> GetVouchers(Guid clientId)
         {
-            LoadClients(); // Load clients if needed
+            Client client = GetClient(clientId);
+            return (client?.Vouchers ?? Enumerable.Empty<Voucher>()).ToList();
+        }
 
-            return (_clients.FirstOrDefault(x => x.Id == id)?.Vouchers ?? Enumerable.Empty<Voucher>()).ToList();
+        public void SaveVoucher(Voucher voucher)
+        {
+            Client client = GetClient(voucher.ClientId);
+            if (client.Vouchers.All(p => p.Id != voucher.Id))
+                client.Vouchers.Add(voucher);
+            SaveClient(client);
         }
     }
 }

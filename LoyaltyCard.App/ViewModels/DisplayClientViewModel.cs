@@ -19,9 +19,12 @@ namespace LoyaltyCard.App.ViewModels
     {
         private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
+        private IPurchaseBL PurchaseBL => EasyIoc.IocContainer.Default.Resolve<IPurchaseBL>();
+        private IVoucherBL VoucherBL => EasyIoc.IocContainer.Default.Resolve<IVoucherBL>();
         private IGeoBL GeoBL => EasyIoc.IocContainer.Default.Resolve<IGeoBL>();
         private IMailSender.IMailSender MailSenderBL => EasyIoc.IocContainer.Default.Resolve<IMailSender.IMailSender>();
 
+        private bool _isUnsavedNewClient;
         private bool _automaticCitySearch;
 
         private Client _client;
@@ -169,11 +172,15 @@ namespace LoyaltyCard.App.ViewModels
 
         private void AddPurchase(decimal amount, bool collectVoucher, DateTime when)
         {
+            if (_isUnsavedNewClient)
+                SaveClient(Client);
+
             Voucher oldestActiveVoucher = null;
             if (collectVoucher)
                 oldestActiveVoucher = Client.OldestActiveVoucher;
             Purchase purchase = new Purchase
             {
+                ClientId = Client.Id,
                 Amount = amount,
                 Date = when,
                 IsPurchaseDeletable = true,
@@ -184,14 +191,13 @@ namespace LoyaltyCard.App.ViewModels
             Client.Purchases = Client.Purchases ?? new ObservableCollection<Purchase>();
             Client.Purchases.Add(purchase);
             Client.PurchaseModified();
-            // Save client and purchase
-            SaveClient(Client);
-            ClientBL.SavePurchase(Client, purchase);
+            // Save purchase
+            PurchaseBL.SavePurchase(purchase); // !! this will add purchase to client if not already added
             // Voucher
             if (collectVoucher)
             {
                 oldestActiveVoucher.CollectDate = DateTime.Now;
-                ClientBL.SaveVoucher(Client, oldestActiveVoucher);
+                VoucherBL.SaveVoucher(oldestActiveVoucher);
                 Client.VoucherModified();
             }
         }
@@ -210,19 +216,23 @@ namespace LoyaltyCard.App.ViewModels
 
         private void DeletePurchaseConfirmed(Purchase purchase)
         {
+            if (_isUnsavedNewClient)
+                SaveClient(Client);
+
             // Reactivate voucher if needed
             if (purchase.VoucherId.HasValue)
             {
                 Voucher voucher = Client.Vouchers.FirstOrDefault(x => x.Id == purchase.VoucherId.Value);
                 if (voucher != null)
                     voucher.CollectDate = null;
-                ClientBL.SaveVoucher(Client, voucher);
+                VoucherBL.SaveVoucher(voucher);
                 Client.VoucherModified();
             }
+            // Delete purchase
+            PurchaseBL.DeletePurchase(purchase); // !! this will remove purchase from client
             // Remove purchase
             Client.Purchases.Remove(purchase);
             Client.PurchaseModified();
-            SaveClient(Client);
         }
 
         #endregion
@@ -265,8 +275,12 @@ namespace LoyaltyCard.App.ViewModels
                     byMail = true;
                 }
 
+                if (_isUnsavedNewClient)
+                    SaveClient(Client);
+
                 Voucher voucher = new Voucher
                 {
+                    ClientId = Client.Id,
                     IssueDate = DateTime.Now,
                     Percentage = percentage,
                     ValidityEndDate = maxValidity,
@@ -275,9 +289,8 @@ namespace LoyaltyCard.App.ViewModels
                 Client.Vouchers = Client.Vouchers ?? new ObservableCollection<Voucher>();
                 Client.Vouchers.Add(voucher);
                 Client.VoucherModified();
-                // Save client and voucher
-                ClientBL.SaveVoucher(Client, voucher);
-                ClientBL.SaveClient(Client);
+                // Save voucher
+                VoucherBL.SaveVoucher(voucher); // !! this will add voucher to client if not already added
 
                 // Purchases cannot be deleted anymore
                 foreach (Purchase purchase in Client.Purchases)
@@ -314,6 +327,7 @@ namespace LoyaltyCard.App.ViewModels
 
         public void Initialize(ClientSummary clientSummary)
         {
+            _isUnsavedNewClient = false;
             if (clientSummary == null)
                 throw new ArgumentNullException(nameof(clientSummary));
 
@@ -322,12 +336,15 @@ namespace LoyaltyCard.App.ViewModels
 
         public void Initialize()
         {
+            _isUnsavedNewClient = true;
             // Create new client
             Client = ClientBL.CreateClient();
         }
 
         private void SaveClient(Client client)
         {
+            _isUnsavedNewClient = false;
+
             // Save input fields to client
             client.LastName = LastName;
             client.FirstName = FirstName;

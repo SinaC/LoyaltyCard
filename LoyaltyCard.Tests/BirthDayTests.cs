@@ -210,27 +210,12 @@ namespace LoyaltyCard.Tests
             _clients.Add(client);
         }
 
-        public List<ClientSummary> GetClientSummaries(string filter)
+        public List<ClientSummary> SearchClientSummaries(string filter)
         {
             throw new NotImplementedException();
-        }
-
-        public List<Client> GetClients()
-        {
-            return _clients.ToList();
         }
 
         public Client GetClient(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Client> SearchClients(string firstNameFilter, string lastNameFilter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Client> SearchClients(string filter)
         {
             throw new NotImplementedException();
         }

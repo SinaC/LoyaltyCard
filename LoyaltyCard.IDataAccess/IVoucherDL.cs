@@ -6,6 +6,7 @@ namespace LoyaltyCard.IDataAccess
 {
     public interface IVoucherDL
     {
-        List<Voucher> GetClientVouchers(Guid id);
+        List<Voucher> GetVouchers(Guid clientId);
+        void SaveVoucher(Voucher voucher);
     }
 }

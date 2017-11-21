@@ -1,3 +1,6 @@
+Issues:
+should not save client when adding/removing purchase, adding/modifier voucher unless the client is new
+
 Features:
 Different type of voucher: Birthday (fixed amount/cumulative), Fidelity (percentage/not cumulative), ...
 	Display Cake icon when Birthday voucher is active

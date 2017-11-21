@@ -9,11 +9,26 @@ namespace LoyaltyCard.DataAccess.FileBased
     // Crappy workaround because Client and Purchases are stored in the same file
     public partial class ClientDL : IPurchaseDL
     {
-        public List<Purchase> GetClientPurchases(Guid id)
+        public List<Purchase> GetPurchases(Guid clientId)
         {
-            LoadClients(); // Load clients if needed
+            Client client = GetClient(clientId);
 
-            return (_clients.FirstOrDefault(x => x.Id == id)?.Purchases ?? Enumerable.Empty<Purchase>()).ToList();
+            return (client?.Purchases ?? Enumerable.Empty<Purchase>()).ToList();
+        }
+
+        public void SavePurchase(Purchase purchase)
+        {
+            Client client = GetClient(purchase.ClientId);
+            if (client.Purchases.All(p => p.Id != purchase.Id))
+                client.Purchases.Add(purchase);
+            SaveClient(client);
+        }
+
+        public void DeletePurchase(Purchase purchase)
+        {
+            Client client = GetClient(purchase.ClientId);
+            client.Purchases.Remove(purchase);
+            SaveClient(client);
         }
 
         public decimal GetDaySales()

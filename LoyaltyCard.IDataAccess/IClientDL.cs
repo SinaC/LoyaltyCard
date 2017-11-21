@@ -6,21 +6,11 @@ namespace LoyaltyCard.IDataAccess
 {
     public interface IClientDL
     {
-        List<ClientSummary> GetClientSummaries(string filter);
-
-        List<Client> GetClients();
+        List<ClientSummary> SearchClientSummaries(string filter);
 
         Client GetClient(Guid id);
 
-        List<Client> SearchClients(string firstNameFilter, string lastNameFilter);
-
-        List<Client> SearchClients(string filter);
-
         void SaveClient(Client client);
-
-        void SavePurchase(Client client, Purchase purchase);
-
-        void SaveVoucher(Client client, Voucher voucher);
 
         int GetMaxClientId();
 
@@ -29,7 +19,6 @@ namespace LoyaltyCard.IDataAccess
         void DeleteClient(Client client);
 
         // Statistics
-
         int GetClientCount();
 
         int GetNewClientCount();

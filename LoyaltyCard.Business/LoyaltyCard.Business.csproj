@@ -44,7 +44,9 @@
     <Compile Include="GeoBL.cs" />
     <Compile Include="MailAutomationBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseBL.cs" />
     <Compile Include="StatisticsBL.cs" />
+    <Compile Include="VoucherBL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\EasyIoc\EasyIoc.csproj">
