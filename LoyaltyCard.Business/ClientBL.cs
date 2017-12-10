@@ -69,6 +69,11 @@ namespace LoyaltyCard.Business
             ClientDL.DeleteClient(client);
         }
 
+        public void DeleteClient(Guid id)
+        {
+            ClientDL.DeleteClient(id);
+        }
+
         //
         private void AddMandatoryFields(Client client)
         {

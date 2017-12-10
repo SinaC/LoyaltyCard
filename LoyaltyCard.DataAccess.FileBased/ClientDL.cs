@@ -114,6 +114,15 @@ namespace LoyaltyCard.DataAccess.FileBased
             SaveClients();
         }
 
+        public void DeleteClient(Guid id)
+        {
+            LoadClients(); // Load clients if needed
+
+            _clients.RemoveAll(x => x.Id == id);
+
+            SaveClients();
+        }
+
         // Statistics
 
         public int GetClientCount()

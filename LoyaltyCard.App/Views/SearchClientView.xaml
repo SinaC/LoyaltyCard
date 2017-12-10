@@ -105,12 +105,12 @@
                       CanUserDeleteRows="False"
                       AutoGenerateColumns="False"
                       SelectedItem="{Binding SelectedClient}"
-                      behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditClientCommand}"
+                      behaviours:DataGridBehaviours.DataGridDoubleClickCommand="{Binding EditSelectedClientCommand}"
                       RowStyle="{StaticResource ClientDataGridRowStyle}"
                       ItemsSource="{Binding Clients}">
                 <DataGrid.InputBindings>
-                    <KeyBinding Key="Enter" Command="{Binding EditClientCommand}"/>
-                    <KeyBinding Key="Return" Command="{Binding EditClientCommand}"/>
+                    <KeyBinding Key="Enter" Command="{Binding EditSelectedClientCommand}"/>
+                    <KeyBinding Key="Return" Command="{Binding EditSelectedClientCommand}"/>
                 </DataGrid.InputBindings>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="N° client" Binding="{Binding ClientBusinessId}"/>
@@ -120,6 +120,26 @@
                     <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                     <DataGridTextColumn Header="Date dernier achat" Binding="{Binding LastPurchase.Date, StringFormat=dd/MM/yyyy}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
                     <DataGridTextColumn Header="€ dernier achat" Binding="{Binding LastPurchase.Amount, StringFormat=C}" ElementStyle="{StaticResource RightAlignedTextBlockStyle}"/>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Margin="1"
+                                            Command="{Binding DataContext.EditClientCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}">
+                                        <Image Source="{StaticResource EditImage}"
+                                               Width="12"/>
+                                    </Button>
+                                    <Button Margin="1"
+                                            Command="{Binding DataContext.DeleteClientCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                            CommandParameter="{Binding}">
+                                        <Image Source="{StaticResource DeleteImage}"
+                                               Width="12"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

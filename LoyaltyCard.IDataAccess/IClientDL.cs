@@ -18,6 +18,8 @@ namespace LoyaltyCard.IDataAccess
 
         void DeleteClient(Client client);
 
+        void DeleteClient(Guid id);
+
         // Statistics
         int GetClientCount();
 

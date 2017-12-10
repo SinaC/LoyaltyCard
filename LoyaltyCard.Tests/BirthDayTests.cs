@@ -250,6 +250,11 @@ namespace LoyaltyCard.Tests
             throw new NotImplementedException();
         }
 
+        public void DeleteClient(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         // Statistics
 
         public int GetClientCount()

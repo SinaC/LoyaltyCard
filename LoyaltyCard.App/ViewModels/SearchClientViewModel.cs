@@ -9,11 +9,13 @@ using LoyaltyCard.App.Messages;
 using LoyaltyCard.Common;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
+using LoyaltyCard.Services.Popup;
 
 namespace LoyaltyCard.App.ViewModels
 {
     public class SearchClientViewModel : ViewModelBase
     {
+        private IPopupService PopupService => EasyIoc.IocContainer.Default.Resolve<IPopupService>();
         private IClientBL ClientBL => EasyIoc.IocContainer.Default.Resolve<IClientBL>();
 
         private string _filter;
@@ -39,18 +41,42 @@ namespace LoyaltyCard.App.ViewModels
 
         #region Edit client
 
-        private ICommand _editClientCommand;
-        public ICommand EditClientCommand => _editClientCommand ?? (_editClientCommand = new RelayCommand(EditClient));
+        private ICommand _editSelectedClientCommand;
+        public ICommand EditSelectedClientCommand => _editSelectedClientCommand ?? (_editSelectedClientCommand = new RelayCommand(() => EditClient(SelectedClient)));
 
-        private void EditClient()
+        private ICommand _editClientCommand;
+        public ICommand EditClientCommand => _editClientCommand ?? (_editClientCommand = new RelayCommand<ClientSummary>(EditClient));
+
+        private void EditClient(ClientSummary client)
         {
-            if (SelectedClient == null)
+            if (client == null)
                 return;
             // Display client
             Mediator.Default.Send(new SwitchToDisplayClientMessage
             {
                 Client = SelectedClient
             });
+        }
+
+        #endregion
+
+        #region Delete client
+
+        private ICommand _deleteClientCommand;
+        public ICommand DeleteClientCommand => _deleteClientCommand ?? (_deleteClientCommand = new RelayCommand<ClientSummary>(DeleteClient));
+
+        private void DeleteClient(ClientSummary client)
+        {
+            if (client == null)
+                return;
+            PopupService.DisplayQuestion("Suppression de client", $"Etes-vous certain de vouloir supprimer le client {client.LastName} {client.FirstName}", QuestionActionButton.Yes(() => DeleteClientConfirmed(client)), QuestionActionButton.No());
+        }
+
+        private void DeleteClientConfirmed(ClientSummary client)
+        {
+            ClientBL.DeleteClient(client.Id);
+            Clients.Remove(client);
+            PopupService.DisplayQuestion("Confirmation de la suppression", "Le client a été supprimé", QuestionActionButton.Ok());
         }
 
         #endregion

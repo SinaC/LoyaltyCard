@@ -17,5 +17,7 @@ namespace LoyaltyCard.IBusiness
         Client CreateClient();
 
         void DeleteClient(Client client);
+
+        void DeleteClient(Guid id);
     }
 }

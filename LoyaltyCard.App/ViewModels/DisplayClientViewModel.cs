@@ -339,6 +339,17 @@ namespace LoyaltyCard.App.ViewModels
             _isUnsavedNewClient = true;
             // Create new client
             Client = ClientBL.CreateClient();
+            // Reset fields
+            LastName = null;
+            FirstName = null;
+            BirthDate = null;
+            Email = null;
+            Mobile = null;
+            StreetName = null;
+            StreetNumber = null;
+            ZipCode = null;
+            City = null;
+            Comment = null;
         }
 
         private void SaveClient(Client client)

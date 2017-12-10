@@ -201,6 +201,8 @@
     <SplashScreen Include="logo.png" />
     <Resource Include="Images\voucher.png" />
     <Resource Include="Images\cake.png" />
+    <Resource Include="Images\edit.png" />
+    <Resource Include="Images\delete.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

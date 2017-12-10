@@ -10,4 +10,6 @@
     <BitmapImage UriSource="Images/mail.png" x:Key="MailImage"/>
     <BitmapImage UriSource="Images/voucher.png" x:Key="VoucherImage"/>
     <BitmapImage UriSource="Images/cake.png" x:Key="BirthdayImage"/>
+    <BitmapImage UriSource="Images/delete.png" x:Key="DeleteImage"/>
+    <BitmapImage UriSource="Images/edit.png" x:Key="EditImage"/>
 </ResourceDictionary>
