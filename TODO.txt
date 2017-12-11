@@ -1,5 +1,6 @@
 Issues:
-should not save client when adding/removing purchase, adding/modifier voucher unless the client is new
+	should not save client when adding/removing purchase, adding/modifier voucher unless the client is new
+	voucher: when a client has collected a voucher, we should start to count purchases from CollectDate instead of IssueDate
 
 Features:
 Different type of voucher: Birthday (fixed amount/cumulative), Fidelity (percentage/not cumulative), ...

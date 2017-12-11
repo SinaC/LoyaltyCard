@@ -298,6 +298,7 @@ namespace LoyaltyCard.Domain
 
         public Voucher OldestActiveVoucher => Vouchers?.Where(x => !x.CollectDate.HasValue && x.ValidityEndDate >= DateTime.Today).OrderBy(x => x.IssueDate).FirstOrDefault();
         public DateTime? LastVoucherIssueDate => Vouchers?.OrderByDescending(x => x.IssueDate).FirstOrDefault()?.IssueDate;
+        //public Voucher LatestActiveVoucher => Vouchers?.Where(x => !x.CollectDate.HasValue && x.ValidityEndDate >= DateTime.Today).OrderByDescending(x => x.IssueDate).FirstOrDefault();
 
         #region Purchases
 

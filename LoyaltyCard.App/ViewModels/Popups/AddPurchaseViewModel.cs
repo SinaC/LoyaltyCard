@@ -64,7 +64,7 @@ namespace LoyaltyCard.App.ViewModels.Popups
             PopupService?.Close(this);
         }
 
-        public AddPurchaseViewModel(DateTime?minDate, Voucher activeVoucher, Action<decimal, bool, DateTime> okAction)
+        public AddPurchaseViewModel(DateTime? minDate, Voucher activeVoucher, Action<decimal, bool, DateTime> okAction)
         {
             MinimumDate = minDate;
             MaximumDate = DateTime.Today;

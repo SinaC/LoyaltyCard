@@ -196,7 +196,7 @@ namespace LoyaltyCard.App.ViewModels
             // Voucher
             if (collectVoucher)
             {
-                oldestActiveVoucher.CollectDate = DateTime.Now;
+                oldestActiveVoucher.CollectDate = purchase.Date.AddMinutes(1); // to be sure it's later than last purchase date (last purchase should not be considered for next voucher)
                 VoucherBL.SaveVoucher(oldestActiveVoucher);
                 Client.VoucherModified();
             }
