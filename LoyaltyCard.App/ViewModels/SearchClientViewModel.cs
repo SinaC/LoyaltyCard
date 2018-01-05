@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using EasyMVVM;
 using LoyaltyCard.App.Messages;
+using LoyaltyCard.App.ViewModels.Popups;
 using LoyaltyCard.Common;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.Domain;
@@ -139,8 +140,10 @@ namespace LoyaltyCard.App.ViewModels
 
         private async Task TestAsync()
         {
-            IMailAutomationBL mailAutomationBL = EasyIoc.IocContainer.Default.Resolve<IMailAutomationBL>();
-            await mailAutomationBL.SendAutomatedMailsAsync();
+            //IMailAutomationBL mailAutomationBL = EasyIoc.IocContainer.Default.Resolve<IMailAutomationBL>();
+            //await mailAutomationBL.SendAutomatedMailsAsync();
+            ChooseAndPreviewEmailViewModel vm = new ChooseAndPreviewEmailViewModel();
+            PopupService.DisplayModal(vm, "Send mail to clients");
         }
 
         #endregion

@@ -2,6 +2,8 @@ Issues:
 	should not save client when adding/removing purchase, adding/modifier voucher unless the client is new
 	voucher: when a client has collected a voucher, we should start to count purchases from CollectDate instead of IssueDate
 
+	reactivate Email editor in ChooseAndPreviewEmailView.xaml
+
 Features:
 Different type of voucher: Birthday (fixed amount/cumulative), Fidelity (percentage/not cumulative), ...
 	Display Cake icon when Birthday voucher is active

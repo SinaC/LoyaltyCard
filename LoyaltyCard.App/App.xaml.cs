@@ -8,6 +8,7 @@ using LoyaltyCard.Business;
 using LoyaltyCard.IBusiness;
 using LoyaltyCard.IDataAccess;
 using LoyaltyCard.Log;
+using LoyaltyCard.Services.IO;
 
 namespace LoyaltyCard.App
 {
@@ -22,6 +23,7 @@ namespace LoyaltyCard.App
         {
             // Register instances
             EasyIoc.IocContainer.Default.RegisterInstance<ILog>(new NLogger());
+            EasyIoc.IocContainer.Default.RegisterInstance<IIOService>(new IOService());
 
             var clientDL = new DataAccess.FileBased.ClientDL(); // one DL for client, purchase and voucher
             EasyIoc.IocContainer.Default.RegisterInstance<IClientDL>(clientDL);

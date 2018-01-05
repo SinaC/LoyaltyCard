@@ -350,6 +350,7 @@ namespace LoyaltyCard.App.ViewModels
             ZipCode = null;
             City = null;
             Comment = null;
+            _automaticCitySearch = true;
         }
 
         private void SaveClient(Client client)

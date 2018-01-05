@@ -97,6 +97,7 @@
     <Compile Include="Behaviours\DataGridBehaviours.cs" />
     <Compile Include="Behaviours\EnterKeyTraversal.cs" />
     <Compile Include="Behaviours\SelectTextOnFocus.cs" />
+    <Compile Include="Behaviours\WebBrowerUtility.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="CustomControls\AdornedControl.cs" />
     <Compile Include="CustomControls\AdornerPlacement.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="ViewModels\DisplayClientViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ViewModels\FooterViewModel.cs" />
+    <Compile Include="ViewModels\Popups\ChooseAndPreviewEmailViewModel.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Compile Include="ViewModels\Popups\AddPurchaseViewModel.cs" />
     <Compile Include="ViewModels\SearchClientViewModel.cs" />
@@ -124,6 +126,9 @@
     </Compile>
     <Compile Include="Views\FooterView.xaml.cs">
       <DependentUpon>FooterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Popups\ChooseAndPreviewEmailView.xaml.cs">
+      <DependentUpon>ChooseAndPreviewEmailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StatisticsView.xaml.cs">
       <DependentUpon>StatisticsView.xaml</DependentUpon>
@@ -163,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FooterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Popups\ChooseAndPreviewEmailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

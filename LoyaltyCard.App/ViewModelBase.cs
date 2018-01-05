@@ -1,5 +1,6 @@
 ﻿using EasyMVVM;
 using LoyaltyCard.Log;
+using LoyaltyCard.Services.Popup;
 
 namespace LoyaltyCard.App
 {
@@ -12,6 +13,11 @@ namespace LoyaltyCard.App
         {
             get { return _isBusy; }
             set { Set(() => IsBusy, ref _isBusy, value); }
+        }
+
+        protected void NotYetImplemented()
+        {
+            EasyIoc.IocContainer.Default.Resolve<IPopupService>().DisplayError("Non-disponible", "Cette fonctionnalité n'est pas encore disponible");
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="LoyaltyCard.App.Views.Popups.ChooseAndPreviewEmailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LoyaltyCard.App.Views.Popups"
+             xmlns:viewModels="clr-namespace:LoyaltyCard.App.ViewModels.Popups"
+             xmlns:htmlTextBlock="http://www.quickzip.org/BaseControls"
+             xmlns:behaviours="clr-namespace:LoyaltyCard.App.Behaviours"
+             
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:ChooseAndPreviewEmailViewModelDesignData, IsDesignTimeCreatable=True}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Choose + send email -->
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding ChooseEmailCommand}">
+                <TextBlock Text="Choose email"/>
+            </Button>
+            <Button Command="{Binding SendEmailCommand}">
+                <TextBlock Text="Send email"/>
+            </Button>
+        </StackPanel>
+        <!-- Preview email -->
+        <!--<WebBrowser x:Name="WebBrowser"
+                    Grid.Row="1"
+                    MaxWidth="640"
+                    MaxHeight="480"
+                    behaviours:WebBrowserUtility.BindableBody="{Binding EmailContent}"/>-->
+        <!--<controls:RichTextEditor Grid.Row="1"
+                                 MaxWidth="640"
+                                 MaxHeight="480"
+                                 Text="{Binding EmailContent}"/>-->
+    </Grid>
+</UserControl>
